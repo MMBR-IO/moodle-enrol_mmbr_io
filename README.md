@@ -1,2 +1,0 @@
-# Foxtrot
-The Moodle Plugin
