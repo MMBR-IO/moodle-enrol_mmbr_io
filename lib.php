@@ -139,4 +139,59 @@ class enrol_mmbr_plugin extends enrol_plugin {
     public function can_add_instance($courseid) {
         return true;
     }
+
+    public function enrol_page_hook(stdClass $instance) {
+        global $CFG, $OUTPUT, $SESSION, $USER, $DB;
+
+        // Guest can't enrol in paid courses
+        if (isguestuser()) {
+            return null;
+        }
+        
+        if ($DB->record_exists('user_enrolments', array('userid' => $USER->id, 'enrolid' => $instance->id))) {
+            return $OUTPUT->notification(get_string('notification', 'enrol_apply'), 'notifysuccess');
+        }
+
+        if ($instance->customint3 > 0) {
+            // Max enrol limit specified.
+            $count = $DB->count_records('user_enrolments', array('enrolid' => $instance->id));
+            if ($count >= $instance->customint3) {
+                // Bad luck, no more self enrolments here.
+                return '<div class="alert alert-error">'.get_string('maxenrolledreached_left', 'enrol_apply')." (".$count.") ".get_string('maxenrolledreached_right', 'enrol_apply').'</div>';
+            }
+        }
+
+        require_once("$CFG->dirroot/enrol/apply/apply_form.php");
+
+        $form = new enrol_apply_apply_form(null, $instance);
+
+        if ($data = $form->get_data()) {
+            // Only process when form submission is for this instance (multi instance support).
+            if ($data->instance == $instance->id) {
+                $timestart = 0;
+                $timeend = 0;
+                $roleid = $instance->roleid;
+
+                $this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend, ENROL_USER_SUSPENDED);
+                $userenrolment = $DB->get_record(
+                    'user_enrolments',
+                    array(
+                        'userid' => $USER->id,
+                        'enrolid' => $instance->id),
+                    'id', MUST_EXIST);
+                $applicationinfo = new stdClass();
+                $applicationinfo->userenrolmentid = $userenrolment->id;
+                $applicationinfo->comment = $data->applydescription;
+                $DB->insert_record('enrol_apply_applicationinfo', $applicationinfo, false);
+
+                $this->send_application_notification($instance, $USER->id, $data);
+
+                redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid");
+            }
+        }
+
+        $output = $form->render();
+
+        return $OUTPUT->box($output);
+    }
 }
