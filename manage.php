@@ -16,10 +16,7 @@
 
 /**
  * @package    enrol_mmbr
- * @copyright  emeneo.com (http://emeneo.com/)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     emeneo.com (http://emeneo.com/)
- * @author     Johannes Burk <johannes.burk@sudile.com>
  */
 
 require_once('../../config.php');
