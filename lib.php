@@ -30,19 +30,44 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Class enrol_mmbr_plugin.
  */
-class enrol_mmbr_plugin extends enrol_plugin {
+class enrol_mmbr_plugin extends enrol_plugin
+{
 
     /**
      * Add new instance of enrol plugin with default settings.
      * @param object $course
      * @return int id of new instance
      */
-    public function add_default_instance($course) {
+    public function add_default_instance($course)
+    {
         $fields = $this->get_instance_defaults();
         return $this->add_instance($course, $fields);
     }
 
-        /**
+    /**
+     * Is it possible to hide/show enrol instance via standard UI?
+     * @param  stdClass $instance
+     * @return bool
+     */
+    public function can_hide_show_instance($instance)
+    {
+        $context = context_course::instance($instance->courseid);
+        return has_capability('enrol/mmbr:config', $context);
+    }
+
+    /**
+     * Is it possible to delete enrol instance via standard UI?
+     *
+     * @param stdClass $instance
+     * @return bool
+     */
+    public function can_delete_instance($instance)
+    {
+        $context = context_course::instance($instance->courseid);
+        return has_capability('enrol/mmbr:config', $context);
+    }
+
+    /**
      * Does this plugin allow manual enrolments?
      *
      * @param stdClass $instance course enrol instance
@@ -50,7 +75,8 @@ class enrol_mmbr_plugin extends enrol_plugin {
      *
      * @return bool - true means user with 'enrol/xxx:enrol' may enrol others freely, false means nobody may add more enrolments manually
      */
-    public function allow_enrol(stdClass $instance) {
+    public function allow_enrol(stdClass $instance)
+    {
         return true;
     }
     /**
@@ -60,7 +86,8 @@ class enrol_mmbr_plugin extends enrol_plugin {
      * @param stdClass $instance course enrol instance
      * @return bool - true means user with 'enrol/xxx:unenrol' may unenrol others freely, false means nobody may touch user_enrolments
      */
-    public function allow_unenrol(stdClass $instance) {
+    public function allow_unenrol(stdClass $instance)
+    {
         return true;
     }
     /**
@@ -75,7 +102,8 @@ class enrol_mmbr_plugin extends enrol_plugin {
      *
      * @return bool - true means user with 'enrol/xxx:unenrol' may unenrol this user, false means nobody may touch this user enrolment
      */
-    public function allow_unenrol_user(stdClass $instance, stdClass $ue) {
+    public function allow_unenrol_user(stdClass $instance, stdClass $ue)
+    {
         return $this->allow_unenrol($instance);
     }
     /**
@@ -86,7 +114,8 @@ class enrol_mmbr_plugin extends enrol_plugin {
      * @param stdClass $instance course enrol instance
      * @return bool - true means it is possible to change enrol period and status in user_enrolments table
      */
-    public function allow_manage(stdClass $instance) {
+    public function allow_manage(stdClass $instance)
+    {
         return true;
     }
 
@@ -96,7 +125,8 @@ class enrol_mmbr_plugin extends enrol_plugin {
      * @since Moodle 3.1.
      * @return bool.
      */
-    public function use_standard_editing_ui() {
+    public function use_standard_editing_ui()
+    {
         return true;
     }
 
@@ -109,7 +139,8 @@ class enrol_mmbr_plugin extends enrol_plugin {
      * @param context $context.
      * @return void
      */
-    public function edit_instance_form($instance, MoodleQuickForm $mform, $context) {
+    public function edit_instance_form($instance, MoodleQuickForm $mform, $context)
+    {
         // Do nothing by default.
     }
 
@@ -123,11 +154,11 @@ class enrol_mmbr_plugin extends enrol_plugin {
      * @param context $context The context of the instance we are editing.
      * @return array Array of "element_name"=>"error_description" if there are errors, empty otherwise.
      */
-   // public function edit_instance_validation($data, $files, $instance, $context) {
-        // No errors by default.
-     //   debugging('enrol_plugin::edit_instance_validation() is missing. This plugin has no validation!', DEBUG_DEVELOPER);
-       // return array();
-   // }
+    // public function edit_instance_validation($data, $files, $instance, $context) {
+    // No errors by default.
+    //   debugging('enrol_plugin::edit_instance_validation() is missing. This plugin has no validation!', DEBUG_DEVELOPER);
+    // return array();
+    // }
 
     /**
      * Return whether or not, given the current state, it is possible to add a new instance
@@ -136,18 +167,20 @@ class enrol_mmbr_plugin extends enrol_plugin {
      * @param int $courseid.
      * @return bool.
      */
-    public function can_add_instance($courseid) {
+    public function can_add_instance($courseid)
+    {
         return true;
     }
 
-    public function enrol_page_hook(stdClass $instance) {
+    public function enrol_page_hook(stdClass $instance)
+    {
         global $CFG, $OUTPUT, $SESSION, $USER, $DB;
 
         // Guest can't enrol in paid courses
         if (isguestuser()) {
             return null;
         }
-        
+
         if ($DB->record_exists('user_enrolments', array('userid' => $USER->id, 'enrolid' => $instance->id))) {
             return $OUTPUT->notification(get_string('notification', 'enrol_mmrb'), 'notifysuccess');
         }
@@ -157,15 +190,21 @@ class enrol_mmbr_plugin extends enrol_plugin {
             $count = $DB->count_records('user_enrolments', array('enrolid' => $instance->id));
             if ($count >= $instance->customint3) {
                 // Bad luck, no more self enrolments here.
-                return '<div class="alert alert-error">'.get_string('maxenrolledreached_left', 'enrol_mmbr')." (".$count.") ".get_string('maxenrolledreached_right', 'enrol_mmbr').'</div>';
+                return '<div class="alert alert-error">' . get_string('maxenrolledreached_left', 'enrol_mmbr') . " (" . $count . ") " . get_string('maxenrolledreached_right', 'enrol_mmbr') . '</div>';
             }
         }
 
-        require_once("$CFG->dirroot/enrol/mmbr/apply_form.php");
+        /*
+            mmbr_form defines how enrol page looks like
+        */
+        require_once "$CFG->dirroot/enrol/mmbr/mmbr_form.php";
 
         $form = new enrol_mmbr_apply_form(null, $instance);
+       // print_r($form);
+       print_r('This data from form: '.$data = $form->get_data());
 
         if ($data = $form->get_data()) {
+            dd($data);
             // Only process when form submission is for this instance (multi instance support).
             if ($data->instance == $instance->id) {
                 $timestart = 0;

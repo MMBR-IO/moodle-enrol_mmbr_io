@@ -39,7 +39,7 @@ if (!enrol_is_enabled('apply')) {
     redirect($return);
 }
 
-$plugin = enrol_get_plugin('apply');
+$plugin = enrol_get_plugin('mmbr');
 
 if ($instanceid) {
     $instance = $DB->get_record(
