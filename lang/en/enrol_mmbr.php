@@ -25,8 +25,22 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'MMBR Enrolment Plugin';
 $string['mmbr:config'] = '';
+
+$string['pluginname'] = 'MMBR Enrolment Plugin';
+$string['paidcourse'] = 'This is paid course. Press "Pay with Card" to pay for this course';
+$string['paywithcard'] = "Pay With Card";
+
+
+
+
+
+
+
+
+
+
+
 
 $string['enrolname'] = 'Course enrol confirmation';
 $string['pluginname_desc'] = 'With this plug-in users can apply to be enrolled in a course. A teacher or site manager will then have to approve the enrolment before the user gets enroled.';

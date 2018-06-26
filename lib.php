@@ -182,7 +182,7 @@ class enrol_mmbr_plugin extends enrol_plugin
         }
 
         if ($DB->record_exists('user_enrolments', array('userid' => $USER->id, 'enrolid' => $instance->id))) {
-            return $OUTPUT->notification(get_string('notification', 'enrol_mmrb'), 'notifysuccess');
+            return $OUTPUT->notification('You are applied on the course', 'notifysuccess');
         }
 
         if ($instance->customint3 > 0) {
@@ -200,13 +200,12 @@ class enrol_mmbr_plugin extends enrol_plugin
         require_once "$CFG->dirroot/enrol/mmbr/mmbr_form.php";
 
         $form = new enrol_mmbr_apply_form(null, $instance);
-       // print_r($form);
-       print_r('This data from form: '.$data = $form->get_data());
 
         if ($data = $form->get_data()) {
-            dd($data);
             // Only process when form submission is for this instance (multi instance support).
             if ($data->instance == $instance->id) {
+                print_r('Got here');
+                die();
                 $timestart = 0;
                 $timeend = 0;
                 $roleid = $instance->roleid;
@@ -218,12 +217,15 @@ class enrol_mmbr_plugin extends enrol_plugin
                         'userid' => $USER->id,
                         'enrolid' => $instance->id),
                     'id', MUST_EXIST);
+                print_r($userenrolment);
+                die();
                 $applicationinfo = new stdClass();
                 $applicationinfo->userenrolmentid = $userenrolment->id;
                 $applicationinfo->comment = $data->applydescription;
                 $DB->insert_record('enrol_mmbr_applicationinfo', $applicationinfo, false);
 
-                $this->send_application_notification($instance, $USER->id, $data);
+              //  $this->send_application_notification($instance, $USER->id, $data);
+                $this->send_application_notification('Whoops...');
 
                 redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid");
             }
