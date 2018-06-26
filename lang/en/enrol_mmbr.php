@@ -25,7 +25,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['mmbr:config'] = '';
+$string['mmbr:config'] = 'Configure MMBR enrol instances';
+$string['mmbr:manage'] = 'Manage user enrolments';
+$string['mmbr:manageapplications'] = 'Manage MMBR enrolment';
+$string['mmbr:unenrol'] = 'Cancel users from the course';
+$string['mmbr:unenrolself'] = 'Cancel self from the course';
 
 $string['pluginname'] = 'MMBR Enrolment Plugin';
 $string['paidcourse'] = 'This is paid course. Press "Pay with Card" to pay for this course';
@@ -97,12 +101,6 @@ $string['enrolusers'] = 'Enrol users';
 
 $string['status'] = 'Allow Course enrol confirmation';
 $string['confirmenrol'] = 'Manage application';
-
-$string['apply:config'] = 'Configure apply enrol instances';
-$string['apply:manage'] = 'Manage user enrolments';
-$string['apply:manageapplications'] = 'Manage apply enrolment';
-$string['apply:unenrol'] = 'Cancel users from the course';
-$string['apply:unenrolself'] = 'Cancel self from the course';
 
 $string['notification'] = '<b>Enrolment application successfully sent</b>. <br/><br/>You will be informed by email when your enrolment has been confirmed.';
 
