@@ -45,6 +45,9 @@ class enrol_mmbr_apply_form extends moodleform
         global $USER, $DB, $PAGE;
 
         $mform = $this->_form;
+        $instance = $this->_customdata;
+        $this->instance = $instance;
+
         $mform->addElement('html', '<h3 class="pay-label">'. get_string('paidcourse', 'enrol_mmbr') .'</h3>');
         $mform->addElement('html', '<h5 class="pay-label">'. get_string('payenrol', 'enrol_mmbr') .'</h5>');
         $PAGE->requires->js( new moodle_url('https://js.stripe.com/v3/'), true);
@@ -62,6 +65,14 @@ class enrol_mmbr_apply_form extends moodleform
         
         $PAGE->requires->js_call_amd('enrol_mmbr/test', 'setStripe');  
         $PAGE->requires->css('/enrol/mmbr/css/style.css');
+
+        $mform->addElement('hidden', 'id');
+        $mform->setType('id', PARAM_INT);
+        $mform->setDefault('id', $instance->courseid);
+
+        $mform->addElement('hidden', 'instance');
+        $mform->setType('instance', PARAM_INT);
+        $mform->setDefault('instance', $instance->id);
     }
 
     private function verifyMmbrAccount(int $id)

@@ -57,12 +57,21 @@ define(['jquery'], function ($) {
               errorElement.textContent = result.error.message;
             } else {
               // Send the token to your server.
-              //stripeTokenHandler(result.token);
-              
+              stripeTokenHandler(result.token);              
             }
           });
        // });
       });
+      function stripeTokenHandler(token) {
+      if(token) {
+        // Submit the form
+        $( "form" ).submit();
+        console.log('Form Submited');
+      } else {
+        console.log('Something went wrong');
+      }
+        
+      }
     }
   };
 });
