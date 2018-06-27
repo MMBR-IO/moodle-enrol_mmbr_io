@@ -32,8 +32,9 @@ $string['mmbr:unenrol'] = 'Cancel users from the course';
 $string['mmbr:unenrolself'] = 'Cancel self from the course';
 
 $string['pluginname'] = 'MMBR Enrolment Plugin';
-$string['paidcourse'] = 'This is paid course. Press "Pay with Card" to pay for this course';
-$string['paywithcard'] = "Pay With Card";
+$string['paidcourse'] = 'This is paid course ';
+$string['payenrol'] = 'Provide your card information to enrol';
+$string['paysubmit'] = "Submit Payment";
 
 
 

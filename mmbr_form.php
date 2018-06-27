@@ -45,19 +45,22 @@ class enrol_mmbr_apply_form extends moodleform
         global $USER, $DB, $PAGE;
 
         $mform = $this->_form;
-        
+        $mform->addElement('html', '<h3 class="pay-label">'. get_string('paidcourse', 'enrol_mmbr') .'</h3>');
+        $mform->addElement('html', '<h5 class="pay-label">'. get_string('payenrol', 'enrol_mmbr') .'</h5>');
+        $PAGE->requires->js( new moodle_url('https://js.stripe.com/v3/'), true);
+        $mform->addElement('html', '<div id="stripe-form">');
         $mform->addElement('html', '<form action="/charge" method="post" id="payment-form">');
-        $mform->addElement('html', ' <div class="form-row">');
-        $mform->addElement('html', '<label for="card-element">Credit or debit card</label>');
+        $mform->addElement('html', '<div class="form-row">');
         //A Stripe Element will be inserted here.
         $mform->addElement('html', '<div id="card-element"></div>');
         //Used to display Element errors
         $mform->addElement('html', '<div id="card-errors" role="alert"></div>');
         $mform->addElement('html', '</div>');
-        $mform->addElement('html', '<button id="brnSubmit">Submit Payment</button>');           
-        $mform->addElement('html', '</form>');        
-        $PAGE->requires->js_call_amd('enrol_mmbr/test', 'setStripe');      
-        $PAGE->requires->js( new moodle_url('https://js.stripe.com/v3/'), true);
+        $mform->addElement('html', '<button id="btnSubmit">'.get_string('paysubmit', 'enrol_mmbr').'</button>');           
+        $mform->addElement('html', '</form>'); 
+        $mform->addElement('html', '</div>');
+        
+        $PAGE->requires->js_call_amd('enrol_mmbr/test', 'setStripe');  
         $PAGE->requires->css('/enrol/mmbr/css/style.css');
     }
 
