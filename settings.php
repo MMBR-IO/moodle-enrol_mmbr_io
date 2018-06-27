@@ -28,63 +28,18 @@ defined('MOODLE_INTERNAL') || die();
 if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('enrol_mmbr_enrolname', '', get_string('pluginname_desc', 'enrol_mmbr')));
 
-    // Confirm mail settings...
     $settings->add(new admin_setting_heading(
-        'enrol_mmbr_confirmmail',
-        get_string('confirmmail_heading', 'enrol_mmbr'),
-        get_string('confirmmail_desc', 'enrol_mmbr')));
+        'enrol_mmbr_key',
+        get_string('mmbrkey', 'enrol_mmbr'),
+        get_string('mmbrkey', 'enrol_mmbr')));
     $settings->add(new admin_setting_configtext(
-        'enrol_mmbr/confirmmailsubject',
-        get_string('confirmmailsubject', 'enrol_mmbr'),
-        get_string('confirmmailsubject_desc', 'enrol_mmbr'),
+        'enrol_mmbr/mmbrkey',
+        get_string('mmbrkey', 'enrol_mmbr'),
+        get_string('mmbrkey_desc', 'enrol_mmbr'),
         null,
         PARAM_TEXT,
         60));
-    $settings->add(new admin_setting_confightmleditor(
-        'enrol_mmbr/confirmmailcontent',
-        get_string('confirmmailcontent', 'enrol_mmbr'),
-        get_string('confirmmailcontent_desc', 'enrol_mmbr'),
-        null,
-        PARAM_RAW));
-
-    // Wait mail settings.
-    $settings->add(new admin_setting_heading(
-        'enrol_mmbr_waitmail',
-        get_string('waitmail_heading', 'enrol_mmbr'),
-        get_string('waitmail_desc', 'enrol_mmbr')));
-    $settings->add(new admin_setting_configtext(
-        'enrol_mmbr/waitmailsubject',
-        get_string('waitmailsubject', 'enrol_mmbr'),
-        get_string('waitmailsubject_desc', 'enrol_mmbr'),
-        null,
-        PARAM_TEXT,
-        60));
-    $settings->add(new admin_setting_confightmleditor(
-        'enrol_mmbr/waitmailcontent',
-        get_string('waitmailcontent', 'enrol_mmbr'),
-        get_string('waitmailcontent_desc', 'enrol_mmbr'),
-        null,
-        PARAM_RAW));
-
-    // Cancel mail settings...
-    $settings->add(new admin_setting_heading(
-        'enrol_mmbr_cancelmail',
-        get_string('cancelmail_heading', 'enrol_mmbr'),
-        get_string('cancelmail_desc', 'enrol_mmbr')));
-    $settings->add(new admin_setting_configtext(
-        'enrol_mmbr/cancelmailsubject',
-        get_string('cancelmailsubject', 'enrol_mmbr'),
-        get_string('cancelmailsubject_desc', 'enrol_mmbr'),
-        null,
-        PARAM_TEXT,
-        60));
-    $settings->add(new admin_setting_confightmleditor(
-        'enrol_mmbr/cancelmailcontent',
-        get_string('cancelmailcontent', 'enrol_mmbr'),
-        get_string('cancelmailcontent_desc', 'enrol_mmbr'),
-        null,
-        PARAM_RAW));
-
+   
     // Notification settings...
     $settings->add(new admin_setting_heading(
         'enrol_mmbr_notify',
