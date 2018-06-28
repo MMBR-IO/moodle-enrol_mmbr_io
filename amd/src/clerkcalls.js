@@ -1,4 +1,3 @@
-<?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -14,18 +13,30 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Plugin version and other meta-data are defined here.
- *
- * @package     enrol_mmbr
- * @copyright   2018 DmitryN defrakcija123@gmail.com
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+/*
+  This page is used to sync local data with Clerk
+*/
+
+/** 
+ * @package    enrol_mmbr
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Dmitry
  */
 
-defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'enrol_mmbr';
-$plugin->release = '0.1.0';
-$plugin->version = 2018062801; // Version format - YYYYMMDDXX
-$plugin->requires = 2018051700;
-$plugin->maturity = MATURITY_ALPHA;
+define(['jquery','core/ajax'], function ($) {
+    return {
+      webhook: function () {
+        $.ajax({
+            url: "https://webhook.site/31efcf38-45ca-41fe-bcb6-d141b471eaa2",
+            type: "GET",
+           // data: {"value1":"HELLO"},
+            complete: function(){
+            }
+          });
+      },
+      test: function() {
+          alert("Working hopefully!!");
+      }
+    };
+});

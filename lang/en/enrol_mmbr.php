@@ -38,6 +38,8 @@ $string['paidcourse'] = 'This is paid course ';
 $string['payenrol'] = 'Provide your card information to enrol';
 $string['paysubmit'] = "Submit Payment";
 
+$string['userloggedin'] = 'Something has happened';
+
 // Settings
 
 $string['mmbrkey'] = "Enter you MMBR key";

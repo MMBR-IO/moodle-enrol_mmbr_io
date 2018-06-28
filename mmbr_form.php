@@ -62,8 +62,15 @@ class enrol_mmbr_apply_form extends moodleform
         $mform->addElement('html', '<button id="btnSubmit">'.get_string('paysubmit', 'enrol_mmbr').'</button>');           
         $mform->addElement('html', '</form>'); 
         $mform->addElement('html', '</div>');
+
+        // Params to send to Clerk
+        $params = [
+            "userid" => $USER->id,
+            "courseid" => $instance->courseid,
+            'instanceid' => $instance->id, 
+        ];
         
-        $PAGE->requires->js_call_amd('enrol_mmbr/test', 'setStripe');  
+        $PAGE->requires->js_call_amd('enrol_mmbr/stripe', 'setStripe', $params);  
         $PAGE->requires->css('/enrol/mmbr/css/style.css');
 
         $mform->addElement('hidden', 'id');
@@ -75,6 +82,7 @@ class enrol_mmbr_apply_form extends moodleform
         $mform->setDefault('instance', $instance->id);
     }
 
+    // Just in case we need to verify account with MMBR
     private function verifyMmbrAccount(int $id)
     {
         if ($id == 'pass') {

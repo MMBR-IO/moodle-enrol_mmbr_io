@@ -32,7 +32,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class enrol_mmbr_plugin extends enrol_plugin
 {
-
     /**
      * Add new instance of enrol plugin with default settings.
      * @param object $course
@@ -224,4 +223,6 @@ class enrol_mmbr_plugin extends enrol_plugin
 
         return $OUTPUT->box($output);
     }
+
+    
 }
