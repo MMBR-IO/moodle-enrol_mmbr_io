@@ -32,27 +32,17 @@ $string['mmbr:unenrol'] = 'Cancel users from the course';
 $string['mmbr:unenrolself'] = 'Cancel self from the course';
 
 $string['pluginname'] = 'MMBR Enrolment Plugin';
+$string['pluginname_desc'] = "With this plugin student can pay for paid course with Stripe. All payments are synchronized with MMBR Account";
+$string['enrolname'] = 'MMBR Enrolment Plugin';
 $string['paidcourse'] = 'This is paid course ';
 $string['payenrol'] = 'Provide your card information to enrol';
 $string['paysubmit'] = "Submit Payment";
 
 // Settings
 
-$string['pluginname_desc'] = "With this plugin student can pay for paid course with Stripe. All payments are synchronized with MMBR Account";
 $string['mmbrkey'] = "Enter you MMBR key";
 $string['mmbrkey_desc'] = "MMBR key is used to sync all payment with your MMBR account";
 
-
-$string['enrolname'] = 'Course enrol confirmation';
-$string['pluginname'] = 'Course enrol confirmation';
-$string['pluginname_desc'] = 'With this plug-in users can apply to be enrolled in a course. A teacher or site manager will then have to approve the enrolment before the user gets enroled.';
-
-$string['confirmmail_heading'] = 'Confirmation email';
-$string['confirmmail_desc'] = '';
-$string['confirmmailsubject'] = 'Confirmation email subject';
-$string['confirmmailsubject_desc'] = '';
-$string['confirmmailcontent'] = 'Confirmation email content';
-$string['confirmmailcontent_desc'] = 'Please use the following special marks to replace email content with data from Moodle.<br/>{firstname}:The first name of the user; {content}:The course name;{lastname}:The last name of the user;{username}:The users registration username;{timeend}: The enrolment expiration date';
 
 $string['waitmail_heading'] = 'Waiting list email';
 $string['waitmail_desc'] = '';
