@@ -172,8 +172,10 @@ class enrol_mmbr_plugin extends enrol_plugin
     }
 
     public function enrol_page_hook(stdClass $instance)
-    {
+    { 
         global $CFG, $OUTPUT, $SESSION, $USER, $DB;
+        require_once "$CFG->dirroot/enrol/mmbr/test.php";
+
 
         // Guest can't enrol in paid courses
         if (isguestuser()) {

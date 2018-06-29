@@ -8,8 +8,11 @@ require_once $CFG->dirroot . '/user/profile/lib.php';
 class enrol_mmbr_showmee {
 	public static function test_user_log($event) {
         $method = "POST";
-        $url = "https://webhook.site/31efcf38-45ca-41fe-bcb6-d141b471eaa2";
-        $data = "myIPKEy";
+        $url = "https://webhook.site/d879f249-2604-409d-a666-fc268d56d176";
+        $data = "someKindOfAKey";
+        // $data = ['key' => 'someKindOfKey',
+        //         'teacher' => 'teachName',
+        //         'someUpdate' => 'UpdateData'];
         $curl = curl_init();
 
         switch ($method)
@@ -28,15 +31,19 @@ class enrol_mmbr_showmee {
                     $url = sprintf("%s?%s", $url, http_build_query($data));
         }
     
-        // Optional Authentication:
-        // curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        // curl_setopt($curl, CURLOPT_USERPWD, "username:password");
+        //Optional Authentication:
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($curl, CURLOPT_USERPWD, "userDmitry:mypassword");
     
-        // curl_setopt($curl, CURLOPT_URL, $url);
-        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
     
         $result = curl_exec($curl);
     
         curl_close($curl);
+    }
+
+    public static function helloMember($user) {
+        print_r($user);
     }
 }
