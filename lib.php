@@ -119,62 +119,41 @@ class enrol_mmbr_plugin extends enrol_plugin
     }
 
     /**
-     * Use the standard interface for adding/editing the form.
+     * Sets up navigation entries.
      *
-     * @since Moodle 3.1.
-     * @return bool.
-     */
-    public function use_standard_editing_ui()
-    {
-        return true;
-    }
-
-    /**
-     * Adds form elements to add/edit instance form.
-     *
-     * @since Moodle 3.1.
-     * @param object $instance Enrol instance or null if does not exist yet.
-     * @param MoodleQuickForm $mform.
-     * @param context $context.
+     * @param navigation_node $instancesnode
+     * @param stdClass $instance
      * @return void
      */
-    public function edit_instance_form($instance, MoodleQuickForm $mform, $context)
-    {
-        // Do nothing by default.
-    }
-
-    /**
-     * Perform custom validation of the data used to edit the instance.
-     *
-     * @since Moodle 3.1.
-     * @param array $data Array of ("fieldname"=>value) of submitted data.
-     * @param array $files Array of uploaded files "element_name"=>tmp_file_path.
-     * @param object $instance The instance data loaded from the DB.
-     * @param context $context The context of the instance we are editing.
-     * @return array Array of "element_name"=>"error_description" if there are errors, empty otherwise.
-     */
-    // public function edit_instance_validation($data, $files, $instance, $context) {
-    // No errors by default.
-    //   debugging('enrol_plugin::edit_instance_validation() is missing. This plugin has no validation!', DEBUG_DEVELOPER);
-    // return array();
+    // public function add_course_navigation($instancesnode, stdClass $instance) {
+    //     if ($instance->enrol !== 'mmbr') {
+    //          throw new coding_exception('Invalid enrol instance type!');
+    //     }
+    //     $context = context_course::instance($instance->courseid);
+    //     if (has_capability('enrol/mmbr:config', $context)) {
+    //         $managelink = new moodle_url('/enrol/mmbr/edit.php', array('courseid' => $instance->courseid, 'id' => $instance->id));
+    //         $instancesnode->add($this->get_instance_name($instance), $managelink, navigation_node::TYPE_SETTING);
+    //     }
     // }
-
     /**
-     * Return whether or not, given the current state, it is possible to add a new instance
-     * of this enrolment plugin to the course.
-     *
-     * @param int $courseid.
-     * @return bool.
+     * Returns link to page which may be used to add new instance of enrolment plugin in course.
+     * @param int $courseid
+     * @return moodle_url page url
      */
-    public function can_add_instance($courseid)
-    {
-        return true;
-    }
-
+    // public function get_newinstance_link($courseid) {
+    //     $context = context_course::instance($courseid, MUST_EXIST);
+    //     if (!has_capability('moodle/course:enrolconfig', $context) or !has_capability('enrol/mmbr:config', $context)) {
+    //         return null;
+    //     }
+    //     // Multiple instances supported - different cost for different roles.
+    //     return new moodle_url('/enrol/mmbr/edit.php', array('courseid' => $courseid));
+    // }
+    // Detecting when user select a course and check is user is enroled or not. 
+    //If not send him to MMBR Payment form
     public function enrol_page_hook(stdClass $instance)
     { 
         global $CFG, $OUTPUT, $SESSION, $USER, $DB;
-        require_once "$CFG->dirroot/enrol/mmbr/test.php";
+      //  require_once "$CFG->dirroot/enrol/mmbr/test.php";
 
 
         // Guest can't enrol in paid courses
@@ -224,7 +203,5 @@ class enrol_mmbr_plugin extends enrol_plugin
         $output = $form->render();
 
         return $OUTPUT->box($output);
-    }
-
-    
+    }    
 }

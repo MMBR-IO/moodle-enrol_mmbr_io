@@ -43,25 +43,19 @@ class enrol_mmbr_apply_form extends moodleform
 
     public function definition() {
         global $USER, $DB, $PAGE;
-
+        $PAGE->requires->js_call_amd('enrol_mmbr/mmbr', 'call');
         $mform = $this->_form;
         $instance = $this->_customdata;
         $this->instance = $instance;
 
-        $mform->addElement('html', '<h3 class="pay-label">'. get_string('paidcourse', 'enrol_mmbr') .'</h3>');
-        $mform->addElement('html', '<h5 class="pay-label">'. get_string('payenrol', 'enrol_mmbr') .'</h5>');
-        $PAGE->requires->js( new moodle_url('https://js.stripe.com/v3/'), true);
-        $mform->addElement('html', '<div id="stripe-form">');
-        $mform->addElement('html', '<form action="/charge" method="post" id="payment-form">');
-        $mform->addElement('html', '<div class="form-row">');
-        //A Stripe Element will be inserted here.
-        $mform->addElement('html', '<div id="card-element"></div>');
-        //Used to display Element errors
-        $mform->addElement('html', '<div id="card-errors" role="alert"></div>');
-        $mform->addElement('html', '</div>');
-        $mform->addElement('html', '<button id="btnSubmit">'.get_string('paysubmit', 'enrol_mmbr').'</button>');           
-        $mform->addElement('html', '</form>'); 
-        $mform->addElement('html', '</div>');
+        $mform->addElement('html', '<form action="#" method="post" id="payment-form">');
+        $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:3000/setframe?'.
+            'courseid='. $instance->courseid .''.
+            '&userid='. $USER->id .''.
+            '&price=20%20USD"></iframe>');
+    // For future to create loading screen while form loads for slow connections
+    //  $mform->addElement('html', '<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>');
+        $mform->addElement('html', '</form>');
 
         // Params to send to Clerk
         $params = [
@@ -69,9 +63,7 @@ class enrol_mmbr_apply_form extends moodleform
             "courseid" => $instance->courseid,
             'instanceid' => $instance->id, 
         ];
-        
-        $PAGE->requires->js_call_amd('enrol_mmbr/stripe', 'setStripe', $params);  
-        $PAGE->requires->css('/enrol/mmbr/css/style.css');
+        $PAGE->requires->css('/enrol/mmbr/css/form.css');
 
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
