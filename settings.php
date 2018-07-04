@@ -39,35 +39,6 @@ if ($ADMIN->fulltree) {
         null,
         PARAM_TEXT,
         60));
-   
-    // Notification settings...
-    $settings->add(new admin_setting_heading(
-        'enrol_mmbr_notify',
-        get_string('notify_heading', 'enrol_mmbr'),
-        get_string('notify_desc', 'enrol_mmbr')));
-    $settings->add(new admin_setting_users_with_capability(
-        'enrol_mmbr/notifyglobal',
-        get_string('notifyglobal', 'enrol_mmbr'),
-        get_string('notifyglobal_desc', 'enrol_mmbr'),
-        array(),
-        'enrol/mmbr:manageapplications'));
-
-    // Expiry settings.
-    $settings->add(new admin_setting_heading(
-        'enrol_mmbr_expiry',
-        get_string('expiry_heading', 'enrol_mmbr'),
-        get_string('expiry_desc', 'enrol_mmbr')));
-    $options = array(
-        ENROL_EXT_REMOVED_KEEP           => get_string('extremovedkeep', 'enrol'),
-        ENROL_EXT_REMOVED_SUSPEND        => get_string('extremovedsuspend', 'enrol'),
-        ENROL_EXT_REMOVED_SUSPENDNOROLES => get_string('extremovedsuspendnoroles', 'enrol'),
-        ENROL_EXT_REMOVED_UNENROL        => get_string('extremovedunenrol', 'enrol'),
-    );
-    $settings->add(new admin_setting_configselect('enrol_mmbr/expiredaction',
-        get_string('expiredaction', 'enrol_mmbr'),
-        get_string('expiredaction_help', 'enrol_mmbr'),
-        ENROL_EXT_REMOVED_KEEP,
-        $options));
 
     // Enrol instance defaults...
     $settings->add(new admin_setting_heading('enrol_manual_defaults',
@@ -75,11 +46,6 @@ if ($ADMIN->fulltree) {
 
     $settings->add(new admin_setting_configcheckbox('enrol_mmbr/defaultenrol',
         get_string('defaultenrol', 'enrol'), get_string('defaultenrol_desc', 'enrol'), 0));
-
-    $options = array(ENROL_INSTANCE_ENABLED => get_string('yes'),
-                     ENROL_INSTANCE_DISABLED  => get_string('no'));
-    $settings->add(new admin_setting_configselect('enrol_mmbr/status',
-        get_string('status', 'enrol_mmbr'), get_string('status_desc', 'enrol_mmbr'), ENROL_INSTANCE_ENABLED, $options));
 
     $options = array(1 => get_string('yes'),
                      0  => get_string('no'));
