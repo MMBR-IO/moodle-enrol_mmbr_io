@@ -32,15 +32,14 @@ defined('MOODLE_INTERNAL') || die();
  */
 class enrol_mmbr_plugin extends enrol_plugin
 {
+
     /**
-     * Add new instance of enrol plugin with default settings.
-     * @param object $course
-     * @return int id of new instance
+     * We are a good plugin and don't invent our own UI/validation code path.
+     *
+     * @return boolean
      */
-    public function add_default_instance($course)
-    {
-        $fields = $this->get_instance_defaults();
-        return $this->add_instance($course, $fields);
+    public function use_standard_editing_ui() {
+        return false;
     }
 
     /**
@@ -66,17 +65,13 @@ class enrol_mmbr_plugin extends enrol_plugin
         return has_capability('enrol/mmbr:config', $context);
     }
 
-    /**
-     * Does this plugin allow manual enrolments?
-     *
-     * @param stdClass $instance course enrol instance
-     * All plugins allowing this must implement 'enrol/xxx:enrol' capability
-     *
-     * @return bool - true means user with 'enrol/xxx:enrol' may enrol others freely, false means nobody may add more enrolments manually
+   /**
+     * Defines if 'enrol me' link will be shown on course page.
+     * @param stdClass $instance of the plugin
+     * @return bool(true or false)
      */
-    public function allow_enrol(stdClass $instance)
-    {
-        return true;
+    public function show_enrolme_link(stdClass $instance) {
+        return ($instance->status == ENROL_INSTANCE_ENABLED);
     }
     /**
      * Does this plugin allow manual unenrolment of all users?
@@ -115,39 +110,23 @@ class enrol_mmbr_plugin extends enrol_plugin
      */
     public function allow_manage(stdClass $instance)
     {
-        return true;
+        return has_capability('enrol/coursecompleted:manage', context_course::instance($instance->courseid));
     }
 
-    /**
-     * Sets up navigation entries.
-     *
-     * @param navigation_node $instancesnode
-     * @param stdClass $instance
-     * @return void
-     */
-    // public function add_course_navigation($instancesnode, stdClass $instance) {
-    //     if ($instance->enrol !== 'mmbr') {
-    //          throw new coding_exception('Invalid enrol instance type!');
-    //     }
-    //     $context = context_course::instance($instance->courseid);
-    //     if (has_capability('enrol/mmbr:config', $context)) {
-    //         $managelink = new moodle_url('/enrol/mmbr/edit.php', array('courseid' => $instance->courseid, 'id' => $instance->id));
-    //         $instancesnode->add($this->get_instance_name($instance), $managelink, navigation_node::TYPE_SETTING);
-    //     }
-    // }
     /**
      * Returns link to page which may be used to add new instance of enrolment plugin in course.
      * @param int $courseid
      * @return moodle_url page url
      */
-    // public function get_newinstance_link($courseid) {
-    //     $context = context_course::instance($courseid, MUST_EXIST);
-    //     if (!has_capability('moodle/course:enrolconfig', $context) or !has_capability('enrol/mmbr:config', $context)) {
-    //         return null;
-    //     }
-    //     // Multiple instances supported - different cost for different roles.
-    //     return new moodle_url('/enrol/mmbr/edit.php', array('courseid' => $courseid));
-    // }
+    public function get_newinstance_link($courseid) {
+        $context = context_course::instance($courseid, MUST_EXIST);
+        if (!has_capability('moodle/course:enrolconfig', $context) or !has_capability('enrol/mmbr:config', $context)) {
+            return null;
+        }
+        // Multiple instances supported - different cost for different roles.
+        return new moodle_url('/enrol/mmbr/edit.php', array('courseid' => $courseid));
+    }
+    
     // Detecting when user select a course and check is user is enroled or not. 
     //If not send him to MMBR Payment form
     public function enrol_page_hook(stdClass $instance)
@@ -163,15 +142,6 @@ class enrol_mmbr_plugin extends enrol_plugin
 
         if ($DB->record_exists('user_enrolments', array('userid' => $USER->id, 'enrolid' => $instance->id))) {
             return $OUTPUT->notification('You are applied on the course', 'notifysuccess');
-        }
-
-        if ($instance->customint3 > 0) {
-            // Max enrol limit specified.
-            $count = $DB->count_records('user_enrolments', array('enrolid' => $instance->id));
-            if ($count >= $instance->customint3) {
-                // Bad luck, no more self enrolments here.
-                return '<div class="alert alert-error">' . get_string('maxenrolledreached_left', 'enrol_mmbr') . " (" . $count . ") " . get_string('maxenrolledreached_right', 'enrol_mmbr') . '</div>';
-            }
         }
 
         /*
@@ -203,5 +173,5 @@ class enrol_mmbr_plugin extends enrol_plugin
         $output = $form->render();
 
         return $OUTPUT->box($output);
-    }    
+    }   
 }
