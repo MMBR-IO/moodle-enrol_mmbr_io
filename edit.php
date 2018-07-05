@@ -38,29 +38,44 @@ if ($instanceid) {
 $mform = new enrol_mmbr_edit_form(null, array($instance, $plugin, $context));
 if($mform->is_cancelled()) {
     redirect($returnurl);
-} else if ($data = $mform->get_data()) {
-    if ($instance->id){
-        $reset = ($instance->status != $data->status);
+} else if ($data = $mform->get_data()) { // If form is submitted
+    if ($instance->id){ // If id exists, means we updating existing instance
+        $reset = ($instance->status != $data->status); // If they don't match reset enrol caches 
 
-        $instance->status       = $data->status;
-        $instance->name         = $data->name;
-        $instance->cost         = unformat_float($data->cost);
-        $instance->currency     = 'CAD';
-        $instance->roleid       = $data->roleid;
-        $instance->enrolperiod    = $data->enrolperiod;
-        $instance->enrolstartdate = $data->enrolstartdate;
-        $instance->enrolenddate   = $data->enrolenddate;
-        $instance->timemodified   = time();
-        $DB->update_record('enrol', $instance);
+        $instance->name             = $data->name;                      // Instance name
+        $instance->status           = $data->status;                    //Status active/susp
+        $instance->cost             = unformat_float($data->cost);      // One time payment cost
+        $instance->currency         = 'CAD';                            // Default value for currency
+        $instance->roleid           = $data->roleid;                    // Role when enroled
+        $instance->enrolperiod      = $data->enrolperiod;               // Optional: enrol period
+        $instance->enrolstartdate   = $data->enrolstartdate;            // Optional: enrolment start date
+        $instance->enrolenddate     = $data->enrolenddate;              // Optional: enrolment end date
+        $instance->timemodified     = time();                           // By default current time when modified
+        $instance->customint1       = unformat_float($data->customint1);// Price for subscription
+        $instance->customint2       = $data->customint2;                // Payment frequency 
+        $DB->update_record('enrol', $instance); 
 
         if ($reset) {
-            $context->mark_dirty();
+            $context->mark_dirty(); // Reset caches here
         }
 
-    } else {
-        $fields = array('status' => $data->status, 'name' => $data->name, 'cost' => unformat_float($data->cost),
-                        'currency' => "CAD", 'roleid' => $data->roleid, 'enrolperiod' => $data->enrolperiod, 'enrolstartdate' => $data->enrolstartdate, 'enrolenddate' => $data->enrolenddate);
+    } else { // or create a new one
+        $fields = array('status' => $data->status, 
+                        'name' => $data->name, 
+                        'cost' => unformat_float($data->cost),
+                        'currency' => "CAD",  // default is CAD
+                        'roleid' => $data->roleid, 
+                        'enrolperiod' => $data->enrolperiod, 
+                        'enrolstartdate' => $data->enrolstartdate, 
+                        'enrolenddate' => $data->enrolenddate,
+                        'customint1' => unformat_float($data->customint1),
+                        'customint2' => $data->customint2);
+        require('classes/observer.php');
+        $observer = new enrol_mmbr_observer();
+
+        $observer->newEnrolmentInstance($fields);
         $plugin->add_instance($course, $fields);
+        
     }
 
     redirect($returnurl);

@@ -44,7 +44,7 @@ $string['mmbrkey_desc'] = "MMBR key is used to sync all payment with your MMBR a
 $string['setoneprice'] = "Set one time payment amount (CAD)";
 $string['setoneprice_help'] = "One time payment gives permanent access to this course";
 $string['setrecprice'] = "Set subscription payment amount (CAD)";
-$string['setrecprice_help'] = "Subscription option gives access as long payment recurring 4 weeks. You can change frequency below.";
+$string['setrecprice_help'] = "Subscription option. By default users get charged every 4 week. You can change frequency below.";
 $string['setpeymentfreq'] = "Change payment frequency";
 $string['setpeymentfreq_help'] = "This help message for this option";
 
@@ -52,3 +52,17 @@ $string['role'] = "Select role once enroled";
 $string['status'] = "Enrolment status";
 $string['active'] = "Active";
 $string['suspended'] = "Suspended";
+
+// Not sure why I need this, but if they miising -> ERROR!
+$string['applymanage'] = 'Manage enrolment applications';
+$string['show_standard_user_profile'] = 'Show standard user profile fields on enrolment screen';
+$string['show_extra_user_profile'] = 'Show extra user profile fields on enrolment screen';
+$string['defaultperiod'] = 'Default enrolment duration';
+$string['defaultperiod_desc'] = 'Default length of time that the enrolment is valid. If set to zero, the enrolment duration will be unlimited by default.';
+$string['defaultperiod_help'] = 'Default length of time that the enrolment is valid, starting with the moment the user is enrolled. If disabled, the enrolment duration will be unlimited by default.';
+$string['notify_heading'] = 'Notification settings';
+$string['notify_desc'] = 'Define who gets notified about new enrolment applications.';
+$string['notifycoursebased'] = "New enrolment application notification (instance based, eg. course teachers)";
+$string['notifycoursebased_desc'] = "Default for new instances: Notify everyone who have the 'Manage apply enrolment' capability for the corresponding course (eg. teachers and managers)";
+$string['notifyglobal'] = "New enrolment application notification (global, eg. global managers and admins)";
+$string['notifyglobal_desc'] = "Define who gets notified about new enrolment applications for any course.";

@@ -41,6 +41,17 @@ class enrol_mmbr_plugin extends enrol_plugin
     public function use_standard_editing_ui() {
         return false;
     }
+    /**
+     *
+     * All plugins allowing this must implement 'enrol/xxx:manage' capability
+     *
+     * @param stdClass $instance course enrol instance
+     * @return bool - true means it is possible to change enrol period and status in user_enrolments table
+     */
+    public function allow_manage(stdClass $instance)
+    {
+        return has_capability('enrol/mmbr:manage', context_course::instance($instance->courseid));
+    }
 
     /**
      * Is it possible to hide/show enrol instance via standard UI?
@@ -64,6 +75,18 @@ class enrol_mmbr_plugin extends enrol_plugin
         $context = context_course::instance($instance->courseid);
         return has_capability('enrol/mmbr:config', $context);
     }
+    /**
+     * Return whether or not, given the current state, it is possible to edit an instance
+     * of this enrolment plugin in the course. Used by the standard editing UI
+     * to generate a link to the edit instance form if editing is allowed.
+     *
+     * @param stdClass $instance
+     * @return boolean
+     */
+    public function can_edit_instance($instance) {
+        $context = context_course::instance($instance->courseid);
+        return has_capability('enrol/' . $instance->enrol . ':config', $context);
+    }
 
    /**
      * Defines if 'enrol me' link will be shown on course page.
@@ -85,6 +108,52 @@ class enrol_mmbr_plugin extends enrol_plugin
         return true;
     }
     /**
+     * This add 'Edit' icon on admin panel to allow edit existing instance
+     * Has possibility to add more icons for additional functionality 
+     * Create icon and add to $icons array 
+     *
+     * @param stdClass $instance course enrol instance
+     * @return icons - List on icons that will be added to plugin instance
+     */
+    public function get_action_icons(stdClass $instance) {
+        global $OUTPUT;
+
+        if ($instance->enrol !== 'mmbr') {
+            throw new coding_exception('invalid enrol instance!');
+        }
+        $context = context_course::instance($instance->courseid);
+
+        $icons = array();
+
+        if (has_capability('enrol/mmbr:config', $context)) {
+            $editlink = new moodle_url("/enrol/mmbr/edit.php", array('courseid' => $instance->courseid, 'id' => $instance->id));
+            $icons[] = $OUTPUT->action_icon($editlink, new pix_icon(
+                't/edit',
+                get_string('edit'),
+                'core',
+                array('class' => 'iconsmall')));
+        }
+        return $icons;
+    }
+    /**
+     * Sets up navigation entries.
+     *
+     * @param stdClass $instancesnode
+     * @param stdClass $instance
+     * @return void
+     */
+    public function add_course_navigation($instancesnode, stdClass $instance) {
+        if ($instance->enrol !== 'mmbr') {
+             throw new coding_exception('Invalid enrol instance type!');
+        }
+
+        $context = context_course::instance($instance->courseid);
+        if (has_capability('enrol/mmbr:config', $context)) {
+            $managelink = new moodle_url('/enrol/mmbr/edit.php', array('courseid' => $instance->courseid, 'id' => $instance->id));
+            $instancesnode->add($this->get_instance_name($instance), $managelink, navigation_node::TYPE_SETTING);
+        }
+    }
+    /**
      * Does this plugin allow manual unenrolment of a specific user?
      * All plugins allowing this must implement 'enrol/xxx:unenrol' capability
      *
@@ -99,18 +168,6 @@ class enrol_mmbr_plugin extends enrol_plugin
     public function allow_unenrol_user(stdClass $instance, stdClass $ue)
     {
         return $this->allow_unenrol($instance);
-    }
-    /**
-     * Does this plugin allow manual changes in user_enrolments table?
-     *
-     * All plugins allowing this must implement 'enrol/xxx:manage' capability
-     *
-     * @param stdClass $instance course enrol instance
-     * @return bool - true means it is possible to change enrol period and status in user_enrolments table
-     */
-    public function allow_manage(stdClass $instance)
-    {
-        return has_capability('enrol/coursecompleted:manage', context_course::instance($instance->courseid));
     }
 
     /**

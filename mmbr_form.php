@@ -28,7 +28,14 @@ require_once $CFG->dirroot . '/user/profile/lib.php';
 
 class enrol_mmbr_apply_form extends moodleform
 {
-    protected $instance;
+    protected   $instance,  // enrolment instance
+                $moodle,    // Current moodle instance
+                $price,     // One time price
+                $recprice,  // Subscription price
+                $frequency, // Subscription payment frequency
+                $courseid,  // ID on enrolment course
+                $studentid, // ID of a student who wants to enrol
+                $mmbrkey;   // MMBR key to indentify MMBR account
 
     //This might be needed in future
     /**
@@ -45,33 +52,54 @@ class enrol_mmbr_apply_form extends moodleform
         global $USER, $DB, $PAGE;
         $PAGE->requires->js_call_amd('enrol_mmbr/mmbr', 'call');
         $mform = $this->_form;
-        $instance = $this->_customdata;
-        $this->instance = $instance;
 
+        // Gather all needed information
+        $this->moodle = $DB->get_record('enrol_mmbr', array('id'=>1));
+        $this->instance = $this->_customdata;;
+        $this->rec = ($this->instance->customint1 != null) ? true : false;
+        $this->price = $this->instance->cost;
+        $this->studentid = $USER->id;
+        $this->mmbrkey = $this->moodle->mmbr_key;
         $mform->addElement('html', '<form action="#" method="post" id="payment-form">');
-        $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:3000/setframe?'.
-            'courseid='. $instance->courseid .''.
-            '&userid='. $USER->id .''.
-            '&price=20%20USD"></iframe>');
-    // For future to create loading screen while form loads for slow connections
-    //  $mform->addElement('html', '<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>');
+
+        if ($this->rec == true) { // Create form for subscription 
+            $this->recprice = $this->instance->customint1;
+            $this->frequency = $this->instance->customint2;
+            $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:3000/setframe?'.
+                'courseid='. $this->courseid .''.
+                '&studentid='. $this->studentid .''.
+                '&price='. $this->price .''.
+                '&recprice='. $this->recprice .''.
+                '&frequency='. $this->frequency .''.
+                '&mmbrkey='. $this->mmbrkey .'"></iframe>');
+        } else { // Create form just for one time payment
+            $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:3000/setframe?'.
+                'courseid='. $this->courseid .''.
+                '&studentid='. $this->studentid .''.
+                '&price='. $this->price .''.
+                '&mmbrkey='. $this->mmbrkey .'"></iframe>');
+        }
         $mform->addElement('html', '</form>');
+       
+        // For future to create loading screen while form loads for slow connections
+        //  $mform->addElement('html', '<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>');
+       
 
         // Params to send to Clerk
-        $params = [
-            "userid" => $USER->id,
-            "courseid" => $instance->courseid,
-            'instanceid' => $instance->id, 
-        ];
+        // $params = [
+        //     "userid" => $USER->id,
+        //     "courseid" => $instance->courseid,
+        //     'instanceid' => $instance->id, 
+        // ];
         $PAGE->requires->css('/enrol/mmbr/css/form.css');
 
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
-        $mform->setDefault('id', $instance->courseid);
+        $mform->setDefault('id', $this->instance->courseid);
 
         $mform->addElement('hidden', 'instance');
         $mform->setType('instance', PARAM_INT);
-        $mform->setDefault('instance', $instance->id);
+        $mform->setDefault('instance', $this->instance->id);
     }
 
     // Just in case we need to verify account with MMBR

@@ -56,7 +56,7 @@ class enrol_mmbr_edit_form extends moodleform {
         $mform->addElement('text', 'customint1', get_string('setrecprice', 'enrol_mmbr'), array('size' => 4));
         $mform->setType('customint1', PARAM_RAW);
         $mform->setDefault('customint1', format_float($plugin->get_config('customint1'), 2, true));
-        $mform->addHelpButton('customchar1', 'setrecprice', 'enrol_mmbr');
+        $mform->addHelpButton('customint1', 'setrecprice', 'enrol_mmbr');
 
         $mform->addElement('duration', 'customint2', get_string('setpeymentfreq', 'enrol_mmbr'),
         array('optional' => true, 'defaultunit' => 86400));

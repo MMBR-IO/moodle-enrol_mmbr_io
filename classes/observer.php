@@ -32,7 +32,25 @@ class enrol_mmbr_observer {
         // curl_close($curl);
     }
 
-    public static function helloMember($user) {
-       // print_r($user);
+    public static function newEnrolmentInstance($instance) {
+        $method = "POST";
+        $url = "http://localhost:3000/add_new_instance";
+        $data = ['key' => $DB->get_record('enrol_mmbr', array('id'=>1)),
+                'courseid' => $instance->courseid,
+                'price' => $instance->price];
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        
+        //Optional Authentication:
+        // curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        // curl_setopt($curl, CURLOPT_USERPWD, "userDmitry:mypassword");
+    
+        // curl_setopt($curl, CURLOPT_URL, $url);
+        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    
+        $result = curl_exec($curl);
+
+        curl_close($curl);
     }
 }
