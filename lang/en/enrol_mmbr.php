@@ -52,6 +52,7 @@ $string['role'] = "Select role once enroled";
 $string['status'] = "Enrolment status";
 $string['active'] = "Active";
 $string['suspended'] = "Suspended";
+$string['status_help'] = 'Active - user gets access to course once paid, Suspended meeans enrol needs to be activated by Teacher';
 
 // Not sure why I need this, but if they miising -> ERROR!
 $string['applymanage'] = 'Manage enrolment applications';

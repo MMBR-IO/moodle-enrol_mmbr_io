@@ -196,10 +196,9 @@ class enrol_mmbr_plugin extends enrol_plugin
         if (isguestuser()) {
             return null;
         }
-
-        if ($DB->record_exists('user_enrolments', array('userid' => $USER->id, 'enrolid' => $instance->id))) {
-            return $OUTPUT->notification('You are applied on the course', 'notifysuccess');
-        }
+        // if ($DB->record_exists('user_enrolments', array('userid' => $USER->id, 'enrolid' => $instance->id))) {
+        //     return $OUTPUT->notification('You are applied on the course', 'notifysuccess');
+        // }
 
         /*
             mmbr_form defines how enrol page looks like
@@ -212,7 +211,7 @@ class enrol_mmbr_plugin extends enrol_plugin
             //Only process when form submission is for this instance (multi instance support).
             if ($data->instance == $instance->id) {
                 $timestart = 0;
-                $timeend = 0;
+                $timeend = $data->timeend;
                 $roleid = $instance->roleid;
 
                 $this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend, ENROL_USER_ACTIVE);

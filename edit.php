@@ -71,11 +71,11 @@ if($mform->is_cancelled()) {
                         'customint1' => unformat_float($data->customint1),
                         'customint2' => $data->customint2);
         require('classes/observer.php');
-        $observer = new enrol_mmbr_observer();
-
-        $observer->newEnrolmentInstance($fields);
         $plugin->add_instance($course, $fields);
-        
+
+         // Nofify MMBR about that new instance is created
+         $observer = new enrol_mmbr_observer();
+         $observer->newEnrolmentInstance($fields, $course);
     }
 
     redirect($returnurl);

@@ -2,55 +2,94 @@
 
 defined('MOODLE_INTERNAL') || die();
 require_once $CFG->dirroot . '/user/profile/lib.php';
-
+require_once $CFG->dirroot . '/lib/filelib.php';
 
 // in classes/observer.php
 class enrol_mmbr_observer {
+
+    /**
+     * USER LOGGEDIN 
+     * Event is triggered when User logs in Moodle
+     * If this user has enrolments with MMBR plugin 
+     *  - check if all enrolments is up to date
+     *  - update with MMBR in case something missing
+     */
 	public static function check_logged_user($event) {
-        print_r("Event fired!");
-        // $method = "POST";
-        // $url = "https://webhook.site/d879f249-2604-409d-a666-fc268d56d176";
-        // $data = "someKindOfAKey";
-        // // $data = ['key' => 'someKindOfKey',
-        // //         'teacher' => 'teachName',
-        // //         'someUpdate' => 'UpdateData'];
-        // $curl = curl_init();
-        // curl_setopt($curl, CURLOPT_POST, 1);
-        // if ($data)
-        //     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        // }
-    
-        // //Optional Authentication:
-        // curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        // curl_setopt($curl, CURLOPT_USERPWD, "userDmitry:mypassword");
-    
-        // curl_setopt($curl, CURLOPT_URL, $url);
-        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    
-        // $result = curl_exec($curl);
-    
-        // curl_close($curl);
+        // var_dump($event);
+        // die();
+        global $DB;
+        // All data about this event
+        $eventdata = $event->get_data();
+        // Get from event user id
+        $userid = $eventdata['userid'];
+        // Check is this user is enroled with mmbr plugin
+        $enrol = "enrol";
+        $enrolments = $DB->get_records($enrol, array('enrol' => 'mmbr'));
+        // Check is this user has enrolment with MMBR plugin
+        // False -> do nothing || True -> Check if all his enrolment is up to date
+        foreach ($enrolments as &$value) {
+            $enrolid = $value->id;
+            $records = $DB->get_records("user_enrolments", array('enrolid' => $enrolid, 'userid'=> $userid)); // Get all user enrolments
+            if ($records != 0){ // If user has enrolments
+                foreach ($records as &$val) {
+                    if ($val->timeend != 0 && $val->timeend < time()){ // If enrolment exist and expired 
+                         /**
+                          * 
+                          * Check with MMBR if payment been made 
+                          *
+                          * Curl call will be made here and if true is return enrolment will be expended
+                          *
+                          */
+
+                        // Update enrolment End time 
+                         
+                    }
+                }
+            }
+        }
+        die();
+
+        $data = ['key' => self::getMemberKey(),
+                'msg' => "This is our member",
+                ];
+        $url = "https://webhook.site/d879f249-2604-409d-a666-fc268d56d176";
+        $mcurl = new curl();
+        $mcurl->post($url, format_postdata_for_curlcall($data), '');
+        $response = $mcurl->getResponse();
     }
 
-    public static function newEnrolmentInstance($instance) {
-        $method = "POST";
-        $url = "http://localhost:3000/add_new_instance";
-        $data = ['key' => $DB->get_record('enrol_mmbr', array('id'=>1)),
-                'courseid' => $instance->courseid,
-                'price' => $instance->price];
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    private static function checkEnrolmentStatus() {
         
-        //Optional Authentication:
-        // curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        // curl_setopt($curl, CURLOPT_USERPWD, "userDmitry:mypassword");
-    
-        // curl_setopt($curl, CURLOPT_URL, $url);
-        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    
-        $result = curl_exec($curl);
+        return false;
+    }
 
-        curl_close($curl);
+    /**
+     * NEW ENROLMENT INSTANCE OF MMBR PLUGIN CREATED
+     * When Moodle admin adds MMBR Plugin as enrolment option 
+     *  - notify MMBR server about new instance
+     */
+    public static function newEnrolmentInstance($instance, $course) {
+        global $DB;
+        $data = ['key' => getMemberKey(),
+                'courseid' => $course->id,
+                'price' => $instance['cost'],
+        ];
+        $url = "https://webhook.site/d879f249-2604-409d-a666-fc268d56d176";
+        $mcurl = new curl();
+        $mcurl->post($url, format_postdata_for_curlcall($data), '');
+        $response = $mcurl->getResponse();
+        // var_dump($response);
+        // die();
+    }
+
+    private static function getMemberKey() {
+        global $DB;
+        $keyrecord = $DB->get_record('enrol_mmbr', array('id'=>1));
+        return $keyrecord->mmbr_key;
+    }
+
+    public static function course_viewed($event) {
+        var_dump($event);
+        die();
     }
 }

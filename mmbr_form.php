@@ -52,19 +52,22 @@ class enrol_mmbr_apply_form extends moodleform
         global $USER, $DB, $PAGE;
         $PAGE->requires->js_call_amd('enrol_mmbr/mmbr', 'call');
         $mform = $this->_form;
+        $endtime = 0;
 
         // Gather all needed information
         $this->moodle = $DB->get_record('enrol_mmbr', array('id'=>1));
-        $this->instance = $this->_customdata;;
-        $this->rec = ($this->instance->customint1 != null) ? true : false;
+        $this->instance = $this->_customdata;
         $this->price = $this->instance->cost;
         $this->studentid = $USER->id;
         $this->mmbrkey = $this->moodle->mmbr_key;
         $mform->addElement('html', '<form action="#" method="post" id="payment-form">');
 
-        if ($this->rec == true) { // Create form for subscription 
+         // Create form for subscription 
+        if ($this->instance->customint1 != "NULL" || $this->instance->customint1 != 0) {
+            var_dump("This is sub section");
             $this->recprice = $this->instance->customint1;
             $this->frequency = $this->instance->customint2;
+            $endtime = time() + $this->frequency;
             $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:3000/setframe?'.
                 'courseid='. $this->courseid .''.
                 '&studentid='. $this->studentid .''.
@@ -73,6 +76,7 @@ class enrol_mmbr_apply_form extends moodleform
                 '&frequency='. $this->frequency .''.
                 '&mmbrkey='. $this->mmbrkey .'"></iframe>');
         } else { // Create form just for one time payment
+            var_dump("This is one time payment section");
             $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:3000/setframe?'.
                 'courseid='. $this->courseid .''.
                 '&studentid='. $this->studentid .''.
@@ -92,6 +96,10 @@ class enrol_mmbr_apply_form extends moodleform
         //     'instanceid' => $instance->id, 
         // ];
         $PAGE->requires->css('/enrol/mmbr/css/form.css');
+
+        $mform->addElement('hidden', 'timeend');
+        $mform->setType('timeend', PARAM_INT);
+        $mform->setDefault('timeend', $endtime);
 
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
