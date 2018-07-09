@@ -46,7 +46,7 @@ class enrol_mmbr_edit_form extends moodleform {
                          ENROL_INSTANCE_DISABLED => get_string('suspended', 'enrol_mmbr'));
         $mform->addElement('select', 'status', get_string('status', 'enrol_mmbr'), $options);
         $mform->setDefault('status', $plugin->get_config('status'));
-        $mform->addHelpButton('status', 'status_help', 'enrol_mmbr');
+        $mform->addHelpButton('status', 'status', 'enrol_mmbr');
 
 
         $mform->addElement('text', 'cost', get_string('setoneprice', 'enrol_mmbr'), array('size' => 6));
@@ -61,7 +61,7 @@ class enrol_mmbr_edit_form extends moodleform {
         $mform->addHelpButton('customint1', 'setrecprice', 'enrol_mmbr');
 
         $mform->addElement('duration', 'customint2', get_string('setpeymentfreq', 'enrol_mmbr'),
-        array('optional' => true, 'defaultunit' => 86400));
+        array('optional' => true));
         $mform->setDefault('customint2', "Every 4 weeks");
         $mform->addHelpButton('customint2', 'setpeymentfreq', 'enrol_mmbr');
 

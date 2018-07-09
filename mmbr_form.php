@@ -63,9 +63,15 @@ class enrol_mmbr_apply_form extends moodleform
         $mform->addElement('html', '<form action="#" method="post" id="payment-form">');
 
          // Create form for subscription 
-        if ($this->instance->customint1 != "NULL" || $this->instance->customint1 != 0) {
-            var_dump("This is sub section");
+        if (! is_null($this->instance->customint1) &&
+                      $this->instance->customint1 > 0) {
             $this->recprice = $this->instance->customint1;
+            $radioarray=array();
+            $radioarray[] = $mform->createElement('radio', 'enrolmentoptions', '', get_string('fullaccess', "enrol_mmbr") . ' ($'.$this->price.')', "onetime", ['class' => 'myclass']);
+            $mform->setDefault('enrolmentoptions', 'onetime');
+            $radioarray[] = $mform->createElement('radio', 'enrolmentoptions', '', get_string('subscription', "enrol_mmbr") . ' ($'.$this->recprice.')', 'subscription',  ['class' => 'myclass']);
+            $mform->addGroup($radioarray, 'radioar', '', array(''), false);
+           
             $this->frequency = $this->instance->customint2;
             $endtime = time() + $this->frequency;
             $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:3000/setframe?'.
@@ -76,7 +82,6 @@ class enrol_mmbr_apply_form extends moodleform
                 '&frequency='. $this->frequency .''.
                 '&mmbrkey='. $this->mmbrkey .'"></iframe>');
         } else { // Create form just for one time payment
-            var_dump("This is one time payment section");
             $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:3000/setframe?'.
                 'courseid='. $this->courseid .''.
                 '&studentid='. $this->studentid .''.
@@ -108,15 +113,6 @@ class enrol_mmbr_apply_form extends moodleform
         $mform->addElement('hidden', 'instance');
         $mform->setType('instance', PARAM_INT);
         $mform->setDefault('instance', $this->instance->id);
-    }
-
-    // Just in case we need to verify account with MMBR
-    private function verifyMmbrAccount(int $id)
-    {
-        if ($id == 'pass') {
-            return true;
-        }
-        return false;
-    }    
+    }  
 }
 

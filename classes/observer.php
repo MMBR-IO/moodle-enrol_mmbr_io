@@ -3,10 +3,10 @@
 defined('MOODLE_INTERNAL') || die();
 require_once $CFG->dirroot . '/user/profile/lib.php';
 require_once $CFG->dirroot . '/lib/filelib.php';
+require_once $CFG->dirroot . '/enrol/mmbr/lib.php';
 
 // in classes/observer.php
 class enrol_mmbr_observer {
-
     /**
      * USER LOGGEDIN 
      * Event is triggered when User logs in Moodle
@@ -28,27 +28,35 @@ class enrol_mmbr_observer {
         // Check is this user has enrolment with MMBR plugin
         // False -> do nothing || True -> Check if all his enrolment is up to date
         foreach ($enrolments as &$value) {
-            $enrolid = $value->id;
-            $records = $DB->get_records("user_enrolments", array('enrolid' => $enrolid, 'userid'=> $userid)); // Get all user enrolments
-            if ($records != 0){ // If user has enrolments
-                foreach ($records as &$val) {
-                    if ($val->timeend != 0 && $val->timeend < time()){ // If enrolment exist and expired 
-                         /**
-                          * 
-                          * Check with MMBR if payment been made 
-                          *
-                          * Curl call will be made here and if true is return enrolment will be expended
-                          *
-                          */
+            var_dump(gettype($value->customint1));
+            // $enrolid = $value->id;
+            // $records = $DB->get_records("user_enrolments", array('enrolid' => $enrolid, 'userid'=> $userid)); // Get all user enrolments
+            // if ($records != 0){ // If user has enrolments
+            //     foreach ($records as &$val) {
+            //         $temp = true;
+            //         $mmbrenrol = new enrol_mmbr_plugin();
+            //         if ($val->timeend > 0 && $val->timeend < time()){ // If enrolment exist and expired 
+            //              /**
+            //               * 
+            //               * Check with MMBR if payment been made 
+            //               *
+            //               * Curl call will be made here and if true is return enrolment will be expended
+            //               *
+            //               */
 
-                        // Update enrolment End time 
+            //             // Update enrolment expiry date
+            //             if($temp) { // If answer from MMBR is true
+            //                 $newtimeend = time() + $value->customint2; // Current time + payment frequency from Enrolment Instance 
+            //                 $mmbrenrol->update_user_enrol($value, $userid, false,null, $newtimeend);
+            //             } else {
+            //                 $mmbrenrol->update_user_enrol($value, $userid, true,null, null);
+            //             }
                          
-                    }
-                }
-            }
+            //         }
+            //     }
+            // }
         }
-        die();
-
+die();
         $data = ['key' => self::getMemberKey(),
                 'msg' => "This is our member",
                 ];
@@ -70,7 +78,7 @@ class enrol_mmbr_observer {
      */
     public static function newEnrolmentInstance($instance, $course) {
         global $DB;
-        $data = ['key' => getMemberKey(),
+        $data = ['key' => self::getMemberKey(),
                 'courseid' => $course->id,
                 'price' => $instance['cost'],
         ];

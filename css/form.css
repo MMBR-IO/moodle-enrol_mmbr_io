@@ -85,4 +85,20 @@
       opacity: 0;
     }
   }
+
+  /* CSS for radio selection */
+  .myclass {
+    display: block;
+    border:  1px lightgrey solid;
+    border-radius: .5em;
+    padding: .5em;
+    background-color:#fafafa;
+    width: 500px;
+    margin: 1em;
+ 
+  }
+ 
+  .myclass input:checked {
+    background-color: green;
+  }
   

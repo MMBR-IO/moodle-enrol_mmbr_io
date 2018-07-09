@@ -15,6 +15,7 @@ TODO:
 3) Double check plugin uninstall flow
 4) As of July all Moodle plugin must gave Privacy API
 Implementing the Privacy API in your Moodle plugin - GDPR (https://www.youtube.com/watch?v=jcVKzq2qimQ) - Video Tutorial
-5)
+5) Form input validation
+6) Fix .IO
 
 

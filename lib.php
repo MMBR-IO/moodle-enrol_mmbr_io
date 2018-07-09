@@ -32,6 +32,15 @@ defined('MOODLE_INTERNAL') || die();
  */
 class enrol_mmbr_plugin extends enrol_plugin
 {
+     /**
+     * Returns name of this enrol plugin
+     * @return string
+     */
+    public function get_name() {
+        // second word in class is always enrol name, sorry, no fancy plugin names with _
+        $words = explode('_', get_class($this));
+        return $words[1];
+    }
 
     /**
      * We are a good plugin and don't invent our own UI/validation code path.
@@ -186,11 +195,10 @@ class enrol_mmbr_plugin extends enrol_plugin
     
     // Detecting when user select a course and check is user is enroled or not. 
     //If not send him to MMBR Payment form
-    public function enrol_page_hook(stdClass $instance)
-    { 
+    public function enrol_page_hook(stdClass $instance) { 
         global $CFG, $OUTPUT, $SESSION, $USER, $DB;
-      //  require_once "$CFG->dirroot/enrol/mmbr/test.php";
-
+        // var_dump($instance);
+        // die();
 
         // Guest can't enrol in paid courses
         if (isguestuser()) {
@@ -211,9 +219,15 @@ class enrol_mmbr_plugin extends enrol_plugin
             //Only process when form submission is for this instance (multi instance support).
             if ($data->instance == $instance->id) {
                 $timestart = 0;
-                $timeend = $data->timeend;
+                $timeend = 0;
                 $roleid = $instance->roleid;
-
+                if ($data->enrolmentoptions == "subscription") { // User selected subscription option
+                    $timeend = $data->timeend;
+                } else if ($data->enrolmentoptions == "onetime") { // User selected one time payment
+                    $timeend = 0;
+                } else { // Something when wrong
+                    throw new coding_exception('Invalid payment option selection...');
+                }
                 $this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend, ENROL_USER_ACTIVE);
                 $userenrolment = $DB->get_record(
                     'user_enrolments',
@@ -221,8 +235,8 @@ class enrol_mmbr_plugin extends enrol_plugin
                         'userid' => $USER->id,
                         'enrolid' => $instance->id),
                     'id', MUST_EXIST);
-
-                redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid");
+                $coursepage = new moodle_url('/course/view.php', array('id'=> $instance->courseid));
+                redirect($coursepage);
             }
         }
 
@@ -230,4 +244,64 @@ class enrol_mmbr_plugin extends enrol_plugin
 
         return $OUTPUT->box($output);
     }   
+
+    /**
+     * Store user_enrolments changes and trigger event.
+     * Get used for subscription, if payment occures extend 'timeend' if no suspend enrolment; 
+     *
+     * @param stdClass $instance
+     * @param int $userid
+     * @param int $status
+     * @param int $timestart
+     * @param int $timeend
+     * @return void
+     */
+    public function update_user_enrol(stdClass $instance, $userid, $status = NULL, $timestart = NULL, $timeend = NULL) {
+        global $DB, $USER, $CFG;
+        $name = $this->get_name();
+        if ($instance->enrol !== $name) {
+            throw new coding_exception('invalid enrol instance!');
+        }
+        if (!$ue = $DB->get_record('user_enrolments', array('enrolid'=>$instance->id, 'userid'=>$userid))) {
+            // weird, user not enrolled
+            return;
+        }
+        $modified = false;
+        if (isset($status) and $ue->status != $status) {
+            $ue->status = $status;
+            $modified = true;
+        }
+        if (isset($timestart) and $ue->timestart != $timestart) {
+            $ue->timestart = $timestart;
+            $modified = true;
+        }
+        if (isset($timeend) and $ue->timeend != $timeend) {
+            $ue->timeend = $timeend;
+            $modified = true;
+        }
+        if (!$modified) {
+            // no change
+            return;
+        }
+        $ue->modifierid = $USER->id;
+        $ue->timemodified = time();
+        $DB->update_record('user_enrolments', $ue);
+        context_course::instance($instance->courseid)->mark_dirty(); // reset enrol caches
+        // Invalidate core_access cache for get_suspended_userids.
+        cache_helper::invalidate_by_definition('core', 'suspended_userids', array(), array($instance->courseid));
+        // Trigger event.
+        $event = \core\event\user_enrolment_updated::create(
+                array(
+                    'objectid' => $ue->id,
+                    'courseid' => $instance->courseid,
+                    'context' => context_course::instance($instance->courseid),
+                    'relateduserid' => $ue->userid,
+                    'other' => array('enrol' => $name)
+                    )
+                );
+        $event->trigger();
+        require_once($CFG->libdir . '/coursecatlib.php');
+        coursecat::user_enrolment_changed($instance->courseid, $ue->userid,
+                $ue->status, $ue->timestart, $ue->timeend);
+    }
 }

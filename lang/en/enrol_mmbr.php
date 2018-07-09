@@ -44,7 +44,7 @@ $string['mmbrkey_desc'] = "MMBR key is used to sync all payment with your MMBR a
 $string['setoneprice'] = "Set one time payment amount (CAD)";
 $string['setoneprice_help'] = "One time payment gives permanent access to this course";
 $string['setrecprice'] = "Set subscription payment amount (CAD)";
-$string['setrecprice_help'] = "Subscription option. By default users get charged every 4 week. You can change frequency below.";
+$string['setrecprice_help'] = "Subscription option. By default users get charged every 4 week. You can change frequency below. Subscription won't be available if you leave this blank.";
 $string['setpeymentfreq'] = "Change payment frequency";
 $string['setpeymentfreq_help'] = "This help message for this option";
 
@@ -53,6 +53,8 @@ $string['status'] = "Enrolment status";
 $string['active'] = "Active";
 $string['suspended'] = "Suspended";
 $string['status_help'] = 'Active - user gets access to course once paid, Suspended meeans enrol needs to be activated by Teacher';
+$string['fullaccess'] = 'Get Full Access';
+$string['subscription'] = 'Subscription';
 
 // Not sure why I need this, but if they miising -> ERROR!
 $string['applymanage'] = 'Manage enrolment applications';
