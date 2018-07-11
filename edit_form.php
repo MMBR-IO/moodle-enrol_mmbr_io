@@ -36,10 +36,9 @@ class enrol_mmbr_edit_form extends moodleform {
         $mform = $this->_form;
 
         list($instance, $plugin, $context) = $this->_customdata;
-
-        $mform->addElement('header', 'header', get_string('pluginname', 'enrol_mmbr'));
-
-        $mform->addElement('text', 'name', get_string('custominstancename', 'enrol'));
+        
+        $options = $plugin->get_enrolment_options();
+        $mform->addElement('select', 'name', get_string('forumtype', 'forum'), $options, "");
         $mform->setType('name', PARAM_TEXT);
 
         $options = array(ENROL_INSTANCE_ENABLED  => get_string('active', 'enrol_mmbr'),
@@ -49,21 +48,14 @@ class enrol_mmbr_edit_form extends moodleform {
         $mform->addHelpButton('status', 'status', 'enrol_mmbr');
 
 
-        $mform->addElement('text', 'cost', get_string('setoneprice', 'enrol_mmbr'), array('size' => 6));
+        $mform->addElement('text', 'cost', get_string('cost', 'enrol_mmbr'), array('size' => 6));
         $mform->setType('cost', PARAM_RAW); // Use unformat_float to get real value.
         $mform->setDefault('cost', format_float($plugin->get_config('cost'), 2, true));
-        $mform->addHelpButton('cost', 'setoneprice', 'enrol_mmbr');
+        $mform->addHelpButton('cost', 'cost', 'enrol_mmbr');
 
-        // Price for subscription
-        $mform->addElement('text', 'customint1', get_string('setrecprice', 'enrol_mmbr'), array('size' => 6));
-        $mform->setType('customint1', PARAM_RAW);
-        $mform->setDefault('customint1', format_float($plugin->get_config('customint1'), 2, true));
-        $mform->addHelpButton('customint1', 'setrecprice', 'enrol_mmbr');
-
-        $mform->addElement('duration', 'customint2', get_string('setpeymentfreq', 'enrol_mmbr'),
-        array('optional' => true));
-        $mform->setDefault('customint2', "Every 4 weeks");
-        $mform->addHelpButton('customint2', 'setpeymentfreq', 'enrol_mmbr');
+        $currencies = $plugin->get_currencies();
+        $mform->addElement('select', 'currency', get_string('currency', 'enrol_mmbr'), $currencies);
+        $mform->setDefault('currency', $plugin->get_config('currency'));
 
         if ($instance->id) {
             $roles = get_default_enrol_roles($context, $instance->roleid);
@@ -73,20 +65,15 @@ class enrol_mmbr_edit_form extends moodleform {
         $mform->addElement('select', 'roleid', get_string('role', 'enrol_mmbr'), $roles);
         $mform->setDefault('roleid', $plugin->get_config('roleid'));
 
-        // $mform->addElement('duration', 'enrolperiod', get_string('enrolperiod', 'enrol_paypal'),
-        // array('optional' => true, 'defaultunit' => 86400));
-        // $mform->setDefault('enrolperiod', $plugin->get_config('enrolperiod'));
-        // $mform->addHelpButton('enrolperiod', 'enrolperiod', 'enrol_paypal');
+        // $mform->addElement('date_time_selector', 'enrolstartdate', get_string('enrolstartdate', 'enrol_paypal'),
+        // array('optional' => true));
+        // $mform->setDefault('enrolstartdate', 0);
+        // $mform->addHelpButton('enrolstartdate', 'enrolstartdate', 'enrol_paypal');
 
-        $mform->addElement('date_time_selector', 'enrolstartdate', get_string('enrolstartdate', 'enrol_paypal'),
-        array('optional' => true));
-        $mform->setDefault('enrolstartdate', 0);
-        $mform->addHelpButton('enrolstartdate', 'enrolstartdate', 'enrol_paypal');
-
-        $mform->addElement('date_time_selector', 'enrolenddate', get_string('enrolenddate', 'enrol_paypal'),
-        array('optional' => true));
-        $mform->setDefault('enrolenddate', 0);
-        $mform->addHelpButton('enrolenddate', 'enrolenddate', 'enrol_paypal');
+        // $mform->addElement('date_time_selector', 'enrolenddate', get_string('enrolenddate', 'enrol_paypal'),
+        // array('optional' => true));
+        // $mform->setDefault('enrolenddate', 0);
+        // $mform->addHelpButton('enrolenddate', 'enrolenddate', 'enrol_paypal');
 
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);

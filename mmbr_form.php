@@ -28,91 +28,31 @@ require_once $CFG->dirroot . '/user/profile/lib.php';
 
 class enrol_mmbr_apply_form extends moodleform
 {
-    protected   $instance,  // enrolment instance
-                $moodle,    // Current moodle instance
-                $price,     // One time price
-                $recprice,  // Subscription price
-                $frequency, // Subscription payment frequency
-                $courseid,  // ID on enrolment course
-                $studentid, // ID of a student who wants to enrol
-                $mmbrkey;   // MMBR key to indentify MMBR account
-
-    //This might be needed in future
-    /**
-     * Overriding this function to get unique form id for multiple apply enrolments
-     *
-     * @return string form identifier
-     */
-    // protected function get_form_identifier() {
-    //     $formid = $this->_customdata->id.'_'.get_class($this);
-    //     return $formid;
-    // }
+    protected   $instances, $courseid;
 
     public function definition() {
         global $USER, $DB, $PAGE;
-        $PAGE->requires->js_call_amd('enrol_mmbr/mmbr', 'call');
         $mform = $this->_form;
-        $endtime = 0;
+        // Retrieve array with all instances
+        $this->instances = $this->_customdata;
 
-        // Gather all needed information
-        $this->moodle = $DB->get_record('enrol_mmbr', array('id'=>1));
-        $this->instance = $this->_customdata;
-        $this->price = $this->instance->cost;
-        $this->studentid = $USER->id;
-        $this->mmbrkey = $this->moodle->mmbr_key;
-        $mform->addElement('html', '<form action="#" method="post" id="payment-form">');
+        $fid = key($this->instances);
 
-         // Create form for subscription 
-        if (! is_null($this->instance->customint1) &&
-                      $this->instance->customint1 > 0) {
-            $this->recprice = $this->instance->customint1;
-            $radioarray=array();
-            $radioarray[] = $mform->createElement('radio', 'enrolmentoptions', '', get_string('fullaccess', "enrol_mmbr") . ' ($'.$this->price.')', "onetime", ['class' => 'myclass']);
-            $mform->setDefault('enrolmentoptions', 'onetime');
-            $radioarray[] = $mform->createElement('radio', 'enrolmentoptions', '', get_string('subscription', "enrol_mmbr") . ' ($'.$this->recprice.')', 'subscription',  ['class' => 'myclass']);
-            $mform->addGroup($radioarray, 'radioar', '', array(''), false);
-           
-            $this->frequency = $this->instance->customint2;
-            $endtime = time() + $this->frequency;
-            $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:3000/setframe?'.
-                'courseid='. $this->courseid .''.
-                '&studentid='. $this->studentid .''.
-                '&price='. $this->price .''.
-                '&recprice='. $this->recprice .''.
-                '&frequency='. $this->frequency .''.
-                '&mmbrkey='. $this->mmbrkey .'"></iframe>');
-        } else { // Create form just for one time payment
-            $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:3000/setframe?'.
-                'courseid='. $this->courseid .''.
-                '&studentid='. $this->studentid .''.
-                '&price='. $this->price .''.
-                '&mmbrkey='. $this->mmbrkey .'"></iframe>');
+        $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolheading', 'enrol_mmbr').'</h3>');
+        foreach ($this->instances as $instance) {
+            $mform->addElement('html', '<div class="enrolment">');
+            $mform->addElement('radio', 'enrolmentinstance', '', $instance->name . ' ($'.$instance->cost.')', $instance->id, '');
+            $mform->setDefault('enrolmentinstance', $fid);
+            $mform->addElement('html', '</div>');
+            $this->courseid = $instance->courseid;
         }
-        $mform->addElement('html', '</form>');
-       
-        // For future to create loading screen while form loads for slow connections
-        //  $mform->addElement('html', '<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>');
-       
 
-        // Params to send to Clerk
-        // $params = [
-        //     "userid" => $USER->id,
-        //     "courseid" => $instance->courseid,
-        //     'instanceid' => $instance->id, 
-        // ];
         $PAGE->requires->css('/enrol/mmbr/css/form.css');
+        $this->add_action_buttons($cancel = true, $submitlabel='Proceed to checkout');
 
-        $mform->addElement('hidden', 'timeend');
-        $mform->setType('timeend', PARAM_INT);
-        $mform->setDefault('timeend', $endtime);
-
-        $mform->addElement('hidden', 'id');
-        $mform->setType('id', PARAM_INT);
-        $mform->setDefault('id', $this->instance->courseid);
-
-        $mform->addElement('hidden', 'instance');
-        $mform->setType('instance', PARAM_INT);
-        $mform->setDefault('instance', $this->instance->id);
+        $mform->addElement('hidden', 'courseid');
+        $mform->setType('courseid', PARAM_INT);
+        $mform->setDefault('courseid', $this->courseid);
     }  
 }
 

@@ -35,24 +35,29 @@ $string['pluginname'] = 'MMBR Enrolment Plugin';
 $string['pluginname_desc'] = "With this plugin student can pay for paid course with Stripe. All payments are synchronized with MMBR Account";
 $string['enrolname'] = 'MMBR Enrolment Plugin';
 
-$string['userloggedin'] = 'Something has happened';
+$string['enrolheading'] = 'Please select one of the following payment options and proceed to payment form';
+$string['paymentheading'] = 'Please provide payment information to enrol in the course';
 
 // Settings
 $string['mmbrkey'] = "Enter you MMBR key";
 $string['mmbrkey_desc'] = "MMBR key is used to sync all payment with your MMBR account";
+
 // Payment options
-$string['setoneprice'] = "Set one time payment amount (CAD)";
-$string['setoneprice_help'] = "One time payment gives permanent access to this course";
-$string['setrecprice'] = "Set subscription payment amount (CAD)";
-$string['setrecprice_help'] = "Subscription option. By default users get charged every 4 week. You can change frequency below. Subscription won't be available if you leave this blank.";
-$string['setpeymentfreq'] = "Change payment frequency";
-$string['setpeymentfreq_help'] = "This help message for this option";
+$string['cost'] = "Price for this enrolment (CAD)";
+$string['cost_help'] = "If Subscription option selected this price will be charged with selected frequency";
+$string['currency'] = "Select Currency";
+
+// Enrolment instance names 
+$string['instancename0'] = "Get Unlimited Access";
+$string['instancename1'] = "Get Access For a Month";
+$string['instancename2'] = "Monthly Subscription";
+$string['instancename3'] = "Annual Subscription";
 
 $string['role'] = "Select role once enroled";
 $string['status'] = "Enrolment status";
 $string['active'] = "Active";
 $string['suspended'] = "Suspended";
-$string['status_help'] = 'Active - user gets access to course once paid, Suspended meeans enrol needs to be activated by Teacher';
+$string['status_help'] = 'Suspended enrolment won\'t be available to use until Activated';
 $string['fullaccess'] = 'Get Full Access';
 $string['subscription'] = 'Subscription';
 

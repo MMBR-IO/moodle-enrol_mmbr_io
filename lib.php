@@ -193,56 +193,30 @@ class enrol_mmbr_plugin extends enrol_plugin
         return new moodle_url('/enrol/mmbr/edit.php', array('courseid' => $courseid));
     }
     
-    // Detecting when user select a course and check is user is enroled or not. 
-    //If not send him to MMBR Payment form
+     /**
+     * Creates course enrol form, checks if form submitted
+     * and enrols user if necessary. It can also redirect.
+     *
+     * @param stdClass $instance
+     * @redirect redirects to the custom enrolment page
+     */
     public function enrol_page_hook(stdClass $instance) { 
         global $CFG, $OUTPUT, $SESSION, $USER, $DB;
-        // var_dump($instance);
-        // die();
-
         // Guest can't enrol in paid courses
         if (isguestuser()) {
             return null;
         }
-        // if ($DB->record_exists('user_enrolments', array('userid' => $USER->id, 'enrolid' => $instance->id))) {
-        //     return $OUTPUT->notification('You are applied on the course', 'notifysuccess');
-        // }
+       
+        // Get all instances for this course 
+        $instances = self::enrol_get_instances($instance->courseid, true);
+        $fid = key($instances);
 
-        /*
-            mmbr_form defines how enrol page looks like
-        */
-        require_once "$CFG->dirroot/enrol/mmbr/mmbr_form.php";
-
-        $form = new enrol_mmbr_apply_form(null, $instance);
-
-        if ($data = $form->get_data()) {
-            //Only process when form submission is for this instance (multi instance support).
-            if ($data->instance == $instance->id) {
-                $timestart = 0;
-                $timeend = 0;
-                $roleid = $instance->roleid;
-                if ($data->enrolmentoptions == "subscription") { // User selected subscription option
-                    $timeend = $data->timeend;
-                } else if ($data->enrolmentoptions == "onetime") { // User selected one time payment
-                    $timeend = 0;
-                } else { // Something when wrong
-                    throw new coding_exception('Invalid payment option selection...');
-                }
-                $this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend, ENROL_USER_ACTIVE);
-                $userenrolment = $DB->get_record(
-                    'user_enrolments',
-                    array(
-                        'userid' => $USER->id,
-                        'enrolid' => $instance->id),
-                    'id', MUST_EXIST);
-                $coursepage = new moodle_url('/course/view.php', array('id'=> $instance->courseid));
-                redirect($coursepage);
-            }
+        if ($instance->id == $fid){
+            $courseid = $instance->courseid;
+            $url = new moodle_url('/enrol/mmbr/enrol.php', array("courseid" => $courseid));
+            redirect($url);
         }
-
-        $output = $form->render();
-
-        return $OUTPUT->box($output);
+        
     }   
 
     /**
@@ -304,4 +278,89 @@ class enrol_mmbr_plugin extends enrol_plugin
         coursecat::user_enrolment_changed($instance->courseid, $ue->userid,
                 $ue->status, $ue->timestart, $ue->timeend);
     }
+
+    /**
+ * Returns enrolment instances in given course.
+ * @param int $courseid
+ * @param bool $enabled
+ * @return array of enrol instances
+ */
+function enrol_get_instances($courseid, $enabled) {
+    global $DB, $CFG;
+    if (!$enabled) {
+        return $DB->get_records('enrol', array('courseid'=>$courseid), 'sortorder,id');
+    }
+    $result = $DB->get_records('enrol', array('courseid'=>$courseid, 'status'=>ENROL_INSTANCE_ENABLED), 'sortorder,id');
+    $enabled = explode(',', $CFG->enrol_plugins_enabled);
+    foreach ($result as $key=>$instance) {
+        if (!in_array($instance->enrol, $enabled)) {
+            unset($result[$key]);
+            continue;
+        }
+        if (!file_exists("$CFG->dirroot/enrol/$instance->enrol/lib.php")) {
+            // broken plugin
+            unset($result[$key]);
+            continue;
+        }
+        if ($instance->enrol === 'manual'){
+            // We dont need this 
+            unset($result[$key]);
+            continue;
+        }
+    }
+    return $result;
+}
+
+/**
+ * Lists all currencies available for plugin.
+ * @return $currencies
+ */
+public function get_currencies() {
+    $codes = array(
+        'AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'JPY',
+        'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'USD');
+    $currencies = array();
+    foreach ($codes as $c) {
+        $currencies[$c] = new lang_string($c, 'core_currencies');
+    }
+    return $currencies;
+}
+
+/**
+ * Returns all available enrolment options
+ * If null passed returns all possible options
+ * If id passed returns options name
+ * @return $options
+ */
+public function get_enrolment_options($id = NULL) {
+    if($id == NULL) {
+    $options = array();
+        for ($i = 0; $i< 4; $i++) {
+            $options[] = get_string('instancename'.$i.'', 'enrol_mmbr');
+        }
+    return $options;
+    } else {
+        return get_string('instancename'.$id.'', 'enrol_mmbr');
+    }
+}
+
+public function confirm_enrolment($key, $instance){
+    $this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend, ENROL_USER_SUSPENDED);
+    $userenrolment = $DB->get_record(
+        'user_enrolments',
+        array(
+            'userid' => $USER->id,
+            'enrolid' => $instance->id),
+        'id', MUST_EXIST);
+    $applicationinfo = new stdClass();
+    $applicationinfo->userenrolmentid = $userenrolment->id;
+    $applicationinfo->comment = $data->applydescription;
+    $DB->insert_record('enrol_apply_applicationinfo', $applicationinfo, false);
+
+    $this->send_application_notification($instance, $USER->id, $data);
+
+    redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid");
+}
+
+
 }

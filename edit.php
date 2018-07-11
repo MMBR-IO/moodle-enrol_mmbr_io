@@ -39,27 +39,26 @@ $mform = new enrol_mmbr_edit_form(null, array($instance, $plugin, $context));
 if($mform->is_cancelled()) {
     redirect($returnurl);
 } else if ($data = $mform->get_data()) { // If form is submitted
-    $frequency = 0;
-    // If subscription price entered, activate subscription
-    if ($data->customint1 > 0) { 
-        // If frequency wasn't changed set default(4 weeks) else set entered one
-        $frequency = (!$data->customint2>0) ? 86400 : $data->customint2;
+    // Based on selected option choose enrolment duration
+    $op = $data->name;
+    if ($op == 1) {
+        $instance->enrolenddate = time() + intval(31536000/12);
+    } elseif ($op == 2) {
+        $instance->enrolperiod = intval(31536000/12);
+    } elseif ($op == 3) {
+        $instance->enrolperiod = 31536000;
     }
     
     if ($instance->id){ // If id exists, means we updating existing instance
         $reset = ($instance->status != $data->status); // If they don't match reset enrol caches 
 
-        $instance->name             = $data->name;                      // Instance name
+        $instance->name             = $plugin->get_enrolment_options($data->name);                      // Instance name
         $instance->status           = $data->status;                    //Status active/susp
         $instance->cost             = unformat_float($data->cost);      // One time payment cost
-        $instance->currency         = 'CAD';                            // Default value for currency
+        $instance->currency         = $data->currency;                           // Default value for currency
         $instance->roleid           = $data->roleid;                    // Role when enroled
-       // $instance->enrolperiod      = $data->enrolperiod;               // Optional: enrol period
-        $instance->enrolstartdate   = $data->enrolstartdate;            // Optional: enrolment start date
-        $instance->enrolenddate     = $data->enrolenddate;              // Optional: enrolment end date
         $instance->timemodified     = time();                           // By default current time when modified
-        $instance->customint1       = unformat_float($data->customint1);// Price for subscription
-        $instance->customint2       = $frequency;                // Payment frequency 
+       // $instance->customint2       = $frequency;                // Payment frequency 
         $DB->update_record('enrol', $instance); 
 
         if ($reset) {
@@ -68,15 +67,12 @@ if($mform->is_cancelled()) {
 
     } else { // or create a new one
         $fields = array('status' => $data->status, 
-                        'name' => $data->name, 
+                        'name' => $plugin->get_enrolment_options($data->name), 
                         'cost' => unformat_float($data->cost),
-                        'currency' => "CAD",  // default is CAD
+                        'currency' => $data->currency,
                         'roleid' => $data->roleid, 
-                       // 'enrolperiod' => $data->enrolperiod, 
-                        'enrolstartdate' => $data->enrolstartdate, 
-                        'enrolenddate' => $data->enrolenddate,
-                        'customint1' => unformat_float($data->customint1),
-                        'customint2' => $frequency);
+                       // 'customint2' => $frequency
+                    );
         require('classes/observer.php');
         $plugin->add_instance($course, $fields);
 
