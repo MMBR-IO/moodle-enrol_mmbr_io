@@ -54,7 +54,7 @@ if($mform->is_cancelled()) {
 
         $instance->name             = $plugin->get_enrolment_options($data->name);                      // Instance name
         $instance->status           = $data->status;                    //Status active/susp
-        $instance->cost             = round($data->cost,2)*100;      // One time payment cost
+        $instance->cost             = round($data->price,2)*100;      // One time payment cost
         $instance->currency         = $data->currency;                           // Default value for currency
         $instance->roleid           = $data->roleid;                    // Role when enroled
         $instance->timemodified     = time();                           // By default current time when modified
@@ -67,7 +67,7 @@ if($mform->is_cancelled()) {
     } else { // or create a new one
         $fields = array('status' => $data->status, 
                         'name' => $plugin->get_enrolment_options($data->name), 
-                        'cost' => round($data->cost,2)*100,
+                        'cost' => round($data->price,2)*100,
                         'currency' => $data->currency,
                         'roleid' => $data->roleid, 
                        // 'customint2' => $frequency

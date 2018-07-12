@@ -44,14 +44,15 @@ class enrol_mmbr_payment_form extends moodleform
         global $USER, $DB, $PAGE;
         $mform = $this->_form;
         $this->instance = $this->_customdata;
+        $plugin = enrol_get_plugin('mmbr');
 
         // Gather all needed information
-        $this->moodle = $DB->get_record('enrol_mmbr', array('id'=>1));
+        $this->moodle = $DB->get_record_select('config_plugins',"plugin = 'enrol_mmbr' AND name = 'mmbrkey'");
         $endtime = 0;
         $this->courseid = $this->instance->courseid;
         $this->price = $this->instance->cost;
         $this->studentid = $USER->id;
-        $this->mmbrkey = $this->moodle->mmbr_key;
+        $this->mmbrkey = $this->moodle->value;
         $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('paymentheading', 'enrol_mmbr').'</h3>');
         $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.$this->instance->name.'</h3>');
         $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: $'.$this->instance->cost.'</h3>');

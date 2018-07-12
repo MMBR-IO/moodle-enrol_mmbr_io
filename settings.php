@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+
+
 if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('enrol_mmbr_enrolname', '', get_string('pluginname_desc', 'enrol_mmbr')));
 
@@ -40,6 +42,10 @@ if ($ADMIN->fulltree) {
         PARAM_TEXT,
         60));
 
+    $currencies = enrol_get_plugin('mmbr')->get_currencies();
+    $settings->add(new admin_setting_configselect('enrol_mmbr/currency',
+    get_string('currency', 'enrol_mmbr'), '', 'USD', $currencies));
+
     // Enrol instance defaults...
     $settings->add(new admin_setting_heading('enrol_manual_defaults',
         get_string('enrolinstancedefaults', 'admin'), get_string('enrolinstancedefaults_desc', 'admin')));
@@ -49,13 +55,6 @@ if ($ADMIN->fulltree) {
 
     $options = array(1 => get_string('yes'),
                      0  => get_string('no'));
-    $settings->add(new admin_setting_configselect('enrol_mmbr/show_standard_user_profile',
-        get_string('show_standard_user_profile', 'enrol_mmbr'), '', 1, $options));
-
-    $options = array(1 => get_string('yes'),
-                     0  => get_string('no'));
-    $settings->add(new admin_setting_configselect('enrol_mmbr/show_extra_user_profile',
-        get_string('show_extra_user_profile', 'enrol_mmbr'), '', 1, $options));
 
     if (!during_initial_install()) {
         $options = get_default_enrol_roles(context_system::instance());
@@ -64,12 +63,6 @@ if ($ADMIN->fulltree) {
         $settings->add(new admin_setting_configselect('enrol_mmbr/roleid',
             get_string('defaultrole', 'role'), '', $student->id, $options));
     }
-
-    $settings->add(new admin_setting_configcheckbox(
-        'enrol_mmbr/notifycoursebased',
-        get_string('notifycoursebased', 'enrol_mmbr'),
-        get_string('notifycoursebased_desc', 'enrol_mmbr'),
-        0));
 
     $settings->add(new admin_setting_configduration('enrol_mmbr/enrolperiod',
         get_string('defaultperiod', 'enrol_mmbr'), get_string('defaultperiod_desc', 'enrol_mmbr'), 0));

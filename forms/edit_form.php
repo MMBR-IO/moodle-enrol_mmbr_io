@@ -48,10 +48,12 @@ class enrol_mmbr_edit_form extends moodleform {
         $mform->addHelpButton('status', 'status', 'enrol_mmbr');
 
 
-        $mform->addElement('text', 'cost', get_string('cost', 'enrol_mmbr'), array('size' => 6));
-        $mform->setType('cost', PARAM_RAW); // Use unformat_float to get real value.
-        $mform->setDefault('cost', format_float($plugin->get_config('cost'), 2, true));
-        $mform->addHelpButton('cost', 'cost', 'enrol_mmbr');
+        $mform->addElement('text', 'price', get_string('cost', 'enrol_mmbr'), array('size' => 8));
+        $mform->setType('price', PARAM_RAW); // Use unformat_float to get real value.
+        if ($instance->id != null) {
+            $mform->setDefault('price', $plugin->get_cost_full($instance->cost));
+        }
+        $mform->addHelpButton('price', 'cost', 'enrol_mmbr');
 
         $currencies = $plugin->get_currencies();
         $mform->addElement('select', 'currency', get_string('currency', 'enrol_mmbr'), $currencies);
@@ -106,11 +108,13 @@ class enrol_mmbr_edit_form extends moodleform {
             $errors['enrolenddate'] = get_string('enrolenddaterror', 'enrol_paypal');
         }
 
-        $cost = str_replace(get_string('decsep', 'langconfig'), '.', $data['cost']);
+        $cost = str_replace(get_string('decsep', 'langconfig'), '.', $data['price']);
         if (!is_numeric($cost)) {
-            $errors['cost'] = get_string('costerror', 'enrol_mmbr');
+            $errors['price'] = get_string('costnumerror', 'enrol_mmbr');
         }
-
+        if ($cost == '0' || $cost == ''){
+            $errors['price'] = get_string('costnullerror', 'enrol_mmbr');
+        }
         return $errors;
     }
 }

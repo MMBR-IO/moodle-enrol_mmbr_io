@@ -15,9 +15,8 @@ class enrol_mmbr_observer {
      *  - update with MMBR.IO in case something missing
      */
 	public static function check_logged_user($event) {
-        // var_dump($event);
-        // die();
         global $DB;
+        $plugin = enrol_get_plugin('mmbr');
         // All data about this event
         $eventdata = $event->get_data();
         // Get from event user id
@@ -61,7 +60,7 @@ class enrol_mmbr_observer {
                 }
             }
         }
-        $data = ['key' => self::getMemberKey(),
+        $data = ['key' => $plugin->get_mmbr_io_key(),
                 'msg' => "This is our member",
                 ];
         $url = "https://webhook.site/d879f249-2604-409d-a666-fc268d56d176";
@@ -82,7 +81,8 @@ class enrol_mmbr_observer {
      */
     public static function newEnrolmentInstance($instance, $course) {
         global $DB;
-        $data = ['key' => self::getMemberKey(),
+        $plugin = enrol_get_plugin('mmbr');
+        $data = ['key' => $plugin->get_mmbr_io_key(),
                 'courseid' => $course->id,
                 'price' => $instance['cost'],
         ];
@@ -90,14 +90,6 @@ class enrol_mmbr_observer {
         $mcurl = new curl();
         $mcurl->post($url, format_postdata_for_curlcall($data), '');
         $response = $mcurl->getResponse();
-    }
-
-    private static function getMemberKey() {
-        global $DB;
-        $keyrecord = $DB->get_record_select('config_plugins', '' ,array('plugin'=>'enrol_mmbr', 'name'=>'mmbrkey'));
-        var_dump($keyrecord);
-        die();
-        return $keyrecord['value'];
     }
 
     public static function course_viewed($event) {
@@ -152,7 +144,8 @@ class enrol_mmbr_observer {
         // ** Testing **
 
         global $DB;
-        $data = ['key' => self::getMemberKey(),
+        $plugin = enrol_get_plugin('mmbr');
+        $data = ['key' => $plugin->get_mmbr_io_key(),
                 'th' => $paymentkey];
         $url = "https://webhook.site/d879f249-2604-409d-a666-fc268d56d176";
         $mcurl = new curl();

@@ -402,4 +402,39 @@ public function confirm_enrolment($key, $instanceid){
 }
 
 
+/**
+ * Converts all currency to cent value
+ * @param $cost reqular price
+ * @return $cents price value in cents
+ */
+public function get_cost_cents($cost) {
+    if (is_string($cost)) {
+        $cost = floatval($cost);
+    }
+    $cents = round($cost,2)*100;
+    return $cents;
+}
+
+/**
+ * Converts cost from cent value to dollar
+ * @param $cost cost in cents
+ * @return $full cost in dollars
+ */
+public function get_cost_full($cost) {
+    if (is_string($cost)) {
+        $cost = floatval($cost);
+    }
+    $full = round($cost,2)/100;
+    return $full;
+}
+/**
+ * Get public key 
+ * @return $key - public key for this instance
+ */
+public function get_mmbr_io_key() {
+    global $DB;
+    $keyrecord = $DB->get_record_select('config_plugins',"plugin = 'enrol_mmbr' AND name = 'mmbrkey'");
+    return $keyrecord->value;
+}
+
 }

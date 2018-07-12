@@ -31,6 +31,7 @@ if ($instanceid > 0) {
             $instance = $value;
         }
     }
+    $instance->cost = $plugin->get_cost_full($instance->cost);
     include_once "$CFG->dirroot/enrol/mmbr/forms/payment_form.php";
     $mform = new enrol_mmbr_payment_form(null, $instance);
     // var_dump($instance);
@@ -52,9 +53,7 @@ if ($instanceid > 0) {
     } 
 }
 
-
-
-$PAGE->set_heading("Looks like working :D");
+$PAGE->set_heading($course->fullname);
 $PAGE->set_title(get_string('pluginname', 'enrol_mmbr'));
 
 echo $OUTPUT->header();

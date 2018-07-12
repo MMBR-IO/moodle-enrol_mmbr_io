@@ -29,20 +29,21 @@ require_once $CFG->dirroot . '/user/profile/lib.php';
 class enrol_mmbr_apply_form extends moodleform
 {
     protected   $instances, $courseid;
-
+    
     public function definition() {
         global $USER, $DB, $PAGE;
         $mform = $this->_form;
         // Retrieve array with all instances
         $this->instances = $this->_customdata;
-
+        $plugin = enrol_get_plugin('mmbr');
         $fid = key($this->instances);
 
         $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolheading', 'enrol_mmbr').'</h3>');
      //   $radioarray=array();
         foreach ($this->instances as $instance) {
+            $price = $plugin->get_cost_full($instance->cost);
           /*  $radioarray[] = */ $mform->addElement('html', '<div class="enrolment">');
-           /*  $radioarray[] = */  $mform->addElement('radio', 'instanceid', '', $instance->name . ' ($'.$instance->cost.')', $instance->id, '');
+           /*  $radioarray[] = */  $mform->addElement('radio', 'instanceid', '', $instance->name . ' ($'.$price.')', $instance->id, '');
             /*  $radioarray[] = */  $mform->addElement('html', '</div>');
             $this->courseid = $instance->courseid;
         }
