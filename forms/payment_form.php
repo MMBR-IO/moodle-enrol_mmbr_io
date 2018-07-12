@@ -44,7 +44,6 @@ class enrol_mmbr_payment_form extends moodleform
         global $USER, $DB, $PAGE;
         $mform = $this->_form;
         $this->instance = $this->_customdata;
-     //   $PAGE->set_url('/enrol/mmbr/index.php', array('id' => $this->instance->courseid));
 
         // Gather all needed information
         $this->moodle = $DB->get_record('enrol_mmbr', array('id'=>1));
@@ -54,6 +53,10 @@ class enrol_mmbr_payment_form extends moodleform
         $this->studentid = $USER->id;
         $this->mmbrkey = $this->moodle->mmbr_key;
         $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('paymentheading', 'enrol_mmbr').'</h3>');
+        $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.$this->instance->name.'</h3>');
+        $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: $'.$this->instance->cost.'</h3>');
+
+
 
         // Create form for subscription 
         $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:3000/setframe?'.
@@ -69,14 +72,15 @@ class enrol_mmbr_payment_form extends moodleform
 
         $PAGE->requires->css('/enrol/mmbr/css/form.css');
         $PAGE->requires->js_call_amd('enrol_mmbr/mmbr', 'call');
+        $PAGE->requires->js_call_amd('enrol_mmbr/mmbr', 'payment');
 
         $mform->addElement('hidden', 'courseid');
         $mform->setType('courseid', PARAM_INT);
         $mform->setDefault('courseid', $this->courseid);
 
-        $mform->addElement('hidden', 'instance');
-        $mform->setType('instance', PARAM_INT);
-        $mform->setDefault('instance', $this->instance->id);
+        $mform->addElement('hidden', 'instanceid');
+        $mform->setType('instanceid', PARAM_INT);
+        $mform->setDefault('instanceid', $this->instance->id);
 
         $mform->addElement('hidden', 'paymentid');
         $mform->setType('paymentid', PARAM_INT);

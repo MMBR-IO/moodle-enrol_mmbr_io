@@ -75,9 +75,4 @@ if ($ADMIN->fulltree) {
         get_string('defaultperiod', 'enrol_mmbr'), get_string('defaultperiod_desc', 'enrol_mmbr'), 0));
 }
 
-if ($hassiteconfig) { // Needs this condition or there is error on login page.
-    $ADMIN->add('courses', new admin_externalpage('enrol_mmbr',
-            get_string('applymanage', 'enrol_mmbr'),
-            new moodle_url('/enrol/mmbr/manage.php')));
-}
 

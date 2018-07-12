@@ -39,13 +39,16 @@ class enrol_mmbr_apply_form extends moodleform
         $fid = key($this->instances);
 
         $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolheading', 'enrol_mmbr').'</h3>');
+     //   $radioarray=array();
         foreach ($this->instances as $instance) {
-            $mform->addElement('html', '<div class="enrolment">');
-            $mform->addElement('radio', 'enrolmentinstance', '', $instance->name . ' ($'.$instance->cost.')', $instance->id, '');
-            $mform->setDefault('enrolmentinstance', $fid);
-            $mform->addElement('html', '</div>');
+          /*  $radioarray[] = */ $mform->addElement('html', '<div class="enrolment">');
+           /*  $radioarray[] = */  $mform->addElement('radio', 'instanceid', '', $instance->name . ' ($'.$instance->cost.')', $instance->id, '');
+            /*  $radioarray[] = */  $mform->addElement('html', '</div>');
             $this->courseid = $instance->courseid;
         }
+     //   $mform->addGroup($radioarray, 'radioar', '', array(' '), false);
+        $mform->setDefault('instanceid', $fid);
+
 
         $PAGE->requires->css('/enrol/mmbr/css/form.css');
         $this->add_action_buttons($cancel = true, $submitlabel='Proceed to checkout');

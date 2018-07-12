@@ -279,7 +279,33 @@ class enrol_mmbr_plugin extends enrol_plugin
                 $ue->status, $ue->timestart, $ue->timeend);
     }
 
-    /**
+/**
+ * Return enrolment instance by id
+ * @param int   $instanceid
+ * @param bool  $enable
+ * @return stdClass $instance
+ */
+function enrol_get_instance($instanceid, $enable){
+    global $DB, $CFG;
+    $status = ($enable)?0:1;
+    try {
+        $result = $DB->get_records('enrol', array('id' => $instanceid, 'status' => $status)); 
+    } catch (Exception $e) {
+        throw new coding_exception( "<b>Exception:</b> " .$exception->getMessage());
+    }
+    $instance = new stdClass();
+    foreach ($result as $inst) {
+        foreach ($inst as $key => $value) {
+            if (is_array($value)) {
+                $value = convertToObject($value);
+            }
+            $instance->$key = $value;
+        }
+    }
+    return $instance;
+}
+
+/**
  * Returns enrolment instances in given course.
  * @param int $courseid
  * @param bool $enabled
@@ -344,22 +370,35 @@ public function get_enrolment_options($id = NULL) {
     }
 }
 
-public function confirm_enrolment($key, $instance){
-    $this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend, ENROL_USER_SUSPENDED);
-    $userenrolment = $DB->get_record(
-        'user_enrolments',
-        array(
-            'userid' => $USER->id,
-            'enrolid' => $instance->id),
-        'id', MUST_EXIST);
-    $applicationinfo = new stdClass();
-    $applicationinfo->userenrolmentid = $userenrolment->id;
-    $applicationinfo->comment = $data->applydescription;
-    $DB->insert_record('enrol_apply_applicationinfo', $applicationinfo, false);
+public function confirm_enrolment($key, $instanceid){
+    global $DB, $CFG, $USER;
+    // var_dump($key, $instance);
+    // die();
+    // Confirm with MMBR.IO that payment successful  
+    require('classes/observer.php');
+    $observer = new enrol_mmbr_observer();
+    if ($response = $observer->verifyPayment($key)) {
+        $timestart  = 0;
+        $timeend    = 0;
+        if($response->enrolment['expiry'] > 0){
+            $timeend = $response->enrolment['expiry'];
+        }
+        // Get instance 
+        $instance = $this->enrol_get_instance($instanceid, true);
+        $roleid = $instance->roleid;
+        // Enrol user in the course
+        $this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend, ENROL_USER_ACTIVE);
+        $userenrolment = $DB->get_record(
+            'user_enrolments',
+            array(
+                'userid' => $USER->id,
+                'enrolid' => $instance->id),
+            'id', MUST_EXIST);
 
-    $this->send_application_notification($instance, $USER->id, $data);
-
-    redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid");
+        redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid");
+    } else {
+        die("Couldn't verify payment");
+    }
 }
 
 

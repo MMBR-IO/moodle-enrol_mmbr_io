@@ -90,14 +90,14 @@ class enrol_mmbr_observer {
         $mcurl = new curl();
         $mcurl->post($url, format_postdata_for_curlcall($data), '');
         $response = $mcurl->getResponse();
-        // var_dump($response);
-        // die();
     }
 
     private static function getMemberKey() {
         global $DB;
-        $keyrecord = $DB->get_record('enrol_mmbr', array('id'=>1));
-        return $keyrecord->mmbr_key;
+        $keyrecord = $DB->get_record_select('config_plugins', '' ,array('plugin'=>'enrol_mmbr', 'name'=>'mmbrkey'));
+        var_dump($keyrecord);
+        die();
+        return $keyrecord['value'];
     }
 
     public static function course_viewed($event) {
@@ -131,7 +131,41 @@ class enrol_mmbr_observer {
     //price
     //cur
     //freq
+    /**
+     * THIS WILL CONFIRM PAYMENT
+     * 
+     * @paymentkey - got from Stripe transaction
+     * 
+     * 
+     */
+    public function verifyPayment($paymentkey){
+        // ** Testing **
+        $response = new stdClass;
+        $response->success = true;
+        $response->enrolment = [
+            'course_id' => 4,
+            'user_id'   => 3,
+            'price'     => 10000,
+            'currency'  => 'USD',
+            'expiry'    => 1631416635,
+            'interval'  => 86400];
+        // ** Testing **
+
+        global $DB;
+        $data = ['key' => self::getMemberKey(),
+                'th' => $paymentkey];
+        $url = "https://webhook.site/d879f249-2604-409d-a666-fc268d56d176";
+        $mcurl = new curl();
+        $mcurl->get($url, $data, '');
+     //   if ($response = $mcurl->getResponse()) {
+         if ($response) {
+            if ($response->success) {
+                return $response;
+            }
+        }
+        return false;
+    }
 
 
-     
+      
 }

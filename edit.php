@@ -1,7 +1,7 @@
 <?php 
 require('../../config.php');
 require_once('lib.php');
-require_once('edit_form.php');
+require_once('forms/edit_form.php');
 
 $courseid = required_param('courseid', PARAM_INT);
 $instanceid = optional_param('id', 0, PARAM_INT); 
@@ -54,11 +54,10 @@ if($mform->is_cancelled()) {
 
         $instance->name             = $plugin->get_enrolment_options($data->name);                      // Instance name
         $instance->status           = $data->status;                    //Status active/susp
-        $instance->cost             = unformat_float($data->cost);      // One time payment cost
+        $instance->cost             = round($data->cost,2)*100;      // One time payment cost
         $instance->currency         = $data->currency;                           // Default value for currency
         $instance->roleid           = $data->roleid;                    // Role when enroled
         $instance->timemodified     = time();                           // By default current time when modified
-       // $instance->customint2       = $frequency;                // Payment frequency 
         $DB->update_record('enrol', $instance); 
 
         if ($reset) {
@@ -68,7 +67,7 @@ if($mform->is_cancelled()) {
     } else { // or create a new one
         $fields = array('status' => $data->status, 
                         'name' => $plugin->get_enrolment_options($data->name), 
-                        'cost' => unformat_float($data->cost),
+                        'cost' => round($data->cost,2)*100,
                         'currency' => $data->currency,
                         'roleid' => $data->roleid, 
                        // 'customint2' => $frequency

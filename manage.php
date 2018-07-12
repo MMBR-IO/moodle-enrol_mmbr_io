@@ -21,8 +21,6 @@
 
 require_once('../../config.php');
 require_once($CFG->dirroot.'/enrol/mmbr/lib.php');
-require_once($CFG->dirroot.'/enrol/mmbr/manage_table.php');
-require_once($CFG->dirroot.'/enrol/mmbr/renderer.php');
 
 $id = optional_param('id', null, PARAM_INT);
 $formaction = optional_param('formaction', null, PARAM_TEXT);
@@ -70,9 +68,3 @@ if ($formaction != null && $userenrolments != null) {
     }
     redirect($manageurl);
 }
-
-$table = new enrol_mmbr_manage_table($id);
-$table->define_baseurl($manageurl);
-
-//$renderer = $PAGE->get_renderer('enrol_mmbr');
-//$renderer->manage_page($table, $manageurl);
