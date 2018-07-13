@@ -17,7 +17,7 @@
 /**
  * @package    enrol_mmbr
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     MMBR
+ * @author     Dmitry Nagorny 
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -42,6 +42,7 @@ class enrol_mmbr_payment_form extends moodleform
 
     public function definition() {
         global $USER, $DB, $PAGE;
+        $PAGE->requires->js_call_amd('enrol_mmbr/mmbr', 'payment');
         $mform = $this->_form;
         $this->instance = $this->_customdata;
         $plugin = enrol_get_plugin('mmbr');
@@ -68,12 +69,11 @@ class enrol_mmbr_payment_form extends moodleform
             '&frequency='. $this->frequency .''.
             '&mmbrkey='. $this->mmbrkey .'"></iframe>');
 
-            $this->add_action_buttons($cancel = true, $submitlabel='Proceed to checkout');
+           // $this->add_action_buttons($cancel = true, $submitlabel='Proceed to checkout');
 
 
         $PAGE->requires->css('/enrol/mmbr/css/form.css');
         $PAGE->requires->js_call_amd('enrol_mmbr/mmbr', 'call');
-        $PAGE->requires->js_call_amd('enrol_mmbr/mmbr', 'payment');
 
         $mform->addElement('hidden', 'courseid');
         $mform->setType('courseid', PARAM_INT);
@@ -83,9 +83,12 @@ class enrol_mmbr_payment_form extends moodleform
         $mform->setType('instanceid', PARAM_INT);
         $mform->setDefault('instanceid', $this->instance->id);
 
-        $mform->addElement('hidden', 'paymentid');
-        $mform->setType('paymentid', PARAM_INT);
-        $mform->setDefault('paymentid', "Some kind of paymentid");
+        // $mform->addElement('hidden', 'paymentid');
+        // $mform->setType('paymentid', PARAM_TEXT);
+        // $mform->setDefault('paymentid', "Some kind of paymentid");
+
+        $mform->addElement('hidden', 'paymentkey');
+        $mform->setType('paymentkey', PARAM_TEXT);
         
     }  
 }

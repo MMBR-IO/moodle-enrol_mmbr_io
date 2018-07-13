@@ -17,7 +17,7 @@
 /**
  * @package    enrol_mmrb
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     DmitryN defrakcija123@gmail.com
+ * @author     Dmitry Nagorny
  */
 
 defined('MOODLE_INTERNAL') || die();

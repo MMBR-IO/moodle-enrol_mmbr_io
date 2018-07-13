@@ -13,14 +13,10 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
-/**
- * Code to be executed after the plugin's database scheme has been installed is defined here.
- *
+/** 
  * @package     enrol_mmbr
- * @category    upgrade
- * @copyright   2018 DmitryN defrakcija123@gmail.com
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright   Dmitry Nagorny
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -30,8 +26,9 @@ defined('MOODLE_INTERNAL') || die();
  */
 function xmldb_enrol_mmbr_install() {
     // Nofify MMBR.IO about that new plugin install
+    require('classes/observer.php');
     $observer = new enrol_mmbr_observer();
-    $observer->newPluginInstall();
+    $observer->new_plugin_install();
 
     return true;
 }

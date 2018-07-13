@@ -19,8 +19,8 @@
  *
  * @package     enrol_mmbr
  * @category    string
- * @copyright   2018 DmitryN defrakcija123@gmail.com
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright   Dmitry Nagorny
  */
 
 defined('MOODLE_INTERNAL') || die();

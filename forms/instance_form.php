@@ -15,9 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * If course have more than one instance let user to choose 
+ * 
  * @package    enrol_mmbr
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     MMBR
+ * @author     Dmitry Nagorny
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -26,7 +28,7 @@ require_once $CFG->libdir . '/formslib.php';
 require_once $CFG->dirroot . '/user/editlib.php';
 require_once $CFG->dirroot . '/user/profile/lib.php';
 
-class enrol_mmbr_apply_form extends moodleform
+class enrol_mmbr_instance_form extends moodleform
 {
     protected   $instances, $courseid;
     
@@ -39,17 +41,14 @@ class enrol_mmbr_apply_form extends moodleform
         $fid = key($this->instances);
 
         $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolheading', 'enrol_mmbr').'</h3>');
-     //   $radioarray=array();
         foreach ($this->instances as $instance) {
             $price = $plugin->get_cost_full($instance->cost);
-          /*  $radioarray[] = */ $mform->addElement('html', '<div class="enrolment">');
-           /*  $radioarray[] = */  $mform->addElement('radio', 'instanceid', '', $instance->name . ' ($'.$price.')', $instance->id, '');
-            /*  $radioarray[] = */  $mform->addElement('html', '</div>');
+            $mform->addElement('html', '<div class="enrolment">');
+            $mform->addElement('radio', 'instanceid', '', $instance->name . ' ($'.$price.')', $instance->id, '');
+            $mform->addElement('html', '</div>');
             $this->courseid = $instance->courseid;
         }
-     //   $mform->addGroup($radioarray, 'radioar', '', array(' '), false);
         $mform->setDefault('instanceid', $fid);
-
 
         $PAGE->requires->css('/enrol/mmbr/css/form.css');
         $this->add_action_buttons($cancel = true, $submitlabel='Proceed to checkout');

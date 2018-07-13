@@ -12,16 +12,17 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/** 
+ * @package     enrol_mmbr
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright   Dmitry Nagorny
+ */
 
 /*
   This page is used to sync local data with Clerk
 */
 
-/** 
- * @package    enrol_mmbr
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Dmitry
- */
+
 
 
 define(['jquery','core/ajax'], function ($) {

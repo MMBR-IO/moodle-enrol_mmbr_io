@@ -13,14 +13,10 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
-/**
- * Plugin administration pages are defined here.
- *
+/** 
  * @package     enrol_mmbr
- * @category    admin
- * @copyright   2018 DmitryN defrakcija123@gmail.com
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright   Dmitry Nagorny
  */
 
 defined('MOODLE_INTERNAL') || die();

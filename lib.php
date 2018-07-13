@@ -13,13 +13,10 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
-/**
- * The enrol plugin mmbr is defined here.
- *
+/** 
  * @package     enrol_mmbr
- * @copyright   2018 DmitryN defrakcija123@gmail.com
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright   Dmitry Nagorny
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -400,12 +397,10 @@ public function get_enrolment_options($id = NULL) {
 
 public function confirm_enrolment($key, $instanceid){
     global $DB, $CFG, $USER;
-    // var_dump($key, $instance);
-    // die();
     // Confirm with MMBR.IO that payment successful  
     require('classes/observer.php');
     $observer = new enrol_mmbr_observer();
-    if ($response = $observer->verifyPayment($key)) {
+    if ($response = $observer->verify_payment($key)) {
         $timestart  = 0;
         $timeend    = 0;
         if($response->enrolment['expiry'] > 0){
