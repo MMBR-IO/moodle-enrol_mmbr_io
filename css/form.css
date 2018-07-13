@@ -103,3 +103,8 @@
   .enrolment input[type="radio"]:checked + label {
     border: solid 2px green !important;
   }
+
+  input:checked div {
+    background-color: red !important
+
+  }
