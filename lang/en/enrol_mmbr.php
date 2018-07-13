@@ -19,36 +19,73 @@
  *
  * @package     enrol_mmbr
  * @category    string
- * @copyright   2018 DmitryN defrakcija123@gmail.com
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright   Dmitry Nagorny
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['mmbr:config'] = 'Configure MMBR enrol instances';
+$string['mmbr:config'] = 'Configure MMBR.IO enrol instances';
 $string['mmbr:manage'] = 'Manage user enrolments';
-$string['mmbr:manageapplications'] = 'Manage MMBR enrolment';
+$string['mmbr:manageapplications'] = 'Manage MMBR.IO enrolment';
 $string['mmbr:unenrol'] = 'Cancel users from the course';
 $string['mmbr:unenrolself'] = 'Cancel self from the course';
 
-$string['pluginname'] = 'MMBR Enrolment Plugin';
-$string['pluginname_desc'] = "With this plugin student can pay for paid course with Stripe. All payments are synchronized with MMBR Account";
-$string['enrolname'] = 'MMBR Enrolment Plugin';
+$string['pluginname'] = 'MMBR.IO Enrolment Plugin';
+$string['pluginname_desc'] = "With this plugin student can pay for paid course with Stripe. All payments are synchronized with MMBR.IO Account";
+$string['enrolname'] = 'MMBR.IO Enrolment Plugin';
 
-$string['userloggedin'] = 'Something has happened';
+$string['enrolheading'] = 'Please select one of the following payment options and proceed to payment form';
+$string['paymentheading'] = 'Please provide payment information to enrol in the course';
+
+// Tasks
+$string['pingserver'] = 'Ping MMBR.IO Server';
 
 // Settings
-$string['mmbrkey'] = "Enter you MMBR key";
-$string['mmbrkey_desc'] = "MMBR key is used to sync all payment with your MMBR account";
+$string['mmbrkey'] = "Enter you MMBR.IO key";
+$string['mmbrkey_desc'] = "MMBR.IO key is used to sync all payment with your MMBR.IO account";
+$string['currency'] = 'Enter default currency';
+
 // Payment options
-$string['setoneprice'] = "Set one time payment amount (CAD)";
-$string['setoneprice_help'] = "One time payment gives permanent access to this course";
-$string['setrecprice'] = "Set subscription payment amount (CAD)";
-$string['setrecprice_help'] = "Subscription option gives access as long payment recurring 4 weeks. You can change frequency below.";
-$string['setpeymentfreq'] = "Change payment frequency";
-$string['setpeymentfreq_help'] = "This help message for this option";
+$string['cost'] = "Price for this enrolment";
+$string['cost_help'] = "If Subscription option selected this price will be charged with selected frequency";
+$string['currency'] = "Select Currency";
+
+// Enrolment instance names 
+$string['instancename0'] = "Get Unlimited Access";
+$string['instancename1'] = "Get Access For a Month";
+$string['instancename2'] = "Monthly Subscription";
+$string['instancename3'] = "Annual Subscription";
 
 $string['role'] = "Select role once enroled";
 $string['status'] = "Enrolment status";
 $string['active'] = "Active";
 $string['suspended'] = "Suspended";
+$string['status_help'] = 'Suspended enrolment won\'t be available to use until Activated';
+$string['fullaccess'] = 'Get Full Access';
+$string['subscription'] = 'Subscription';
+
+// Not sure why I need this, but if they miising -> ERROR!
+$string['defaultperiod'] = 'Default enrolment duration';
+$string['defaultperiod_desc'] = 'Default length of time that the enrolment is valid. If set to zero, the enrolment duration will be unlimited by default.';
+$string['defaultperiod_help'] = 'Default length of time that the enrolment is valid, starting with the moment the user is enrolled. If disabled, the enrolment duration will be unlimited by default.';
+
+// Delete later
+// $string['applymanage'] = 'Manage enrolment applications';
+// $string['show_standard_user_profile'] = 'Show standard user profile fields on enrolment screen';
+// $string['show_extra_user_profile'] = 'Show extra user profile fields on enrolment screen';
+// $string['notify_heading'] = 'Notification settings';
+// $string['notify_desc'] = 'Define who gets notified about new enrolment applications.';
+// $string['notifycoursebased'] = "New enrolment application notification (instance based, eg. course teachers)";
+// $string['notifycoursebased_desc'] = "Default for new instances: Notify everyone who have the 'Manage apply enrolment' capability for the corresponding course (eg. teachers and managers)";
+// $string['notifyglobal'] = "New enrolment application notification (global, eg. global managers and admins)";
+// $string['notifyglobal_desc'] = "Define who gets notified about new enrolment applications for any course.";
+
+
+// Errors 
+$string['costnumerror'] = 'Price should be numeric values';
+$string['costnullerror'] = 'Price should be more than 0';
+
+
+// Delete soon
+$string['aftercourse'] = 'Some text from Dmitry';

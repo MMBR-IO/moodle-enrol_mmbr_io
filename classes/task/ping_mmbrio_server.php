@@ -19,10 +19,26 @@
  * @copyright   Dmitry Nagorny
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace enrol_mmbr\task;
 
-$plugin->component = 'enrol_mmbr';
-$plugin->release = '0.5.1';
-$plugin->version = 2018071304; // Version format - YYYYMMDDXX
-$plugin->requires = 2018051700;
-$plugin->maturity = MATURITY_BETA;
+defined('MOODLE_INTERNAL') || die();
+require_once $CFG->dirroot . '/lib/filelib.php';
+class ping_mmbrio_server extends \core\task\scheduled_task {      
+    public function get_name() {
+        // Shown in admin screens
+        return get_string('pingserver', 'enrol_mmbr');
+    }
+                                                                     
+    public function execute() {     
+        $data = ['id' =>  "CronPing",
+                'date' => time()];
+        $url = "https://webhook.site/d879f249-2604-409d-a666-fc268d56d176";
+
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+
+        curl_exec($ch);
+        curl_close($ch);
+    }                                                                                                                               
+}
