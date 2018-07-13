@@ -61,7 +61,35 @@ class enrol_mmbr_plugin extends enrol_plugin
     {
         return has_capability('enrol/mmbr:manage', context_course::instance($instance->courseid));
     }
-
+/**
+     * Returns optional enrolment information icons.
+     *
+     * This is used in course list for quick overview of enrolment options.
+     *
+     * We are not using single instance parameter because sometimes
+     * we might want to prevent icon repetition when multiple instances
+     * of one type exist. One instance may also produce several icons.
+     *
+     * @param array $instances all enrol instances of this type in one course
+     * @return array of pix_icon
+     */
+    public function get_info_icons(array $instances) {
+        $found = false;
+        foreach ($instances as $instance) {
+            if ($instance->enrolstartdate != 0 && $instance->enrolstartdate > time()) {
+                continue;
+            }
+            if ($instance->enrolenddate != 0 && $instance->enrolenddate < time()) {
+                continue;
+            }
+            $found = true;
+            break;
+        }
+        if ($found) {
+            return array(new pix_icon('icon', get_string('pluginname', 'enrol_mmbr'), 'enrol_mmbr'));
+        }
+        return array();
+    }
     /**
      * Is it possible to hide/show enrol instance via standard UI?
      * @param  stdClass $instance

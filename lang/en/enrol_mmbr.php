@@ -38,6 +38,9 @@ $string['enrolname'] = 'MMBR.IO Enrolment Plugin';
 $string['enrolheading'] = 'Please select one of the following payment options and proceed to payment form';
 $string['paymentheading'] = 'Please provide payment information to enrol in the course';
 
+// Tasks
+$string['pingserver'] = 'Ping MMBR.IO Server';
+
 // Settings
 $string['mmbrkey'] = "Enter you MMBR.IO key";
 $string['mmbrkey_desc'] = "MMBR.IO key is used to sync all payment with your MMBR.IO account";
@@ -82,3 +85,7 @@ $string['defaultperiod_help'] = 'Default length of time that the enrolment is va
 // Errors 
 $string['costnumerror'] = 'Price should be numeric values';
 $string['costnullerror'] = 'Price should be more than 0';
+
+
+// Delete soon
+$string['aftercourse'] = 'Some text from Dmitry';
