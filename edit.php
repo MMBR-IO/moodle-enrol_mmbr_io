@@ -50,9 +50,11 @@ if ($instanceid) {
 } else {
     require_capability('moodle/course:enrolconfig', $context);
     navigation_node::override_active_url(new moodle_url('/enrol/instances.php', array('id' => $course->id)));
-    $instance = new stdClass();
-    $instance->id       = null;
-    $instance->courseid = $course->id;
+    $instance               = new stdClass();
+    $instance->id           = null;
+    $instance->courseid     = $course->id;
+    $instance->enrolperiod  = 0;
+    $instance->enrolenddate = 0;
 }
 
 $mform = new enrol_mmbr_edit_form(null, array($instance, $plugin, $context));
@@ -60,14 +62,18 @@ if($mform->is_cancelled()) {
     redirect($returnurl);
 } else if ($data = $mform->get_data()) { // If form is submitted
     // Based on selected option choose enrolment duration
-    $op = $data->name;
-    if ($op == 1) {
+    $op = (int)$data->name;
+    if ($op === 1) {
         $instance->enrolenddate = time() + intval(31536000/12);
-    } elseif ($op == 2) {
+       // die('Got 1');
+    } elseif ($op === 2) {
         $instance->enrolperiod = intval(31536000/12);
-    } elseif ($op == 3) {
+     //   die('Got 2');
+    } elseif ($op === 3) {
         $instance->enrolperiod = 31536000;
+       // die('Got 3');
     }
+   // die('Got nothing or 0');
     
     if ($instance->id){ // If id exists, means we updating existing instance
         $reset = ($instance->status != $data->status); // If they don't match reset enrol caches 
@@ -90,14 +96,15 @@ if($mform->is_cancelled()) {
                         'cost' => round($data->price,2)*100,
                         'currency' => $data->currency,
                         'roleid' => $data->roleid, 
-                       // 'customint2' => $frequency
+                        'enrolenddate' => $instance->enrolenddate,
+                        'enrolperiod' => $instance->enrolperiod,
                     );
         require('classes/observer.php');
         $plugin->add_instance($course, $fields);
 
          // Nofify MMBR about that new instance is created
          $observer = new enrol_mmbr_observer();
-         $observer->newEnrolmentInstance($fields, $course);
+         $observer->new_enrolment_instance($fields, $course);
     }
 
     redirect($returnurl);

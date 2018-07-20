@@ -58,9 +58,6 @@ if ($instanceid > 0) {
     $mform = new enrol_mmbr_payment_form(null, $instance);
 
     if ($data = $mform->get_data()) { 
-        // If form submitted go and validate payment
-       // var_dump($data);
-       // die();
         $plugin->confirm_enrolment($data->paymentkey, $data->instanceid);
     }
     if ($mform->is_cancelled()) {

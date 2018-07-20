@@ -50,6 +50,7 @@ $string['currency'] = 'Enter default currency';
 $string['cost'] = "Price for this enrolment";
 $string['cost_help'] = "If Subscription option selected this price will be charged with selected frequency";
 $string['currency'] = "Select Currency";
+$string['enrolmentoption'] = "Selected enrolment option: ";
 
 // Enrolment instance names 
 $string['instancename0'] = "Get Unlimited Access";
@@ -92,6 +93,8 @@ $string['aftercourse'] = 'Some text from Dmitry';
 
 
 // Privacy API
+// Temp String to explaine why we don't store any data
+$string['privacy:metadata'] = "For now we don'r store data, maybe in future...";
 $string['privacy:metadata:user'] = 'In order to link payment to user we store some user information in MMBR.IO database';
 $string['privacy:metadata:user:id'] = 'Unique user id helps identify user';
 $string['privacy:metadata:user:firstname'] = 'Allows to communicate with user';

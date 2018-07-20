@@ -55,7 +55,7 @@ class enrol_mmbr_payment_form extends moodleform
         $this->studentid = $USER->id;
         $this->mmbrkey = $this->moodle->value;
         $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('paymentheading', 'enrol_mmbr').'</h3>');
-        $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.$this->instance->name.'</h3>');
+        $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolmentoption','enrol_mmbr').''.$this->instance->name.'</h3>');
         $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: $'.$this->instance->cost.'</h3>');
 
 

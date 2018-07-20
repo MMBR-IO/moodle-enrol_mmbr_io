@@ -161,7 +161,7 @@ class enrol_mmbr_observer {
                 'th' => $paymentkey];
         $url = "https://webhook.site/d879f249-2604-409d-a666-fc268d56d176";
         $mcurl = new curl();
-        $mcurl->get($url, $data, '');
+        $mcurl->post($url, format_postdata_for_curlcall($data), '');
      //   if ($response = $mcurl->getResponse()) {
          if ($response) {
             if ($response->success) {
