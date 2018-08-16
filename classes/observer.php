@@ -103,7 +103,8 @@ class enrol_mmbr_observer {
      * @param $mmbriokey - Public key to sync with MMBR.IO account
      */
     public static function new_plugin_install($mmbriokey) {
-        //Call MMBR.IO
+        var_dump($mmbriokey);
+        die();
     }
 
     /**
