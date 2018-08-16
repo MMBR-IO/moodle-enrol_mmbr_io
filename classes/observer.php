@@ -71,7 +71,6 @@ class enrol_mmbr_observer {
                         } else {
                             $plugin->update_user_enrol($value, $userid, true,null, null);
                         }
-                         
                     }
                 }
             }
@@ -90,10 +89,11 @@ class enrol_mmbr_observer {
                 'courseid' => $course->id,
                 'price' => $instance['cost'],
         ];
-        $url = "https://webhook.site/d879f249-2604-409d-a666-fc268d56d176";
+        $url = "http://10.0.2.2:4143/foxtrot/plugin/connect";
         $mcurl = new curl();
         $mcurl->post($url, format_postdata_for_curlcall($data), '');
         $response = $mcurl->getResponse();
+        var_dump($response);
     }
 
     /**
@@ -103,8 +103,6 @@ class enrol_mmbr_observer {
      * @param $mmbriokey - Public key to sync with MMBR.IO account
      */
     public static function new_plugin_install($mmbriokey) {
-        var_dump($mmbriokey);
-        die();
     }
 
     /**

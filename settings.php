@@ -21,8 +21,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-
-
 if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('enrol_mmbr_enrolname', '', get_string('pluginname_desc', 'enrol_mmbr')));
 
@@ -34,7 +32,7 @@ if ($ADMIN->fulltree) {
         'enrol_mmbr/mmbrkey',
         get_string('mmbrkey', 'enrol_mmbr'),
         get_string('mmbrkey_desc', 'enrol_mmbr'),
-        null,
+        '',
         PARAM_TEXT,
         60));
 

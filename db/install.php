@@ -25,10 +25,5 @@ defined('MOODLE_INTERNAL') || die();
  * Custom code to be run on installing the plugin.
  */
 function xmldb_enrol_mmbr_install() {
-    // Nofify MMBR.IO about that new plugin install
-    require('classes/observer.php');
-    $observer = new enrol_mmbr_observer();
-    $observer->new_plugin_install("This is my message on install :)");
-
     return true;
 }
