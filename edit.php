@@ -78,12 +78,12 @@ if($mform->is_cancelled()) {
     if ($instance->id){ // If id exists, means we updating existing instance
         $reset = ($instance->status != $data->status); // If they don't match reset enrol caches 
 
-        $instance->name             = $plugin->get_enrolment_options($data->name);                      // Instance name
-        $instance->status           = $data->status;                    //Status active/susp
-        $instance->cost             = round($data->price,2)*100;      // One time payment cost
-        $instance->currency         = $data->currency;                           // Default value for currency
-        $instance->roleid           = $data->roleid;                    // Role when enroled
-        $instance->timemodified     = time();                           // By default current time when modified
+        $instance->name             = $plugin->get_enrolment_options($data->name);  // Instance name
+        $instance->status           = $data->status;                                //Status active/susp
+        $instance->cost             = round($data->price,2)*100;                    // One time payment cost
+        $instance->currency         = $data->currency;                              // Default value for currency
+        $instance->roleid           = $data->roleid;                                // Role when enroled
+        $instance->timemodified     = time();                                       // By default current time when modified
         $DB->update_record('enrol', $instance); 
 
         if ($reset) {
@@ -100,14 +100,29 @@ if($mform->is_cancelled()) {
                         'enrolperiod' => $instance->enrolperiod,
                     );
         require('classes/observer.php');
-        $plugin->add_instance($course, $fields);
 
-         // Nofify MMBR about that new instance is created
-         $observer = new enrol_mmbr_observer();
-         $observer->new_enrolment_instance($fields, $course);
+        // Nofify MMBR about that new instance is created
+        $observer = new enrol_mmbr_observer();
+        $result =  $observer->new_enrolment_instance($fields, $course);
+        if (!$result->errors && $result->status === 'success') {
+            $plugin->add_instance($course, $fields);
+            redirect($returnurl);
+        } else {
+            switch($result->errors) {
+                case 'miss_key':
+                    \core\notification::error(get_string('mmbriokeyerror', 'enrol_mmbr'));
+                    break;
+                case 'wrong_key': 
+                    \core\notification::error(get_string('mmbriokeymiserror','enrol_mmbr'));
+                    break;
+                case 'server':
+                    \core\notification::error(get_string('mmbrioservererror', 'enrol_mmbr'));
+                    break;
+                default:
+                    \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbr'));
+            }
+        }         
     }
-
-    redirect($returnurl);
 }
 
 $PAGE->set_heading($course->fullname);

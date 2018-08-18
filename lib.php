@@ -47,6 +47,7 @@ class enrol_mmbr_plugin extends enrol_plugin
     public function use_standard_editing_ui() {
         return false;
     }
+
     /**
      *
      * All plugins allowing this must implement 'enrol/xxx:manage' capability
@@ -58,7 +59,8 @@ class enrol_mmbr_plugin extends enrol_plugin
     {
         return has_capability('enrol/mmbr:manage', context_course::instance($instance->courseid));
     }
-/**
+
+    /**
      * Returns optional enrolment information icons.
      *
      * This is used in course list for quick overview of enrolment options.
@@ -109,6 +111,7 @@ class enrol_mmbr_plugin extends enrol_plugin
         $context = context_course::instance($instance->courseid);
         return has_capability('enrol/mmbr:config', $context);
     }
+
     /**
      * Return whether or not, given the current state, it is possible to edit an instance
      * of this enrolment plugin in the course. Used by the standard editing UI
@@ -122,7 +125,7 @@ class enrol_mmbr_plugin extends enrol_plugin
         return has_capability('enrol/' . $instance->enrol . ':config', $context);
     }
 
-   /**
+    /**
      * Defines if 'enrol me' link will be shown on course page.
      * @param stdClass $instance of the plugin
      * @return bool(true or false)
@@ -130,6 +133,7 @@ class enrol_mmbr_plugin extends enrol_plugin
     public function show_enrolme_link(stdClass $instance) {
         return ($instance->status == ENROL_INSTANCE_ENABLED);
     }
+
     /**
      * Does this plugin allow manual unenrolment of all users?
      * All plugins allowing this must implement 'enrol/xxx:unenrol' capability
@@ -141,6 +145,7 @@ class enrol_mmbr_plugin extends enrol_plugin
     {
         return true;
     }
+
     /**
      * This add 'Edit' icon on admin panel to allow edit existing instance
      * Has possibility to add more icons for additional functionality 
@@ -169,6 +174,7 @@ class enrol_mmbr_plugin extends enrol_plugin
         }
         return $icons;
     }
+
     /**
      * Sets up navigation entries.
      *
@@ -187,6 +193,7 @@ class enrol_mmbr_plugin extends enrol_plugin
             $instancesnode->add($this->get_instance_name($instance), $managelink, navigation_node::TYPE_SETTING);
         }
     }
+
     /**
      * Does this plugin allow manual unenrolment of a specific user?
      * All plugins allowing this must implement 'enrol/xxx:unenrol' capability

@@ -28,6 +28,9 @@ require_once $CFG->dirroot . '/enrol/mmbr/lib.php';
 
 // in classes/observer.php
 class enrol_mmbr_observer {
+
+    private static $DOMAIN = 'http://localhost/cobb/v1/';
+    private static $DOMAIN_PORT = 4143;
     /**
      * USER LOGGEDIN 
      * Event is triggered when User logs in Moodle
@@ -59,7 +62,7 @@ class enrol_mmbr_observer {
                                  ];
                         $url = "https://webhook.site/d879f249-2604-409d-a666-fc268d56d176";
                         $mcurl = new curl();
-                        $mcurl->post($url, format_postdata_for_curlcall($data), '');
+                        $mcurl->post($url, format_postdata_for_curlcall($data), []);
                        // $response = $mcurl->getResponse();
                         $response = true;
 
@@ -82,18 +85,44 @@ class enrol_mmbr_observer {
      * When Moodle admin adds MMBR Plugin as enrolment option 
      *  - notify MMBR.IO server about new instance
      */
+    // public static function new_enrolment_instance($instance, $course) {
+    //     global $DB;
+    //     $plugin = enrol_get_plugin('mmbr');
+    //     $data = ['key' => $plugin->get_mmbr_io_key(),
+    //             'courseid' => $course->id,
+    //             'price' => $instance['cost'],
+    //     ];
+    //     $options['CURLOPT_PORT'] = 4143;
+    //     $url = "http://localhost/cobb/v1/foxtrot/plugin/connect";
+    //     $mcurl = new curl();
+    //     //$mcurl->get($url, null, $options);
+    //     $mcurl->get($url, $data, $options);
+    //     $response = $mcurl->getResponse();
+    //     var_dump($response);
+    //     die();
+    // }
+
     public static function new_enrolment_instance($instance, $course) {
         global $DB;
+        $response = new stdClass;
         $plugin = enrol_get_plugin('mmbr');
-        $data = ['key' => $plugin->get_mmbr_io_key(),
-                'courseid' => $course->id,
-                'price' => $instance['cost'],
+        if (strlen($plugin->get_mmbr_io_key()) < 13) {
+            $response->errors = 'miss_key';
+            var_dump($response);
+            die("Can't find key");
+            return $response;
+        }
+        $data = ['public_key'   => $plugin->get_mmbr_io_key(),
+                'course_id'     => $course->id,
+                'course_name'   => $course->fullname
         ];
-        $url = "http://10.0.2.2:4143/foxtrot/plugin/connect";
-        $mcurl = new curl();
-        $mcurl->post($url, format_postdata_for_curlcall($data), '');
-        $response = $mcurl->getResponse();
+        $options['CURLOPT_HTTPGET'] = 1;
+
+        $response = self::get('foxtrot/plugin/instance', $data, $options);
+        $response = json_decode($response);
         var_dump($response);
+        die('After curl');
+        return $response;
     }
 
     /**
@@ -160,7 +189,7 @@ class enrol_mmbr_observer {
                 'th' => $paymentkey];
         $url = "https://webhook.site/d879f249-2604-409d-a666-fc268d56d176";
         $mcurl = new curl();
-        $mcurl->post($url, format_postdata_for_curlcall($data), '');
+        $mcurl->post($url, format_postdata_for_curlcall($data), []);
      //   if ($response = $mcurl->getResponse()) {
          if ($response) {
             if ($response->success) {
@@ -169,4 +198,28 @@ class enrol_mmbr_observer {
         }
         return false;
     }    
+
+    public static function get($route, $params = array(), $options = array()) {
+        $url = self::$DOMAIN . $route;
+        if (!empty($params)) {
+            $url .= (stripos($url, '?') !== false) ? '&' : '?';
+            $url .= http_build_query($params, '', '&');
+        }
+        $curl = curl_init();
+        curl_setopt_array($curl, array(        
+            CURLOPT_HTTPGET         => 1,
+            CURLOPT_RETURNTRANSFER  => 1,
+            CURLOPT_URL             => $url,
+            CURLOPT_PORT            => self::$DOMAIN_PORT,
+        ));
+        if(!$response = curl_exec($curl)){
+            return $response->errors = curl_error;
+        }
+        curl_close($curl);
+        return $response;
+    }
+
+    public static function post() {
+
+    }
 }
