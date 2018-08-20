@@ -58,19 +58,16 @@ class enrol_mmbr_payment_form extends moodleform
         $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolmentoption','enrol_mmbr').''.$this->instance->name.'</h3>');
         $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: $'.$this->instance->cost.'</h3>');
 
-
-
         // Create form for subscription 
-        $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:3000/setframe?'.
-            'courseid='. $this->courseid .''.
-            '&studentid='. $this->studentid .''.
-            '&price='. $this->price .''.
-            '&recprice='. $this->recprice .''.
-            '&frequency='. $this->frequency .''.
-            '&mmbrkey='. $this->mmbrkey .'"></iframe>');
+        $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:4141/comma/v1/foxtrot/frame?'.
+            'course_id='.   $this->courseid     .''.
+            '&student_id='. $this->studentid    .''.
+            '&price='.      $this->price        .''.
+            '&currency='.   $this->price        .''.
+            '&repeat_interval='.  $this->frequency    .''.
+            '&public_key='. $this->mmbrkey      .'"></iframe>');
 
            // $this->add_action_buttons($cancel = true, $submitlabel='Proceed to checkout');
-
 
         $PAGE->requires->css('/enrol/mmbr/css/form.css');
         $PAGE->requires->js_call_amd('enrol_mmbr/mmbr', 'call');

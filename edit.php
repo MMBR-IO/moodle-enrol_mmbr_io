@@ -104,7 +104,7 @@ if($mform->is_cancelled()) {
         // Nofify MMBR about that new instance is created
         $observer = new enrol_mmbr_observer();
         $result =  $observer->new_enrolment_instance($fields, $course);
-        if (!$result->errors && $result->status === 'success') {
+        if ($result->success) {
             $plugin->add_instance($course, $fields);
             redirect($returnurl);
         } else {

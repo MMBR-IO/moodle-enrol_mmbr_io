@@ -41,11 +41,8 @@ class enrol_mmbr_observer {
 	public static function check_logged_user($event) {
         global $DB;
         $plugin = enrol_get_plugin('mmbr');
-        // All data about this event
-        $eventdata = $event->get_data();
-        // Get from event user id
+        $eventdata = $event->get_data();    // All data about this event
         $userid = $eventdata['userid'];
-        // Check is this user is enroled with mmbr plugin
         $enrol = "enrol";
         $enrolments = $DB->get_records($enrol, array('enrol' => 'mmbr'));
         // Check is this user has enrolment with MMBR plugin
@@ -80,58 +77,25 @@ class enrol_mmbr_observer {
         }
     }
 
-    /**
-     * NEW ENROLMENT INSTANCE OF MMBR.IO PLUGIN CREATED
-     * When Moodle admin adds MMBR Plugin as enrolment option 
-     *  - notify MMBR.IO server about new instance
-     */
-    // public static function new_enrolment_instance($instance, $course) {
-    //     global $DB;
-    //     $plugin = enrol_get_plugin('mmbr');
-    //     $data = ['key' => $plugin->get_mmbr_io_key(),
-    //             'courseid' => $course->id,
-    //             'price' => $instance['cost'],
-    //     ];
-    //     $options['CURLOPT_PORT'] = 4143;
-    //     $url = "http://localhost/cobb/v1/foxtrot/plugin/connect";
-    //     $mcurl = new curl();
-    //     //$mcurl->get($url, null, $options);
-    //     $mcurl->get($url, $data, $options);
-    //     $response = $mcurl->getResponse();
-    //     var_dump($response);
-    //     die();
-    // }
-
     public static function new_enrolment_instance($instance, $course) {
         global $DB;
         $response = new stdClass;
         $plugin = enrol_get_plugin('mmbr');
+        $mmbriokey = $plugin->get_mmbr_io_key();
         if (strlen($plugin->get_mmbr_io_key()) < 13) {
             $response->errors = 'miss_key';
-            var_dump($response);
-            die("Can't find key");
             return $response;
         }
-        $data = ['public_key'   => $plugin->get_mmbr_io_key(),
-                'course_id'     => $course->id,
-                'course_name'   => $course->fullname
+        $data = [
+            'public_key'    => $mmbriokey,
+            'course_id'     => $course->id,
+            'course_name'   => $course->fullname,
         ];
         $options['CURLOPT_HTTPGET'] = 1;
 
         $response = self::get('foxtrot/plugin/instance', $data, $options);
         $response = json_decode($response);
-        var_dump($response);
-        die('After curl');
         return $response;
-    }
-
-    /**
-     * NEW MMBR.IO PLUGIN INSTALLED
-     * When installation of this plugin happened 
-     *  - notify MMBR server about new plugin
-     * @param $mmbriokey - Public key to sync with MMBR.IO account
-     */
-    public static function new_plugin_install($mmbriokey) {
     }
 
     /**
@@ -170,7 +134,7 @@ class enrol_mmbr_observer {
      * @param $paymentkey - got from Stripe transaction
      * @return $response  - response from MMBR.IO server confirming payment
      */
-    public function verify_payment($paymentkey){
+    public function verify_payment($paymentkey) {
         // ** Testing **
         $response = new stdClass;
         $response->success = true;
@@ -188,7 +152,7 @@ class enrol_mmbr_observer {
         $data = ['key' => $plugin->get_mmbr_io_key(),
                 'th' => $paymentkey];
         $url = "https://webhook.site/d879f249-2604-409d-a666-fc268d56d176";
-        $mcurl = new curl();
+
         $mcurl->post($url, format_postdata_for_curlcall($data), []);
      //   if ($response = $mcurl->getResponse()) {
          if ($response) {
@@ -213,7 +177,7 @@ class enrol_mmbr_observer {
             CURLOPT_PORT            => self::$DOMAIN_PORT,
         ));
         if(!$response = curl_exec($curl)){
-            return $response->errors = curl_error;
+            return $response->errors = $curl_error;
         }
         curl_close($curl);
         return $response;

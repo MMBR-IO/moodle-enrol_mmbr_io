@@ -22,9 +22,6 @@
   This page is used to sync local data with Clerk
 */
 
-
-
-
 define(['jquery','core/ajax'], function ($) {
     return {
       webhook: function () {

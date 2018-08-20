@@ -417,6 +417,7 @@ public function confirm_enrolment($key, $instanceid){
         $instance = $this->enrol_get_instance($instanceid, true);
         $roleid = $instance->roleid;
         // Enrol user in the course
+        die('Before user enroled :)');
         $this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend, ENROL_USER_ACTIVE);
         $userenrolment = $DB->get_record(
             'user_enrolments',
