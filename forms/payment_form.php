@@ -31,8 +31,9 @@ class enrol_mmbr_payment_form extends moodleform
     protected   $instance,  // enrolment instance
                 $moodle,    // Current moodle instance
                 $price,     // One time price
-                $recprice,  // Subscription price
+                $email,     // User email
                 $frequency, // Subscription payment frequency
+                $currency,  // Currency
                 $courseid,  // ID on enrolment course
                 $studentid, // ID of a student who wants to enrol
                 $mmbrkey;   // MMBR key to indentify MMBR account
@@ -42,7 +43,7 @@ class enrol_mmbr_payment_form extends moodleform
 
     public function definition() {
         global $USER, $DB, $PAGE;
-        $PAGE->requires->js_call_amd('enrol_mmbr/mmbr', 'payment');
+        $PAGE->requires->js_call_amd('enrol_mmbr/mmbr_io_calls', 'call');
         $mform = $this->_form;
         $this->instance = $this->_customdata;
         $plugin = enrol_get_plugin('mmbr');
@@ -51,9 +52,12 @@ class enrol_mmbr_payment_form extends moodleform
         $this->moodle = $DB->get_record_select('config_plugins',"plugin = 'enrol_mmbr' AND name = 'mmbrkey'");
         $endtime = 0;
         $this->courseid = $this->instance->courseid;
-        $this->price = $this->instance->cost;
+        $this->price = $plugin->get_cost_cents($this->instance->cost);
         $this->studentid = $USER->id;
         $this->mmbrkey = $this->moodle->value;
+        $this->currency = $this->instance->currency;
+        $this->frequency = $this->instance->enrolperiod;
+        $this->email = $USER->email;
         $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('paymentheading', 'enrol_mmbr').'</h3>');
         $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolmentoption','enrol_mmbr').''.$this->instance->name.'</h3>');
         $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: $'.$this->instance->cost.'</h3>');
@@ -63,14 +67,14 @@ class enrol_mmbr_payment_form extends moodleform
             'course_id='.   $this->courseid     .''.
             '&student_id='. $this->studentid    .''.
             '&price='.      $this->price        .''.
-            '&currency='.   $this->price        .''.
-            '&repeat_interval='.  $this->frequency    .''.
+            '&currency='.   $this->currency     .''.
+            '&email='.      $this->email        .''.
+            '&repeat_interval='.$this->frequency.''.
             '&public_key='. $this->mmbrkey      .'"></iframe>');
 
            // $this->add_action_buttons($cancel = true, $submitlabel='Proceed to checkout');
 
         $PAGE->requires->css('/enrol/mmbr/css/form.css');
-        $PAGE->requires->js_call_amd('enrol_mmbr/mmbr', 'call');
 
         $mform->addElement('hidden', 'courseid');
         $mform->setType('courseid', PARAM_INT);

@@ -18,18 +18,20 @@
  * @copyright   Dmitry Nagorny
  */
 
+ /**
+  * Submits form after approved payment, to enrol user in the course
+  */
 define(['jquery'], function ($) {
     return {
         call: function () {
-            console.log('MMBR.IO Message event listener started!');
             window.addEventListener("message", receiveMessage, false);
             function receiveMessage(event) {
                 // Origin validation MUSTHAVE in production
-                // if (event.origin !== "http://example.org:8080")
+                // if (event.origin !== "http://example.org:8080");
                 //     return;
                 // } 
                 var paymentKey = event.data;
-                console.log("Received key: " + event.data);
+                console.log(event);
                 // Apply receiveed data to the form and submit it
                 $('<input>', {
                     type: 'hidden',
@@ -38,15 +40,6 @@ define(['jquery'], function ($) {
                     value: paymentKey
                 }).appendTo('form');
                 $("form").submit();
-            } 
-        }, 
-        payment: function () {
-            console.log('MMBR.IO Submit event listener started!');
-            window.addEventListener("submit", processPayment, false);
-            function processPayment(event) {
-                event.preventDefault();
-                console.log("Submit catched");
-                console.log(event);
             }
         },
     };

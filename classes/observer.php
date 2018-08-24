@@ -57,9 +57,12 @@ class enrol_mmbr_observer {
                                  'userid'   => $userid,
                                  'courseid' => $value->courseid,
                                  ];
-                        $url = "https://webhook.site/d879f249-2604-409d-a666-fc268d56d176";
-                        $mcurl = new curl();
-                        $mcurl->post($url, format_postdata_for_curlcall($data), []);
+                        $options['CURLOPT_HTTPGET'] = 1;
+                        $response = self::get('foxtrot/plugin/user');
+                        $response = json_decode($response);
+                
+
+                        
                        // $response = $mcurl->getResponse();
                         $response = true;
 
@@ -129,12 +132,12 @@ class enrol_mmbr_observer {
     }
 
     /** 
-     * Concurrency check with MMBR.IO server that payment was successful  
+     * Concurrency check with MMBR.IO server about user enrolments 
      * 
-     * @param $paymentkey - got from Stripe transaction
-     * @return $response  - response from MMBR.IO server confirming payment
+     *
+     * @return $response  - response from MMBR.IO server requested course enrolment
      */
-    public function verify_payment($paymentkey) {
+    public function verify_user($userId, $courseId, $timeend) {
         // ** Testing **
         $response = new stdClass;
         $response->success = true;

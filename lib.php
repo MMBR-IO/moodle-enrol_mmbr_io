@@ -407,7 +407,7 @@ public function confirm_enrolment($key, $instanceid){
     // Confirm with MMBR.IO that payment successful  
     require('classes/observer.php');
     $observer = new enrol_mmbr_observer();
-    if ($response = $observer->verify_payment($key)) {
+    if ($response = $observer->verify_user()) {
         $timestart  = 0;
         $timeend    = 0;
         if($response->enrolment['expiry'] > 0){

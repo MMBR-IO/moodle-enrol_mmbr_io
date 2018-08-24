@@ -21,11 +21,10 @@
 define(['jquery'], function ($) {
     return {
         instances: function () {
-            console.log('MMBR.IO Style JQuery started!');
             $(':radio:first').parent('label').css('background-color', 'green');
             $(":radio").change(function() {
                 if(this.checked) {
-                    $(':radio').parent('label').css('background-color', 'lightgrey')
+                    $(':radio').parent('label').css('background-color', 'lightgrey');
                     $(this).parent('label').css('background-color', 'green');
 
                 }
