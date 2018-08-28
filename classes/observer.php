@@ -38,6 +38,12 @@ class enrol_mmbr_observer {
      *  - check if all enrolments is up to date
      *  - update with MMBR.IO in case something missing
      */
+
+    /**
+     * |*| 1) Get all MMBR.IO enrollments -> check is user has one -> validate it         
+     * | | 2) Get all user_enrollments -> check if there are MMBR.IO ones -> validate them
+     * | | 3) Write custom query with table JOIN to get all MMBR.IO enrolments -> validate them 
+     */
 	public static function check_logged_user($event) {
         global $DB;
         $plugin = enrol_get_plugin('mmbr');
@@ -47,32 +53,20 @@ class enrol_mmbr_observer {
         $enrolments = $DB->get_records($enrol, array('enrol' => 'mmbr'));
         // Check is this user has enrolment with MMBR plugin
         // False -> do nothing || True -> Check if all his enrolment is up to date
-        foreach ($enrolments as &$value) {
-            $enrolid = $value->id;
+        foreach ($enrolments as &$enrolment) {
+            $enrolid = $enrolment->id;
             $records = $DB->get_records("user_enrolments", array('enrolid' => $enrolid, 'userid'=> $userid)); // Get all user enrolments
             if ($records != 0){ // If user has enrolments
-                foreach ($records as &$val) {
-                    if (!empty($val->timeend) && $val->timeend > 0 && $val->timeend < time()){ // If enrolment exist and expired 
-                        $data = ['key'      => $plugin->get_mmbr_io_key(),
-                                 'userid'   => $userid,
-                                 'courseid' => $value->courseid,
-                                 ];
-                        $options['CURLOPT_HTTPGET'] = 1;
-                        $response = self::get('foxtrot/plugin/user');
-                        $response = json_decode($response);
-                
-
-                        
-                       // $response = $mcurl->getResponse();
-                        $response = true;
-
+                foreach ($records as &$rec) {
+                    if ($rec->status == 0 && !empty($rec->timeend) && $rec->timeend > 0 && $rec->timeend < time()){ // If enrolment exist and expired 
+                        $result = self::validate_user_enrolment($userid, $enrolment->courseid, $enrolment->cost);
                         // Update enrolment expiry date
-                        if($response) { // If answer from MMBR.IO is true
-                            $newtimeend = time() + $value->customint2; // Current time + payment frequency from Enrolment Instance 
-                            $plugin->update_user_enrol($value, $userid, false,null, $newtimeend);
-                            // Check if expiry date didn't expire LS
+                        if($result->success) { // If answer from MMBR.IO is true
+                            $newtimeend = intval(substr(strval($result->data->timeend), 0, 10));
+                            $plugin->update_user_enrol($enrolment, $userid, false,null, $newtimeend);
                         } else {
-                            $plugin->update_user_enrol($value, $userid, true,null, null);
+                            $plugin->update_user_enrol($enrolment, $userid, true,null, null);
+                            \core\notification::error($result->errors);
                         }
                     }
                 }
@@ -80,11 +74,70 @@ class enrol_mmbr_observer {
         }
     }
 
+    /**
+     * User enrolment deleted
+     * Event is triggered when user enrollment deleted
+     * 
+     * 
+     */
+    public static function check_unenrolled_user($event) {
+        var_dump($event);
+        die();
+    }
+
+     /** 
+     * Validates if user is enrolled in course with given price
+     * 
+     * @param $user_id     
+     * @param $course_id    
+     * @param $price    - Needed to identify enrolement instance
+     *
+     * @return $response - Response from MMBR.IO server 
+     *      - success: true/false,
+     *          if (true) {
+     *      - data: {timeend: integer }     
+     *          } else {
+     *      - error: string
+     *          }
+     */
+
+    public static function validate_user_enrolment($user_id, $course_id, $price) {
+        $plugin = enrol_get_plugin('mmbr');
+        $mmbriokey = $plugin->get_mmbr_io_key();
+        $data = [
+            'public_key'   => $mmbriokey,
+            'user_id'      => $user_id,
+            'course_id'    => $course_id,
+            'price'        => $price,
+        ];
+        $response = self::get('foxtrot/plugin/user', $data, array());
+        $response = json_decode($response);
+        if ($response->success) { // validate if answer has success message
+            return $response;
+        } else {
+            $response->success = false;
+            $response->error = get_string('mmbriovaliderror', 'enrol_mmbr');
+            return $response;
+        }
+    }
+
+    /**
+     * Pings MMBR.IO Server when new enrolment instance is created. 
+     * 
+     * @param $instance     - Enrolment instance
+     * @param $course       - Course where instance were created
+     * 
+     * @return $response    - Success message, if false provides error message
+     */
+
     public static function new_enrolment_instance($instance, $course) {
         global $DB;
         $response = new stdClass;
         $plugin = enrol_get_plugin('mmbr');
         $mmbriokey = $plugin->get_mmbr_io_key();
+        if (!$mmbriokey) { // Check if key exists
+            return $response->errors = get_string('mmbriodeferror', 'enrol_mmbr');
+        }
         if (strlen($plugin->get_mmbr_io_key()) < 13) {
             $response->errors = 'miss_key';
             return $response;
@@ -94,9 +147,7 @@ class enrol_mmbr_observer {
             'course_id'     => $course->id,
             'course_name'   => $course->fullname,
         ];
-        $options['CURLOPT_HTTPGET'] = 1;
-
-        $response = self::get('foxtrot/plugin/instance', $data, $options);
+        $response = self::get('foxtrot/plugin/instance', $data);
         $response = json_decode($response);
         return $response;
     }
@@ -131,41 +182,6 @@ class enrol_mmbr_observer {
         $plugin->unenrol_user($instance, $userid);
     }
 
-    /** 
-     * Concurrency check with MMBR.IO server about user enrolments 
-     * 
-     *
-     * @return $response  - response from MMBR.IO server requested course enrolment
-     */
-    public function verify_user($userId, $courseId, $timeend) {
-        // ** Testing **
-        $response = new stdClass;
-        $response->success = true;
-        $response->enrolment = [
-            'course_id' => 4,
-            'user_id'   => 3,
-            'price'     => 10000,
-            'currency'  => 'USD',
-            'expiry'    => 1631416635,
-            'interval'  => 86400];
-        // ** Testing **
-
-        global $DB;
-        $plugin = enrol_get_plugin('mmbr');
-        $data = ['key' => $plugin->get_mmbr_io_key(),
-                'th' => $paymentkey];
-        $url = "https://webhook.site/d879f249-2604-409d-a666-fc268d56d176";
-
-        $mcurl->post($url, format_postdata_for_curlcall($data), []);
-     //   if ($response = $mcurl->getResponse()) {
-         if ($response) {
-            if ($response->success) {
-                return $response;
-            }
-        }
-        return false;
-    }    
-
     public static function get($route, $params = array(), $options = array()) {
         $url = self::$DOMAIN . $route;
         if (!empty($params)) {
@@ -187,6 +203,5 @@ class enrol_mmbr_observer {
     }
 
     public static function post() {
-
     }
 }

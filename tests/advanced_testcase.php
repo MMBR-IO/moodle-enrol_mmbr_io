@@ -19,23 +19,21 @@
  * @copyright   Dmitry Nagorny
  */
 
-$observers = array(
-    array(
-        'eventname' => '\core\event\user_loggedin',
-        'includefile' => '/enrol/mmbr/classes/observer.php',
-        'callback' => "enrol_mmbr_observer::check_logged_user",
-    ),
-    array(
-        'eventname' => '\core\event\user_enrolment_deleted',
-        'includefile' => '/enrol/mmbr/classes/observer.php',
-        'callback' => "enrol_mmbr_observer::check_unenrolled_user",
-    ),
-
-    
-    array(
-        'eventname' => '\core\event\course_module_instance_list_viewed',
-        'includefile' => '/enrol/mmbr/classes/observer.php',
-        'callback' => "enrol_mmbr_observer::course_viewed",
-    ),
-
-);
+defined('MOODLE_INTERNAL') || die();
+require_once $CFG->dirroot . '/user/profile/lib.php';
+require_once $CFG->dirroot . '/lib/filelib.php';
+require_once $CFG->dirroot . '/enrol/mmbr/lib.php';
+class mod_myplugin_testcase extends advanced_testcase {
+  public function test_deleting() {
+    global $DB;
+    // Back to before test DB state
+    $this->resetAfterTest(true);
+    $user1 = $this->getDataGenerator()->create_user(array('email'=>'user1@example.com', 'username'=>'user1'));
+    $this->setUser($user1);
+  }
+  
+  public function test_user_table_was_reset() {
+    global $DB;
+    $this->assertEquals(2, $DB->count_records('user', array()));
+  }
+ }

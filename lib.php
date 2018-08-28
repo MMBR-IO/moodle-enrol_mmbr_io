@@ -407,17 +407,18 @@ public function confirm_enrolment($key, $instanceid){
     // Confirm with MMBR.IO that payment successful  
     require('classes/observer.php');
     $observer = new enrol_mmbr_observer();
-    if ($response = $observer->verify_user()) {
+    // Get instance 
+    $instance = $this->enrol_get_instance($instanceid, true);
+    $result = $observer->validate_user_enrolment($USER->id, $instance->courseid, $instance->cost);
+    if ($result->success) {
+        // We get unix time with milliseconds, need to trim before saving to moodle database to keep consistency 
         $timestart  = 0;
         $timeend    = 0;
-        if($response->enrolment['expiry'] > 0){
-            $timeend = $response->enrolment['expiry'];
-        }
-        // Get instance 
-        $instance = $this->enrol_get_instance($instanceid, true);
+        if ($result->data && $result->data->timeend && $result->data->timeend > 0) {
+            $timeend = intval(substr(strval($result->data->timeend), 0, 10));
+        } 
         $roleid = $instance->roleid;
         // Enrol user in the course
-        die('Before user enroled :)');
         $this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend, ENROL_USER_ACTIVE);
         $userenrolment = $DB->get_record(
             'user_enrolments',
@@ -428,7 +429,7 @@ public function confirm_enrolment($key, $instanceid){
 
         redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid");
     } else {
-        die("Couldn't verify payment");
+        \core\notification::error($result->errors);
     }
 }
 
@@ -464,8 +465,10 @@ public function get_cost_full($cost) {
  */
 public function get_mmbr_io_key() {
     global $DB;
-    $keyrecord = $DB->get_record_select('config_plugins',"plugin = 'enrol_mmbr' AND name = 'mmbrkey'");
-    return $keyrecord->value;
+    if ($keyrecord = $DB->get_record_select('config_plugins',"plugin = 'enrol_mmbr' AND name = 'mmbrkey'")) {
+        return $keyrecord->value;
+    }
+    return null;
 }
 
 }

@@ -46,10 +46,13 @@ $capabilities = array(
             'manager' => CAP_ALLOW,
         )
     ),
+    
+    /* Allow a user to unenrol himself */
     'enrol/mmbr:unenrolself' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
+            'student' => CAP_ALLOW,
         )
     ),
 );

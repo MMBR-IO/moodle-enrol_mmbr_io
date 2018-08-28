@@ -82,7 +82,6 @@ $string['defaultperiod_help'] = 'Default length of time that the enrolment is va
 // $string['notifyglobal'] = "New enrolment application notification (global, eg. global managers and admins)";
 // $string['notifyglobal_desc'] = "Define who gets notified about new enrolment applications for any course.";
 
-
 // Errors 
 $string['costnumerror']     = 'Price should be numeric values';
 $string['costnullerror']    = 'Price should be more than 0';
@@ -90,10 +89,7 @@ $string['mmbriodeferror']   = 'Sorry, but error occurred in MMBR.IO Plugin.';
 $string['mmbriokeyerror']   = 'MMBR.IO Public Key Error. Make sure you entered right key in plugin setting';
 $string['mmbrioservererror']= 'Look like MMBR.IO Server down for maintenance. Please, try later.';
 $string['mmbriokeymiserror']= 'This plugin missing MMBR.IO Public Key in settings. Please enter it.';
-
-// Delete soon
-$string['aftercourse'] = 'Some text from Dmitry';
-
+$string['mmbriovaliderror'] = 'Colnd\'t validate your enrolment'; 
 
 // Privacy API
 // Temp String to explaine why we don't store any data
