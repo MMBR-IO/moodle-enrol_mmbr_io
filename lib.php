@@ -412,7 +412,7 @@ public function confirm_enrolment($key, $instanceid){
     $result = $observer->validate_user_enrolment($USER->id, $instance->courseid, $instance->cost);
     if ($result->success) {
         // We get unix time with milliseconds, need to trim before saving to moodle database to keep consistency 
-        $timestart  = 0;
+        $timestart  = time();
         $timeend    = 0;
         if ($result->data && $result->data->timeend && $result->data->timeend > 0) {
             $timeend = intval(substr(strval($result->data->timeend), 0, 10));

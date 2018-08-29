@@ -37,6 +37,8 @@ class enrol_mmbr_observer {
      * If this user has enrolments with MMBR.IO plugin 
      *  - check if all enrolments is up to date
      *  - update with MMBR.IO in case something missing
+     * 
+     * @param $event - This event instance
      */
 
     /**
@@ -58,15 +60,15 @@ class enrol_mmbr_observer {
             $records = $DB->get_records("user_enrolments", array('enrolid' => $enrolid, 'userid'=> $userid)); // Get all user enrolments
             if ($records != 0){ // If user has enrolments
                 foreach ($records as &$rec) {
-                    if ($rec->status == 0 && !empty($rec->timeend) && $rec->timeend > 0 && $rec->timeend < time()){ // If enrolment exist and expired 
+                    if (intval($rec->status) == 0 && !empty($rec->timeend) && intval($rec->timeend) != 0 && $rec->timeend > 0 && $rec->timeend < time()){ // If enrolment exist and expired 
                         $result = self::validate_user_enrolment($userid, $enrolment->courseid, $enrolment->cost);
                         // Update enrolment expiry date
                         if($result->success) { // If answer from MMBR.IO is true
                             $newtimeend = intval(substr(strval($result->data->timeend), 0, 10));
-                            $plugin->update_user_enrol($enrolment, $userid, false,null, $newtimeend);
+                            $plugin->update_user_enrol($enrolment, $userid, false, null, $newtimeend);  // false -> enrolment is active
                         } else {
-                            $plugin->update_user_enrol($enrolment, $userid, true,null, null);
-                            \core\notification::error($result->errors);
+                            $plugin->update_user_enrol($enrolment, $userid, true, null, null);          // true -> enrolment is deactivated
+                            \core\notification::error($result->errors); // Shows error to user
                         }
                     }
                 }
@@ -75,14 +77,35 @@ class enrol_mmbr_observer {
     }
 
     /**
-     * User enrolment deleted
+     * User enrolment deleted.
      * Event is triggered when user enrollment deleted
      * 
+     * @param $event - This event instance
+     * 
+     */
+
+    /**
      * 
      */
     public static function check_unenrolled_user($event) {
-        var_dump($event);
-        die();
+        global $DB;
+        $eventdata  = $event->get_data();    // All data about this event
+        if ($eventdata['other']['enrol'] === "mmbr") {
+            $userid     = $eventdata['other']['userenrolment']['userid'];
+            $courseid   = $eventdata['other']['userenrolment']['courseid'];
+            $enrolid    = $eventdata['other']['userenrolment']['enrolid'];
+            $plugin = enrol_get_plugin('mmbr');
+            $price = $DB->get_field('enrol', 'cost' , array('id' => $enrolid), $strictness=IGNORE_MISSING);
+
+            $mmbriokey = $plugin->get_mmbr_io_key();
+            $data = [
+                'public_key'   => $mmbriokey,
+                'user_id'      => $userid,
+                'course_id'    => $courseid,
+                'price'        => $price,
+            ];
+            $result = self::put('foxtrot/plugin/delete_enrollment', $data, array());
+        }
     }
 
      /** 
@@ -202,6 +225,22 @@ class enrol_mmbr_observer {
         return $response;
     }
 
-    public static function post() {
+    public static function put($route, $params = array(), $options = array()) {
+        $url = self::$DOMAIN . $route;
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(     
+            CURLOPT_RETURNTRANSFER  => true,
+            CURLOPT_CUSTOMREQUEST   => 'PUT',
+            CURLOPT_URL             => $url,
+            CURLOPT_PORT            => self::$DOMAIN_PORT,
+            CURLOPT_POSTFIELDS      => http_build_query($params),
+        ));
+
+        if(!$response = curl_exec($curl)){
+            return $response->errors = $curl_error;
+        }
+        curl_close($curl);
+        return $response;
     }
 }

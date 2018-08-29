@@ -59,8 +59,8 @@ class enrol_mmbr_payment_form extends moodleform
         $this->frequency = $this->instance->enrolperiod;
         $this->email = $USER->email;
         $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('paymentheading', 'enrol_mmbr').'</h3>');
-        $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolmentoption','enrol_mmbr').''.$this->instance->name.'</h3>');
-        $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: $'.$this->instance->cost.'</h3>');
+        $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolmentoption','enrol_mmbr').'<strong>'.$this->instance->name.'</strong></h3>');
+        $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: <strong>$'.$this->instance->cost.'</strong></h3>');
 
         // Create form for subscription 
         $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:4141/comma/v1/foxtrot/frame?'.
