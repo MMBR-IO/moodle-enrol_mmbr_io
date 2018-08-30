@@ -20,30 +20,25 @@
 
  /**
   * Submits form after approved payment, to enrol user in the course
+  * @param $ -
+  * @returns functions
   */
 define(['jquery'], function ($) {
     return {
         call: function () {
             window.addEventListener("message", receiveMessage, false);
+            /**
+             * 
+             * @param {Object} event 
+             */
             function receiveMessage(event) {
-                // Origin validation MUSTHAVE in production
-                // if (event.origin !== "http://example.org:8080");
-                //     return;
-                // } 
-                var paymentKey = event.data;
-                console.log(event);
-                // Apply receiveed data to the form and submit it
-                $('<input>', {
-                    type: 'hidden',
-                    id: 'paymentkey',
-                    name: 'paymentkey',
-                    value: paymentKey
-                }).appendTo('form');
-                $("form").submit();
+                if (typeof event === 'undefined' || event.origin !== "http://localhost:4141" ||
+                    event.data !== 'success') {
+                    $("#postError").text('Error handling message event');
+                } else {
+                    $("form").submit();
+                }
             }
         },
     };
 });
-
-
-

@@ -22,7 +22,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'enrol_mmbr';
-$plugin->release = '0.5.1';
-$plugin->version = 2018071601; // Version format - YYYYMMDDXX
+$plugin->release = '0.8.1';
+$plugin->version = 2018083000; // Version format - YYYYMMDDXX
 $plugin->requires = 2018051700;
 $plugin->maturity = MATURITY_BETA;

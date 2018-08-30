@@ -26,6 +26,8 @@ require_login();
 $courseid   = required_param('courseid', PARAM_INT);
 $instanceid = optional_param('instanceid', 0, PARAM_INT); 
 $paymentid = optional_param('paymentid', null, PARAM_TEXT);
+header("Cache-Control: private, must-revalidate, max-age=0");
+
 
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
@@ -58,7 +60,8 @@ if ($instanceid > 0) {
     $mform = new enrol_mmbr_payment_form(null, $instance);
 
     if ($data = $mform->get_data()) { 
-        $plugin->confirm_enrolment($data->paymentkey, $data->instanceid);
+        die('Looks like something died :(');
+        $plugin->confirm_enrolment($data->instanceid);
     }
     if ($mform->is_cancelled()) {
         redirect($return);

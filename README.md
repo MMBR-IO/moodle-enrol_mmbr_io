@@ -14,7 +14,5 @@ Foxtrot is for anyone who uses or plans to use Moodle to publish courses. Foxtro
 TODO:
 
 1.  Do something if iFrame can't load content
-2.  Situation when there are few teachers :/
-4.  As of July all Moodle plugin must gave Privacy API
+2.  As of July all Moodle plugin must gave Privacy API
     Implementing the Privacy API in your Moodle plugin - GDPR (https://www.youtube.com/watch?v=jcVKzq2qimQ) - Video Tutorial
-5. We can run cron jobs remotely with password

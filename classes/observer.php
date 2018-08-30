@@ -83,10 +83,6 @@ class enrol_mmbr_observer {
      * @param $event - This event instance
      * 
      */
-
-    /**
-     * 
-     */
     public static function check_unenrolled_user($event) {
         global $DB;
         $eventdata  = $event->get_data();    // All data about this event

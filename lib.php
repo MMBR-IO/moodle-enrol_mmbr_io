@@ -374,9 +374,10 @@ function enrol_get_instances($courseid, $enabled) {
  * @return $currencies
  */
 public function get_currencies() {
-    $codes = array(
-        'AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'JPY',
-        'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'USD');
+    // $codes = array(
+    //     'AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'JPY',
+    //     'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'USD');
+    $codes = array('USD', 'CAD');
     $currencies = array();
     foreach ($codes as $c) {
         $currencies[$c] = new lang_string($c, 'core_currencies');
@@ -402,7 +403,7 @@ public function get_enrolment_options($id = NULL) {
     }
 }
 
-public function confirm_enrolment($key, $instanceid){
+public function confirm_enrolment($instanceid){
     global $DB, $CFG, $USER;
     // Confirm with MMBR.IO that payment successful  
     require('classes/observer.php');

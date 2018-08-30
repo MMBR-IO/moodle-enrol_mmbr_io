@@ -39,42 +39,48 @@ class enrol_mmbr_payment_form extends moodleform
                 $mmbrkey;   // MMBR key to indentify MMBR account
 
     //This might be needed in future
-   
-
+    
     public function definition() {
         global $USER, $DB, $PAGE;
-        $PAGE->requires->js_call_amd('enrol_mmbr/mmbr_io_calls', 'call');
         $mform = $this->_form;
+        // var_dump($this->_form);
+        //die();
         $this->instance = $this->_customdata;
         $plugin = enrol_get_plugin('mmbr');
 
         // Gather all needed information
         $this->moodle = $DB->get_record_select('config_plugins',"plugin = 'enrol_mmbr' AND name = 'mmbrkey'");
-        $endtime = 0;
-        $this->courseid = $this->instance->courseid;
-        $this->price = $plugin->get_cost_cents($this->instance->cost);
-        $this->studentid = $USER->id;
-        $this->mmbrkey = $this->moodle->value;
-        $this->currency = $this->instance->currency;
-        $this->frequency = $this->instance->enrolperiod;
-        $this->email = $USER->email;
-        $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('paymentheading', 'enrol_mmbr').'</h3>');
-        $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolmentoption','enrol_mmbr').'<strong>'.$this->instance->name.'</strong></h3>');
-        $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: <strong>$'.$this->instance->cost.'</strong></h3>');
+        if (empty($this->moodle) || empty($this->moodle->value)) {
+            \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbr'));
+            \core\notification::error(get_string('mmbriocustomerkey', 'enrol_mmbr'));
+        } else {
+            $endtime = 0;
+            $this->courseid = $this->instance->courseid;
+            $this->price = $plugin->get_cost_cents($this->instance->cost);
+            $this->studentid = $USER->id;
+            $this->mmbrkey = $this->moodle->value;
+            $this->currency = $this->instance->currency;
+            $this->frequency = $this->instance->enrolperiod;
+            $this->email = $USER->email;
+            $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('paymentheading', 'enrol_mmbr').'</h3>');
+            $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolmentoption','enrol_mmbr').'<strong>'.$this->instance->name.'</strong></h3>');
+            $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: <strong>$'.$this->instance->cost.'</strong></h3>');
 
-        // Create form for subscription 
-        $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:4141/comma/v1/foxtrot/frame?'.
-            'course_id='.   $this->courseid     .''.
-            '&student_id='. $this->studentid    .''.
-            '&price='.      $this->price        .''.
-            '&currency='.   $this->currency     .''.
-            '&email='.      $this->email        .''.
-            '&repeat_interval='.$this->frequency.''.
-            '&public_key='. $this->mmbrkey      .'"></iframe>');
+            // Create form for subscription 
+            $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:4141/comma/v1/foxtrot/frame?'.
+                'course_id='.   $this->courseid     .''.
+                '&student_id='. $this->studentid    .''.
+                '&price='.      $this->price        .''.
+                '&currency='.   $this->currency     .''.
+                '&email='.      $this->email        .''.
+                '&repeat_interval='.$this->frequency.''.
+                '&public_key='. $this->mmbrkey      .'"></iframe>');
+            
+                $mform->addElement('html', '<h5 id="postError" style="text-align:center;color:red;"></h5>');
 
-           // $this->add_action_buttons($cancel = true, $submitlabel='Proceed to checkout');
-
-        $PAGE->requires->css('/enrol/mmbr/css/form.css');
+            $PAGE->requires->css('/enrol/mmbr/css/form.css');
+            $PAGE->requires->js_call_amd('enrol_mmbr/mmbr_io_calls', 'call');
+        }
 
         $mform->addElement('hidden', 'courseid');
         $mform->setType('courseid', PARAM_INT);
@@ -88,8 +94,8 @@ class enrol_mmbr_payment_form extends moodleform
         // $mform->setType('paymentid', PARAM_TEXT);
         // $mform->setDefault('paymentid', "Some kind of paymentid");
 
-        $mform->addElement('hidden', 'paymentkey');
-        $mform->setType('paymentkey', PARAM_TEXT);
+        $mform->addElement('hidden', 'submit_data');
+        $mform->setType('submit_data', PARAM_TEXT);
         
     }  
 }

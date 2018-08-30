@@ -52,7 +52,7 @@ function xmldb_enrol_mmbr_upgrade($oldversion) {
         }
 
         // Mmbr savepoint reached.
-        upgrade_plugin_savepoint(true, 2018062200, 'enrol', 'mmbr');
+        upgrade_plugin_savepoint(true, 2018083000, 'enrol', 'mmbr');
     }
 
     return true;
