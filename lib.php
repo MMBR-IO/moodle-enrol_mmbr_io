@@ -197,6 +197,41 @@ class enrol_mmbr_plugin extends enrol_plugin
         }
     }
 
+     /**
+     * Returns list of unenrol links for all enrol instances in course.
+     *
+     * @param int $instance
+     * @return moodle_url or NULL if self unenrolment not supported
+     */
+    public function get_unenrolself_link($instance) {
+        global $USER, $CFG, $DB;
+        $name = $this->get_name();
+        if ($instance->enrol !== $name) {
+            throw new coding_exception('invalid enrol instance!');
+        }
+        if ($instance->courseid == SITEID) {
+            return NULL;
+        }
+        if (!enrol_is_enabled($name)) {
+            return NULL;
+        }
+        if ($instance->status != ENROL_INSTANCE_ENABLED) {
+            return NULL;
+        }
+        if (!file_exists("$CFG->dirroot/enrol/$name/unenrolself.php")) {
+            return NULL;
+        }
+        $context = context_course::instance($instance->courseid, MUST_EXIST);
+        if (!has_capability("enrol/$name:unenrolself", $context)) {
+            return NULL;
+        }
+        if (!$DB->record_exists('user_enrolments', array('enrolid'=>$instance->id, 'userid'=>$USER->id, 'status'=>ENROL_USER_ACTIVE))) {
+            return NULL;
+        }
+        return new moodle_url("/enrol/$name/unenrolself.php", array('enrolid'=>$instance->id));
+    }
+
+
     /**
      * Does this plugin allow manual unenrolment of a specific user?
      * All plugins allowing this must implement 'enrol/xxx:unenrol' capability

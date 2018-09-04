@@ -66,7 +66,7 @@ if($mform->is_cancelled()) {
     // 1 = represents monthly subscription  
     $op = (int)$data->name;
     if ($op === 1) {
-        $instance->enrolenddate = time() + intval(31536000/12);
+        $instance->enrolperiod = intval(31536000/12);
     } 
     
     if ($instance->id){ // If id exists, means we updating existing instance

@@ -29,7 +29,6 @@ $capabilities = array(
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
             'manager' => CAP_ALLOW,
-            'student' => CAP_ALLOW,
         )
     ),
     'enrol/mmbr:manage' => array(
@@ -38,7 +37,6 @@ $capabilities = array(
         'archetypes' => array(
             'manager' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'student' => CAP_ALLOW,
         )
     ),
     'enrol/mmbr:unenrol' => array(
@@ -46,16 +44,14 @@ $capabilities = array(
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
             'manager' => CAP_ALLOW,
-            'student' => CAP_ALLOW,
         )
     ),
     
-    /* Allow a user to unenrol himself */
+    /* Allow a users to unenroll themselves */
     'enrol/mmbr:unenrolself' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
-            'editingteacher' => CAP_ALLOW,
             'student' => CAP_ALLOW,
         )
     ),

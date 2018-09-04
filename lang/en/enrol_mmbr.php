@@ -53,32 +53,20 @@ $string['currency']         = "Select Currency";
 $string['enrolmentoption']  = "Selected enrolment option: ";
 
 // Enrolment instance names 
-$string['instancename0'] = "One Time Payment";
-$string['instancename1'] = "Monthly Subscription";
+$string['instancename0']  = "One Time Payment";
+$string['instancename1']  = "Monthly Subscription";
 
-$string['role'] = "Select role once enroled";
-$string['status'] = "Enrolment status";
-$string['active'] = "Active";
-$string['suspended'] = "Suspended";
-$string['status_help'] = 'Suspended enrolment won\'t be available to use until Activated';
-$string['fullaccess'] = 'Get Full Access';
-$string['subscription'] = 'Subscription';
+$string['role']           = "Select role once enroled";
+$string['status']         = "Enrolment status";
+$string['active']         = "Active";
+$string['suspended']      = "Suspended";
+$string['status_help']    = 'Suspended enrolment won\'t be available to use until Activated';
+$string['fullaccess']     = 'Get Full Access';
+$string['subscription']   = 'Subscription';
 
-// Not sure why I need this, but if they miising -> ERROR!
-$string['defaultperiod'] = 'Default enrolment duration';
-$string['defaultperiod_desc'] = 'Default length of time that the enrolment is valid. If set to zero, the enrolment duration will be unlimited by default.';
-$string['defaultperiod_help'] = 'Default length of time that the enrolment is valid, starting with the moment the user is enrolled. If disabled, the enrolment duration will be unlimited by default.';
-
-// Delete later
-// $string['applymanage'] = 'Manage enrolment applications';
-// $string['show_standard_user_profile'] = 'Show standard user profile fields on enrolment screen';
-// $string['show_extra_user_profile'] = 'Show extra user profile fields on enrolment screen';
-// $string['notify_heading'] = 'Notification settings';
-// $string['notify_desc'] = 'Define who gets notified about new enrolment applications.';
-// $string['notifycoursebased'] = "New enrolment application notification (instance based, eg. course teachers)";
-// $string['notifycoursebased_desc'] = "Default for new instances: Notify everyone who have the 'Manage apply enrolment' capability for the corresponding course (eg. teachers and managers)";
-// $string['notifyglobal'] = "New enrolment application notification (global, eg. global managers and admins)";
-// $string['notifyglobal_desc'] = "Define who gets notified about new enrolment applications for any course.";
+// Unenrolment
+$string['unenrolselfonetime']   = "This course was paid in full, if you unenrol yourself you will lose access to it.";
+$string['unenrolselfsubscribe'] = "If you unenrol yourself, you will loose access to this course and you credit card won't be charged";
 
 // Errors 
 $string['mmbriodeferror']   = 'Sorry, but error occurred in MMBR.IO Plugin.';
@@ -92,14 +80,14 @@ $string['mmbriocustomerkey']= 'Right now you can not enroll in this course. Cont
 
 // Privacy API
 // Temp String to explaine why we don't store any data
-$string['privacy:metadata'] = "For now we don'r store data, maybe in future...";
-$string['privacy:metadata:user'] = 'In order to link payment to user we store some user information in MMBR.IO database';
-$string['privacy:metadata:user:id'] = 'Unique user id helps identify user';
-$string['privacy:metadata:user:firstname'] = 'Allows to communicate with user';
-$string['privacy:metadata:user:lastname'] = 'Allows to communicate with user';
-$string['privacy:metadata:user:email'] = 'Allows to communicate with user';
+$string['privacy:metadata']                 = "For now we don'r store data, maybe in future...";
+$string['privacy:metadata:user']            = 'In order to link payment to user we store some user information in MMBR.IO database';
+$string['privacy:metadata:user:id']         = 'Unique user id helps identify user';
+$string['privacy:metadata:user:firstname']  = 'Allows to communicate with user';
+$string['privacy:metadata:user:lastname']   = 'Allows to communicate with user';
+$string['privacy:metadata:user:email']      = 'Allows to communicate with user';
 
-$string['privacy:metadata:user_enrolments'] = 'In order to validate enrolment and payment status we synchronise this data with MMBR.IO database';
-$string['privacy:metadata:user_enrolments:status'] = 'Stores data is enrolment still valid';
-$string['privacy:metadata:user_enrolments:userid'] = 'Links enrolment with user';
-$string['privacy:metadata:user_enrolments:timeend'] = 'Specifies temporary enrolment end date';
+$string['privacy:metadata:user_enrolments']           = 'In order to validate enrolment and payment status we synchronise this data with MMBR.IO database';
+$string['privacy:metadata:user_enrolments:status']    = 'Stores data is enrolment still valid';
+$string['privacy:metadata:user_enrolments:userid']    = 'Links enrolment with user';
+$string['privacy:metadata:user_enrolments:timeend']   = 'Specifies temporary enrolment end date';
