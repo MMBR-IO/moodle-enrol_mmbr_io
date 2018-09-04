@@ -135,18 +135,6 @@ class enrol_mmbr_plugin extends enrol_plugin
     }
 
     /**
-     * Does this plugin allow manual unenrolment of all users?
-     * All plugins allowing this must implement 'enrol/xxx:unenrol' capability
-     *
-     * @param stdClass $instance course enrol instance
-     * @return bool - true means user with 'enrol/xxx:unenrol' may unenrol others freely, false means nobody may touch user_enrolments
-     */
-    public function allow_unenrol(stdClass $instance)
-    {
-        return true;
-    }
-
-    /**
      * This add 'Edit' icon on admin panel to allow edit existing instance
      * Has possibility to add more icons for additional functionality 
      * Create icon and add to $icons array 
@@ -191,6 +179,21 @@ class enrol_mmbr_plugin extends enrol_plugin
         if (has_capability('enrol/mmbr:config', $context)) {
             $managelink = new moodle_url('/enrol/mmbr/edit.php', array('courseid' => $instance->courseid, 'id' => $instance->id));
             $instancesnode->add($this->get_instance_name($instance), $managelink, navigation_node::TYPE_SETTING);
+        }
+    }
+
+    /**
+     * Does this plugin allow manual unenrolment of all users?
+     * All plugins allowing this must implement 'enrol/xxx:unenrol' capability
+     *
+     * @param stdClass $instance course enrol instance
+     * @return bool - true means user with 'enrol/xxx:unenrol' may unenrol others freely, false means nobody may touch user_enrolments
+     */
+    public function allow_unenrol(stdClass $instance)
+    {
+        $context = context_course::instance($instance->courseid);
+        if (has_capability('enrol/mmbr:unenrolself', $context)) {
+            return true;           
         }
     }
 
@@ -427,7 +430,6 @@ public function confirm_enrolment($instanceid){
                 'userid' => $USER->id,
                 'enrolid' => $instance->id),
             'id', MUST_EXIST);
-
         redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid", 'Thank you. You now enrolled in this course.', null, \core\output\notification::NOTIFY_SUCCESS);
     } else {
         \core\notification::error($result->errors);

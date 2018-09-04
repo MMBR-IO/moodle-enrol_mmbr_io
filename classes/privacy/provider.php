@@ -29,18 +29,12 @@ class provider implements
         // This plugin does store personal user data.
      //   \core_privacy\local\metadata\provider {
 
-/**
- * Lets pretend that we don't store any data for now
- */
-
 // This plugin does not store any personal user data.
 \core_privacy\local\metadata\null_provider {
 
 public static function get_reason() : string {
     return 'privacy:metadata';
 }
-
-
  
 //     public static function get_metadata(collection $collection) : collection {
 //      //   $collection = new \core_privacy\local\metadata\collection;

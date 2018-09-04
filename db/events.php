@@ -30,12 +30,4 @@ $observers = array(
         'includefile' => '/enrol/mmbr/classes/observer.php',
         'callback' => "enrol_mmbr_observer::check_unenrolled_user",
     ),
-
-    
-    array(
-        'eventname' => '\core\event\course_module_instance_list_viewed',
-        'includefile' => '/enrol/mmbr/classes/observer.php',
-        'callback' => "enrol_mmbr_observer::course_viewed",
-    ),
-
 );

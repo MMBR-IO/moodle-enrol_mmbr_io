@@ -43,8 +43,6 @@ class enrol_mmbr_payment_form extends moodleform
     public function definition() {
         global $USER, $DB, $PAGE;
         $mform = $this->_form;
-        // var_dump($this->_form);
-        //die();
         $this->instance = $this->_customdata;
         $plugin = enrol_get_plugin('mmbr');
 
@@ -89,10 +87,6 @@ class enrol_mmbr_payment_form extends moodleform
         $mform->addElement('hidden', 'instanceid');
         $mform->setType('instanceid', PARAM_INT);
         $mform->setDefault('instanceid', $this->instance->id);
-
-        // $mform->addElement('hidden', 'paymentid');
-        // $mform->setType('paymentid', PARAM_TEXT);
-        // $mform->setDefault('paymentid', "Some kind of paymentid");
 
         $mform->addElement('hidden', 'submit_data');
         $mform->setType('submit_data', PARAM_TEXT);
