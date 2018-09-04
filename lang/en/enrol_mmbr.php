@@ -25,38 +25,36 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['mmbr:config'] = 'Configure MMBR.IO enrol instances';
-$string['mmbr:manage'] = 'Manage user enrolments';
+$string['mmbr:config']        = 'Configure MMBR.IO enrol instances';
+$string['mmbr:manage']        = 'Manage user enrolments';
 $string['mmbr:manageapplications'] = 'Manage MMBR.IO enrolment';
-$string['mmbr:unenrol'] = 'Cancel users from the course';
-$string['mmbr:unenrolself'] = 'Cancel self from the course';
+$string['mmbr:unenrol']       = 'Cancel users from the course';
+$string['mmbr:unenrolself']   = 'Cancel self from the course';
 
-$string['pluginname'] = 'MMBR.IO Enrolment Plugin';
-$string['pluginname_desc'] = "With this plugin student can pay for paid course with Stripe. All payments are synchronized with MMBR.IO Account";
-$string['enrolname'] = 'MMBR.IO Enrolment Plugin';
+$string['pluginname']       = 'MMBR.IO Enrolment Plugin';
+$string['pluginname_desc']  = "With this plugin student can pay for paid course. All payments are synchronized with MMBR.IO Account";
+$string['enrolname']        = 'MMBR.IO Enrolment Plugin';
 
-$string['enrolheading'] = 'Please select one of the following payment options and proceed to payment form';
-$string['paymentheading'] = 'Please provide payment information to enrol in the course';
+$string['enrolheading']     = 'Please select one of the following payment options and proceed to payment form';
+$string['paymentheading']   = 'Please provide payment information to enrol in the course';
 
 // Tasks
-$string['pingserver'] = 'Ping MMBR.IO Server';
+$string['pingserver']       = 'Ping MMBR.IO Server';
 
 // Settings
-$string['mmbrkey'] = "Enter you MMBR.IO key";
-$string['mmbrkey_desc'] = "MMBR.IO key is used to sync all payment with your MMBR.IO account";
-$string['currency'] = 'Enter default currency';
+$string['mmbrkey']          = "Enter you MMBR.IO public key";
+$string['mmbrkey_desc']     = "MMBR.IO key is used to sync all payment with your MMBR.IO account";
+$string['currency']         = 'Enter default currency';
 
 // Payment options
-$string['cost'] = "Price for this enrolment";
-$string['cost_help'] = "If Subscription option selected this price will be charged with selected frequency";
-$string['currency'] = "Select Currency";
-$string['enrolmentoption'] = "Selected enrolment option: ";
+$string['cost']             = "Price for this enrolment";
+$string['cost_help']        = "If Subscription option selected this price will be charged once a month";
+$string['currency']         = "Select Currency";
+$string['enrolmentoption']  = "Selected enrolment option: ";
 
 // Enrolment instance names 
-$string['instancename0'] = "Get Unlimited Access";
-$string['instancename1'] = "Get Access For a Month";
-$string['instancename2'] = "Monthly Subscription";
-$string['instancename3'] = "Annual Subscription";
+$string['instancename0'] = "One Time Payment";
+$string['instancename1'] = "Monthly Subscription";
 
 $string['role'] = "Select role once enroled";
 $string['status'] = "Enrolment status";

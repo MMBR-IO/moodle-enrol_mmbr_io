@@ -253,7 +253,7 @@ class enrol_mmbr_plugin extends enrol_plugin
 
     /**
      * Store user_enrolments changes and trigger event.
-     * Get used for subscription, if payment occures extend 'timeend' if no suspend enrolment; 
+     * Get used for subscription, if payment occures extend 'timeend', if no suspend enrolment; 
      *
      * @param stdClass $instance
      * @param int $userid
@@ -394,7 +394,7 @@ public function get_currencies() {
 public function get_enrolment_options($id = NULL) {
     if($id == NULL) {
     $options = array();
-        for ($i = 0; $i< 4; $i++) {
+        for ($i = 0; $i< 2; $i++) {
             $options[] = get_string('instancename'.$i.'', 'enrol_mmbr');
         }
     return $options;
@@ -428,7 +428,7 @@ public function confirm_enrolment($instanceid){
                 'enrolid' => $instance->id),
             'id', MUST_EXIST);
 
-        redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid");
+        redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid", 'Thank you. You now enrolled in this course.', null, \core\output\notification::NOTIFY_SUCCESS);
     } else {
         \core\notification::error($result->errors);
     }

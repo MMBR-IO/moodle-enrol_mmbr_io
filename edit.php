@@ -61,28 +61,22 @@ $mform = new enrol_mmbr_edit_form(null, array($instance, $plugin, $context));
 if($mform->is_cancelled()) {
     redirect($returnurl);
 } else if ($data = $mform->get_data()) { // If form is submitted
-    // Based on selected option choose enrolment duration
+    // Based on selected option choose enrolment duration // Not the best way, must be done properly later.
+    // 0 = represents one time payment 
+    // 1 = represents monthly subscription  
     $op = (int)$data->name;
     if ($op === 1) {
         $instance->enrolenddate = time() + intval(31536000/12);
-       // die('Got 1');
-    } elseif ($op === 2) {
-        $instance->enrolperiod = intval(31536000/12);
-     //   die('Got 2');
-    } elseif ($op === 3) {
-        $instance->enrolperiod = 31536000;
-       // die('Got 3');
-    }
-   // die('Got nothing or 0');
+    } 
     
     if ($instance->id){ // If id exists, means we updating existing instance
         $reset = ($instance->status != $data->status); // If they don't match reset enrol caches 
 
         $instance->name             = $plugin->get_enrolment_options($data->name);  // Instance name
-        $instance->status           = $data->status;                                //Status active/susp
-        $instance->cost             = round($data->price,2)*100;                    // One time payment cost
-        $instance->currency         = $data->currency;                              // Default value for currency
-        $instance->roleid           = $data->roleid;                                // Role when enroled
+        $instance->status           = 0;                                            // Status -> active 
+        $instance->cost             = round($data->price,2)*100;                    // Price
+        $instance->currency         = $data->currency;                              // Currency
+        $instance->roleid           = 5;                                            // Role -> Student
         $instance->timemodified     = time();                                       // By default current time when modified
         $DB->update_record('enrol', $instance); 
 
@@ -91,11 +85,11 @@ if($mform->is_cancelled()) {
         }
 
     } else { // or create a new one
-        $fields = array('status' => $data->status, 
+        $fields = array('status' => 0, 
                         'name' => $plugin->get_enrolment_options($data->name), 
                         'cost' => round($data->price,2)*100,
                         'currency' => $data->currency,
-                        'roleid' => $data->roleid, 
+                        'roleid' => 5, 
                         'enrolenddate' => $instance->enrolenddate,
                         'enrolperiod' => $instance->enrolperiod,
                     );
