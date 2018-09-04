@@ -95,25 +95,29 @@ if($mform->is_cancelled()) {
                     );
         require('classes/observer.php');
 
-        // Nofify MMBR about that new instance is created
+        // Notify MMBR about that new instance is created
         $observer = new enrol_mmbr_observer();
         $result =  $observer->new_enrolment_instance($fields, $course);
-        if ($result->success) {
+        if ($result && $result->success) {
             $plugin->add_instance($course, $fields);
             redirect($returnurl);
         } else {
-            switch($result->errors) {
-                case 'miss_key':
-                    \core\notification::error(get_string('mmbriokeyerror', 'enrol_mmbr'));
-                    break;
-                case 'wrong_key': 
-                    \core\notification::error(get_string('mmbriokeymiserror','enrol_mmbr'));
-                    break;
-                case 'server':
-                    \core\notification::error(get_string('mmbrioservererror', 'enrol_mmbr'));
-                    break;
-                default:
-                    \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbr'));
+            if (is_object($result)) {
+                switch($result->errors) {
+                    case 'miss_key':
+                        \core\notification::error(get_string('mmbriokeyerror', 'enrol_mmbr'));
+                        break;
+                    case 'wrong_key': 
+                        \core\notification::error(get_string('mmbriokeymiserror','enrol_mmbr'));
+                        break;
+                    case 'server':
+                        \core\notification::error(get_string('mmbrioservererror', 'enrol_mmbr'));
+                        break;
+                    default:
+                        \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbr'));
+                }
+            } else {
+                \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbr'));
             }
         }         
     }

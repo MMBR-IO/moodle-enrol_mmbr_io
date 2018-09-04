@@ -83,7 +83,7 @@ $string['defaultperiod_help'] = 'Default length of time that the enrolment is va
 // Errors 
 $string['mmbriodeferror']   = 'Sorry, but error occurred in MMBR.IO Plugin.';
 $string['costnumerror']     = 'Price should be numeric values';
-$string['costnullerror']    = 'Price should be more than 0';
+$string['costnullerror']    = 'Minimum charge should be $2';
 $string['mmbriokeyerror']   = 'MMBR.IO Public Key Error. Make sure you entered right key in plugin setting';
 $string['mmbrioservererror']= 'Look like MMBR.IO Server down for maintenance. Please, try later.';
 $string['mmbriokeymiserror']= 'This plugin missing MMBR.IO Public Key in settings. Please enter it.';

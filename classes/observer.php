@@ -215,6 +215,7 @@ class enrol_mmbr_observer {
             CURLOPT_PORT            => self::$DOMAIN_PORT,
         ));
         if(!$response = curl_exec($curl)){
+            $response = new stdClass();
             return $response->errors = $curl_error;
         }
         curl_close($curl);

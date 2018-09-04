@@ -85,7 +85,7 @@ class enrol_mmbr_edit_form extends moodleform {
         if (!is_numeric($cost)) {
             $errors['price'] = get_string('costnumerror', 'enrol_mmbr');
         }
-        if (intval($cost) > 2){
+        if (intval($cost) < 2){
             $errors['price'] = get_string('costnullerror', 'enrol_mmbr');
         }
         return $errors;
