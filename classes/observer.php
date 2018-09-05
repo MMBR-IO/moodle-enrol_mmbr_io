@@ -90,17 +90,19 @@ class enrol_mmbr_observer {
             $userid     = $eventdata['other']['userenrolment']['userid'];
             $courseid   = $eventdata['other']['userenrolment']['courseid'];
             $enrolid    = $eventdata['other']['userenrolment']['enrolid'];
+            $expiry     = $eventdata['other']['userenrolment']['timeend'];
             $plugin = enrol_get_plugin('mmbr');
             $price = $DB->get_field('enrol', 'cost' , array('id' => $enrolid), $strictness=IGNORE_MISSING);
 
             $mmbriokey = $plugin->get_mmbr_io_key();
-            $data = [
+            $data = array(
                 'public_key'   => $mmbriokey,
                 'user_id'      => $userid,
                 'course_id'    => $courseid,
                 'price'        => $price,
-            ];
-            $result = self::put('foxtrot/plugin/delete_enrollment', $data, array());
+                'expiry'       => $expiry,
+            );
+            $result = self::post('foxtrot/plugin/delete_enrollment', $data, array());
         }
     }
 
@@ -171,36 +173,6 @@ class enrol_mmbr_observer {
         return $response;
     }
 
-    /**
-     * This needed to unenrol user from course 
-     * 
-     * core\event\user_password_updated.php	user_password_updated	core	user	updated	
-     * core\event\user_enrolment_created	user_enrolled	core	user_enrolment	created	
-     * core\event\user_enrolment_deleted	user_unenrolled	core	user_enrolment	deleted	
-     * core\event\user_enrolment_updated	user_enrol_modified	core	user_enrolment	updated
-     * @param $userid - useer to unenrol 
-     * @param $courseid - course to unenrol from 
-     */
-    public static function unenrol_user($userid, $courseid) {
-        global $DB;
-        $plugin = enrol_get_plugin('mmbr');
-        $instance = new stdClass;
-        $instances = $plugin->enrol_get_instances($courseid,true);
-        $userenrolments = $DB->get_records('user_enrolments', array('userid' => $userid));
-        // Figure what instance we are enroled 
-        if (count($instances) > 0 && count($userenrolments) > 0) {
-            foreach($instances as $ins) {
-                foreach($userenrolments as $ue){
-
-                    if ($ins->id == $ue->enrolid){
-                        $instance = $ins;
-                    }
-                }
-            }
-        }
-        $plugin->unenrol_user($instance, $userid);
-    }
-
     public static function get($route, $params = array(), $options = array()) {
         $url = self::$DOMAIN . $route;
         if (!empty($params)) {
@@ -208,11 +180,12 @@ class enrol_mmbr_observer {
             $url .= http_build_query($params, '', '&');
         }
         $curl = curl_init();
-        curl_setopt_array($curl, array(        
+        curl_setopt_array($curl, array(       
             CURLOPT_HTTPGET         => 1,
             CURLOPT_RETURNTRANSFER  => 1,
             CURLOPT_URL             => $url,
             CURLOPT_PORT            => self::$DOMAIN_PORT,
+          
         ));
         if(!$response = curl_exec($curl)){
             $response = new stdClass();
@@ -222,16 +195,22 @@ class enrol_mmbr_observer {
         return $response;
     }
 
-    public static function put($route, $params = array(), $options = array()) {
+    public static function post($route, $params = array(), $options = array()) {     
         $url = self::$DOMAIN . $route;
+
+        $payload = json_encode($params);
 
         $curl = curl_init();
         curl_setopt_array($curl, array(     
+            CURLINFO_HEADER_OUT     => true,
             CURLOPT_RETURNTRANSFER  => true,
-            CURLOPT_CUSTOMREQUEST   => 'PUT',
+            CURLOPT_POST            => true,
             CURLOPT_URL             => $url,
             CURLOPT_PORT            => self::$DOMAIN_PORT,
-            CURLOPT_POSTFIELDS      => http_build_query($params),
+            CURLOPT_POSTFIELDS      => $payload,
+            CURLOPT_HTTPHEADER      => array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($payload)),
         ));
 
         if(!$response = curl_exec($curl)){

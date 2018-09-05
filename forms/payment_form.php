@@ -45,7 +45,6 @@ class enrol_mmbr_payment_form extends moodleform
         $mform = $this->_form;
         $this->instance = $this->_customdata;
         $plugin = enrol_get_plugin('mmbr');
-
         // Gather all needed information
         $this->moodle = $DB->get_record_select('config_plugins',"plugin = 'enrol_mmbr' AND name = 'mmbrkey'");
         if (empty($this->moodle) || empty($this->moodle->value)) {
@@ -84,9 +83,9 @@ class enrol_mmbr_payment_form extends moodleform
         $mform->setType('courseid', PARAM_INT);
         $mform->setDefault('courseid', $this->courseid);
 
-        $mform->addElement('hidden', 'instanceid');
-        $mform->setType('instanceid', PARAM_INT);
-        $mform->setDefault('instanceid', $this->instance->id);
+        $mform->addElement('hidden', 'enrolinstanceid');
+        $mform->setType('enrolinstanceid', PARAM_INT);
+        $mform->setDefault('enrolinstanceid', $this->instance->id);
 
         $mform->addElement('hidden', 'submit_data');
         $mform->setType('submit_data', PARAM_TEXT);
