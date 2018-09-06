@@ -30,7 +30,7 @@ require_once $CFG->dirroot . '/enrol/mmbr/lib.php';
 class enrol_mmbr_observer {
 
     private static $DOMAIN = 'https://staging.mmbr.io/cobb/v1/';
-    private static $DOMAIN_PORT = 4143;
+    //private static $DOMAIN_PORT = 4143; // Only for development
     /**
      * USER LOGGEDIN 
      * Event is triggered when User logs in Moodle
@@ -190,7 +190,7 @@ class enrol_mmbr_observer {
             CURLOPT_HTTPGET         => 1,
             CURLOPT_RETURNTRANSFER  => 1,
             CURLOPT_URL             => $url,
-            CURLOPT_PORT            => self::$DOMAIN_PORT,
+            //CURLOPT_PORT            => self::$DOMAIN_PORT, //Only for development
           
         ));
         if(!$response = curl_exec($curl)){
@@ -212,7 +212,7 @@ class enrol_mmbr_observer {
             CURLOPT_RETURNTRANSFER  => true,
             CURLOPT_POST            => true,
             CURLOPT_URL             => $url,
-            CURLOPT_PORT            => self::$DOMAIN_PORT,
+            //CURLOPT_PORT            => self::$DOMAIN_PORT, // Only for development
             CURLOPT_POSTFIELDS      => $payload,
             CURLOPT_HTTPHEADER      => array(
                 'Content-Type: application/json',
