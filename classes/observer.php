@@ -29,7 +29,7 @@ require_once $CFG->dirroot . '/enrol/mmbr/lib.php';
 // in classes/observer.php
 class enrol_mmbr_observer {
 
-    private static $DOMAIN = 'http://localhost/cobb/v1/';
+    private static $DOMAIN = 'https://staging.mmbr.io/cobb/v1/';
     private static $DOMAIN_PORT = 4143;
     /**
      * USER LOGGEDIN 

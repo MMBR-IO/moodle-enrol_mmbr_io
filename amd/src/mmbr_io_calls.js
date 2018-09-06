@@ -32,7 +32,7 @@ define(['jquery'], function ($) {
              * @param {Object} event 
              */
             function receiveMessage(event) {
-                if (typeof event === 'undefined' || event.origin !== "http://localhost:4141" ||
+                if (typeof event === 'undefined' || event.origin !== "https://staging.mmbr.io" ||
                     event.data !== 'success') {
                     $("#postError").text('Error handling message event');
                 } else {
