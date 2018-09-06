@@ -77,6 +77,7 @@ $string['mmbrioservererror']= 'Look like MMBR.IO Server down for maintenance. Pl
 $string['mmbriokeymiserror']= 'This plugin missing MMBR.IO Public Key in settings. Please enter it.';
 $string['mmbriovaliderror'] = 'Colnd\'t validate your enrolment'; 
 $string['mmbriocustomerkey']= 'Right now you can not enroll in this course. Contact Moodle manager. (Error: mmbrkey)';
+$string['unernolfailed']    = 'Error happened while cancelling you subscription. Please contact administrator for more information';
 
 // Privacy API
 // Temp String to explaine why we don't store any data

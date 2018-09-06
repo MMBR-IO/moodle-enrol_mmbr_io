@@ -103,6 +103,12 @@ class enrol_mmbr_observer {
                 'expiry'       => $expiry,
             );
             $result = self::post('foxtrot/plugin/delete_enrollment', $data, array());
+            if (!is_object($result)) {
+                $result = json_decode($result);
+            }
+            if (intval($expiry) > 0 && !$result->success) {
+                \core\notification::error(get_string('unernolfailed', 'enrol_mmbr')); 
+            }
         }
     }
 
