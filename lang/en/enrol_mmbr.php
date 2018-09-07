@@ -50,7 +50,7 @@ $string['currency']         = 'Enter default currency';
 $string['cost']             = "Price for this enrolment";
 $string['cost_help']        = "If Subscription option selected this price will be charged once a month";
 $string['currency']         = "Select Currency";
-$string['enrolmentoption']  = "Selected enrolment option: ";
+$string['enrolmentoption']  = "Select enrolment option: ";
 
 // Enrolment instance names 
 $string['instancename0']  = "One Time Payment";
