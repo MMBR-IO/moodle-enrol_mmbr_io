@@ -70,7 +70,6 @@ if($mform->is_cancelled()) {
     } 
     
     if ($instance->id){ // If id exists, means we updating existing instance
-        $reset = ($instance->status != $data->status); // If they don't match reset enrol caches 
 
         $instance->name             = $plugin->get_enrolment_options($data->name);  // Instance name
         $instance->status           = 0;                                            // Status -> active 
@@ -79,10 +78,10 @@ if($mform->is_cancelled()) {
         $instance->roleid           = 5;                                            // Role -> Student
         $instance->timemodified     = time();                                       // By default current time when modified
         $DB->update_record('enrol', $instance); 
-
-        if ($reset) {
-            $context->mark_dirty(); // Reset caches here
-        }
+        
+        $context->mark_dirty(); // Reset caches here
+        
+        redirect($returnurl, get_string('enrolupdated', 'enrol_mmbr'), null, \core\output\notification::NOTIFY_SUCCESS);
 
     } else { // or create a new one
         $fields = array('status' => 0, 

@@ -465,7 +465,7 @@ public function confirm_enrolment($instanceid){
                 'userid' => $USER->id,
                 'enrolid' => $instance->id),
             'id', MUST_EXIST);
-        redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid", 'Thank you. You now enrolled in this course.', null, \core\output\notification::NOTIFY_SUCCESS);
+        redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid", get_string('enrolsuccess', 'enrol_mmbr'), null, \core\output\notification::NOTIFY_SUCCESS);
     } else {
         \core\notification::error($result->errors);
     }
