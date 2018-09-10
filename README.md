@@ -30,6 +30,6 @@ Foxtrot is for anyone who uses or plans to use Moodle to publish courses. Foxtro
 
 ## Author
 
-2018 || MMBR.IO || Dmitry Nagorny || defrakcija123@gmail.com
+2018 || MMBR.IO || Dmitry Nagorny || dmitry.nagorny@mmbr.io
 
 

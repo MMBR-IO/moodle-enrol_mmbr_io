@@ -65,6 +65,7 @@ class enrol_mmbr_payment_form extends moodleform
 
             // Create form for subscription 
             $mform->addElement('html', '<iframe class="mainframe" src="https://staging.mmbr.io/comma/v1/foxtrot/frame?'.
+            //$mform->addElement('html', '<iframe class="mainframe" src="http://localhost:4141/comma/v1/foxtrot/frame?'.
                 'course_id='.   $this->courseid     .''.
                 '&student_id='. $this->studentid    .''.
                 '&price='.      $this->price        .''.
@@ -86,6 +87,11 @@ class enrol_mmbr_payment_form extends moodleform
         $mform->addElement('hidden', 'enrolinstanceid');
         $mform->setType('enrolinstanceid', PARAM_INT);
         $mform->setDefault('enrolinstanceid', $this->instance->id);
+
+        $mform->addElement('hidden', 'instanceid');
+        $mform->setType('instanceid', PARAM_INT);
+        $mform->setDefault('instanceid', $this->instance->id);
+        
 
         $mform->addElement('hidden', 'submit_data');
         $mform->setType('submit_data', PARAM_TEXT);

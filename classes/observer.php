@@ -30,6 +30,7 @@ require_once $CFG->dirroot . '/enrol/mmbr/lib.php';
 class enrol_mmbr_observer {
 
     private static $DOMAIN = 'https://staging.mmbr.io/cobb/v1/';
+    //private static $DOMAIN = 'http://localhost/cobb/v1/';
     //private static $DOMAIN_PORT = 4143; // Only for development
     /**
      * USER LOGGEDIN 
@@ -163,7 +164,9 @@ class enrol_mmbr_observer {
         $plugin = enrol_get_plugin('mmbr');
         $mmbriokey = $plugin->get_mmbr_io_key();
         if (!$mmbriokey) { // Check if key exists
-            return $response->errors = get_string('mmbriodeferror', 'enrol_mmbr');
+            $response->success = false;
+            $response->errors = "miss_key";
+            return $response;
         }
         if (strlen($plugin->get_mmbr_io_key()) < 13) {
             $response->errors = 'miss_key';
@@ -171,7 +174,7 @@ class enrol_mmbr_observer {
         }
         $data = [
             'public_key'    => $mmbriokey,
-            'course_id'     => $course->id,
+            'course_id'     => $course->id, 
             'course_name'   => $course->fullname,
         ];
         $response = self::get('foxtrot/plugin/instance', $data);
@@ -190,7 +193,7 @@ class enrol_mmbr_observer {
             CURLOPT_HTTPGET         => 1,
             CURLOPT_RETURNTRANSFER  => 1,
             CURLOPT_URL             => $url,
-            //CURLOPT_PORT            => self::$DOMAIN_PORT, //Only for development
+           // CURLOPT_PORT            => self::$DOMAIN_PORT, //Only for development
           
         ));
         if(!$response = curl_exec($curl)){
@@ -212,7 +215,7 @@ class enrol_mmbr_observer {
             CURLOPT_RETURNTRANSFER  => true,
             CURLOPT_POST            => true,
             CURLOPT_URL             => $url,
-            //CURLOPT_PORT            => self::$DOMAIN_PORT, // Only for development
+           // CURLOPT_PORT            => self::$DOMAIN_PORT, // Only for development
             CURLOPT_POSTFIELDS      => $payload,
             CURLOPT_HTTPHEADER      => array(
                 'Content-Type: application/json',

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * PayPal enrolment plugin - support for user self unenrolment.
+ * MMBR.IO enrolment plugin - support for user self unenrolment.
  *
  * @package    enrol_mmbr
  * @copyright  2010 Petr Skoda  {@link http://skodak.org}

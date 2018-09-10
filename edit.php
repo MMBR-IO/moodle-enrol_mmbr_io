@@ -104,10 +104,10 @@ if($mform->is_cancelled()) {
         } else {
             if (is_object($result)) {
                 switch($result->errors) {
-                    case 'miss_key':
+                    case 'wrong_key':
                         \core\notification::error(get_string('mmbriokeyerror', 'enrol_mmbr'));
                         break;
-                    case 'wrong_key': 
+                    case 'miss_key': 
                         \core\notification::error(get_string('mmbriokeymiserror','enrol_mmbr'));
                         break;
                     case 'server':
