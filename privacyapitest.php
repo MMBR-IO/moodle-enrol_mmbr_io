@@ -1,22 +1,25 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
-//
-// Moodle is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Moodle is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /** 
- * @package     enrol_mmbr
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @copyright   Dmitry Nagorny
+ * This file is part of Moodle - http://moodle.org/
+ * 
+ * PHP version 7
+ *
+ * Moodle is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Moodle is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+ * @package   enrol_mmbr
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright Dmitry Nagorny
  */
  
 // Set this if you want to run the script for one component only. Otherwise leave empty.
@@ -66,8 +69,7 @@ foreach ($list->good as $component) {
     if (check_implements($component, \core_privacy\local\metadata\null_provider::class)) {
         echo "    Claims not to store any data with reason:\n";
         echo "      '" . get_string($classname::get_reason(), $component) . "'\n";
-    }
-    else if (check_implements($component, \core_privacy\local\metadata\provider::class)) {
+    } else if (check_implements($component, \core_privacy\local\metadata\provider::class)) {
         $collection = new \core_privacy\local\metadata\collection($component);
         $classname::get_metadata($collection);
         $count = count($collection);
@@ -108,7 +110,8 @@ foreach ($list->good as $component) {
  
 echo "\n\n== Done ==\n";
  
-function check_implements($component, $interface) {
+function check_implements($component, $interface) 
+{
     $manager = new \core_privacy\manager();
     $rc = new \ReflectionClass(\core_privacy\manager::class);
     $rcm = $rc->getMethod('component_implements');
