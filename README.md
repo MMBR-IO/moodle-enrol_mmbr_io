@@ -1,10 +1,6 @@
 # MMBR.IO Enrolment Plugin
 
-Foxtrot allows you to easily add fee and tuition collection to your existing online Moodle courses. All payments are synchronized with MMBR.IO Account.
-
-MMBR.IO product Foxtrot offers an easy way for educators of all kinds to build courses, enroll students and manage fee collection.
-Foxtrot is for anyone who uses or plans to use Moodle to publish courses. Foxtrot adds easy-to-use integration for charging course and subscription fees. With Foxtrot you manage your own Moodle content, choose where you want to host your course content and simply take advantage of MMBR's powerful member management and fee management capabilities.
-
+Foxtrot is a MMBR.IO-powered plugin for Moodle that makes it easy for teachers to charge one-time or a subscription for access to selected courses. https://mmbr.io/products/foxtrot
 
 ## Installation 
 
@@ -22,9 +18,7 @@ Foxtrot is for anyone who uses or plans to use Moodle to publish courses. Foxtro
 9) Now users can enrol in the course
 10) If user enrolled in the course with subscription, to stop payments user need to unenrol from the course
 
-
 ## Author
 
-2018 || MMBR.IO || Dmitry Nagorny || dmitry.nagorny@mmbr.io
-
+2018 || MMBR.IO || dmitry.nagorny@mmbr.io
 
