@@ -9,7 +9,7 @@ Foxtrot is for anyone who uses or plans to use Moodle to publish courses. Foxtro
 ## Installation 
 
 1) Install plugin from zip or Moodle plugin directory
-2) On setting page enter provided test public key -> mmbrio_pk_f6c123b1ed369a3
+2) On setting page enter public key from your MMBR.IO account
 3) Go to Site administration->Plugins->Enrolments 
 4) Find "MMBR.IO Enrolment Plugin" and enable it (by pressing eye symbol near it)
 5) Now you can add "MMBR.IO Enrolment Plugin" as course enrolment option
@@ -20,12 +20,7 @@ Foxtrot is for anyone who uses or plans to use Moodle to publish courses. Foxtro
   b) Enter price for this enrolment (Minumum charge is $2)
   c) Select currency 
 9) Now users can enrol in the course
-10) To do test enrollment enter:
-  a) Test credit card number: ( ex. Visa -> 4242 4242 4242, Master -> 5555 5555 5555 4444) 
-  b) Random date in the future (ex. 04/24 )
-  c) Random CVC number (ex. 242)
-  d) Random Postal code (ex. 12345)
-11) If user enrolled in the course with subscription, to stop payments user need to unenrol from the course
+10) If user enrolled in the course with subscription, to stop payments user need to unenrol from the course
 
 
 ## Author
