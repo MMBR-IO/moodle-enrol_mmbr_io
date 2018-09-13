@@ -21,8 +21,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-
-
 if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('enrol_mmbr_enrolname', '', get_string('pluginname_desc', 'enrol_mmbr')));
 
@@ -34,7 +32,7 @@ if ($ADMIN->fulltree) {
         'enrol_mmbr/mmbrkey',
         get_string('mmbrkey', 'enrol_mmbr'),
         get_string('mmbrkey_desc', 'enrol_mmbr'),
-        null,
+        '',
         PARAM_TEXT,
         60));
 
@@ -42,26 +40,23 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configselect('enrol_mmbr/currency',
     get_string('currency', 'enrol_mmbr'), '', 'USD', $currencies));
 
-    // Enrol instance defaults...
-    $settings->add(new admin_setting_heading('enrol_manual_defaults',
-        get_string('enrolinstancedefaults', 'admin'), get_string('enrolinstancedefaults_desc', 'admin')));
+    // Enrol instance defaults... We won't need them probably in early plugin versions
+    // $settings->add(new admin_setting_heading('enrol_manual_defaults',
+    //     get_string('enrolinstancedefaults', 'admin'), get_string('enrolinstancedefaults_desc', 'admin')));
 
-    $settings->add(new admin_setting_configcheckbox('enrol_mmbr/defaultenrol',
-        get_string('defaultenrol', 'enrol'), get_string('defaultenrol_desc', 'enrol'), 0));
+    // $settings->add(new admin_setting_configcheckbox('enrol_mmbr/defaultenrol',
+    //     get_string('defaultenrol', 'enrol'), get_string('defaultenrol_desc', 'enrol'), 0));
 
-    $options = array(1 => get_string('yes'),
-                     0  => get_string('no'));
+    // $options = array(1 => get_string('yes'),
+    //                  0  => get_string('no'));
 
-    if (!during_initial_install()) {
-        $options = get_default_enrol_roles(context_system::instance());
-        $student = get_archetype_roles('student');
-        $student = reset($student);
-        $settings->add(new admin_setting_configselect('enrol_mmbr/roleid',
-            get_string('defaultrole', 'role'), '', $student->id, $options));
-    }
-
-    $settings->add(new admin_setting_configduration('enrol_mmbr/enrolperiod',
-        get_string('defaultperiod', 'enrol_mmbr'), get_string('defaultperiod_desc', 'enrol_mmbr'), 0));
+    // if (!during_initial_install()) {
+    //     $options = get_default_enrol_roles(context_system::instance());
+    //     $student = get_archetype_roles('student');
+    //     $student = reset($student);
+    //     $settings->add(new admin_setting_configselect('enrol_mmbr/roleid',
+    //         get_string('defaultrole', 'role'), '', $student->id, $options));
+    // }
 }
 
 

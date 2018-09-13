@@ -13,18 +13,28 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/** 
- * @package     enrol_mmbr
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @copyright   Dmitry Nagorny
- */
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
- * Custom uninstallation procedure.
+ * If course have more than one instance let user to choose 
+ * 
+ * @package enrol_mmbr
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Dmitry Nagorny
  */
-function xmldb_enrol_mmbr_uninstall() {
 
-    return true;
+namespace enrol_mmbr\privacy;
+use core_privacy\local\metadata\collection;
+ 
+class Provider implements 
+        // This plugin does store personal user data.
+     //   \core_privacy\local\metadata\provider {
+
+// This plugin does not store any personal user data.
+\core_privacy\local\metadata\null_provider {
+
+    public static function get_reason() : string 
+    {
+        return 'privacy:metadata';
+    }
+    
 }

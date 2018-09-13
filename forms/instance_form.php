@@ -51,7 +51,8 @@ class enrol_mmbr_instance_form extends moodleform
         $mform->setDefault('instanceid', $fid);
 
         $PAGE->requires->css('/enrol/mmbr/css/form.css');
-        $this->add_action_buttons($cancel = true, $submitlabel='Proceed to checkout');
+        $PAGE->requires->js_call_amd('enrol_mmbr/style', 'instances');
+        $this->add_action_buttons($cancel = false, $submitlabel='Proceed to checkout');
 
         $mform->addElement('hidden', 'courseid');
         $mform->setType('courseid', PARAM_INT);

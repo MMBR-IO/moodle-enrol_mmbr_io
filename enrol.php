@@ -27,7 +27,6 @@ $courseid   = required_param('courseid', PARAM_INT);
 $instanceid = optional_param('instanceid', 0, PARAM_INT); 
 $paymentid = optional_param('paymentid', null, PARAM_TEXT);
 
-
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $context = context_course::instance($course->id, MUST_EXIST);
 
@@ -53,15 +52,13 @@ if ($instanceid > 0) {
             $instance = $value;
         }
     }
+    // Set so price is in cents
     $instance->cost = $plugin->get_cost_full($instance->cost);
     include_once "$CFG->dirroot/enrol/mmbr/forms/payment_form.php";
     $mform = new enrol_mmbr_payment_form(null, $instance);
 
     if ($data = $mform->get_data()) { 
-        // If form submitted go and validate payment
-       // var_dump($data);
-       // die();
-        $plugin->confirm_enrolment($data->paymentkey, $data->instanceid);
+        $plugin->confirm_enrolment($data->enrolinstanceid);
     }
     if ($mform->is_cancelled()) {
         redirect($return);

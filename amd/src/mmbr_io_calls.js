@@ -18,39 +18,27 @@
  * @copyright   Dmitry Nagorny
  */
 
+ /**
+  * Submits form after approved payment, to enrol user in the course
+  * @param $ -
+  * @returns functions
+  */
 define(['jquery'], function ($) {
     return {
         call: function () {
-            console.log('MMBR.IO Message event listener started!');
             window.addEventListener("message", receiveMessage, false);
+            /**
+             * 
+             * @param {Object} event 
+             */
             function receiveMessage(event) {
-                // Origin validation MUSTHAVE in production
-                // if (event.origin !== "http://example.org:8080")
-                //     return;
-                // } 
-                var paymentKey = event.data;
-                console.log("Received key: " + event.data);
-                // Apply receiveed data to the form and submit it
-                $('<input>', {
-                    type: 'hidden',
-                    id: 'paymentkey',
-                    name: 'paymentkey',
-                    value: paymentKey
-                }).appendTo('form');
-                $("form").submit();
-            } 
-        }, 
-        payment: function () {
-            console.log('MMBR.IO Submit event listener started!');
-            window.addEventListener("submit", processPayment, false);
-            function processPayment(event) {
-                event.preventDefault();
-                console.log("Submit catched");
-                console.log(event);
+                if (typeof event === 'undefined' || event.origin !== "https://staging.mmbr.io" ||
+                    event.data !== 'success') {
+                    $("#postError").text('Error handling message event');
+                } else {
+                    $("form").submit();
+                }
             }
         },
     };
 });
-
-
-

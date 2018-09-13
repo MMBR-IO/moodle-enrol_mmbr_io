@@ -94,6 +94,7 @@
     border: solid 2px lightgrey;
     border-radius: .5em;
     transition: all 0.3s;
+    background-color: lightgrey;
   }
   
   /* .enrolment input[type="radio"] {
@@ -102,4 +103,9 @@
   
   .enrolment input[type="radio"]:checked + label {
     border: solid 2px green !important;
+  }
+
+  input:checked div {
+    background-color: red !important
+
   }

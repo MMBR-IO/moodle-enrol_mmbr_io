@@ -19,26 +19,21 @@
  * @copyright   Dmitry Nagorny
  */
 
-namespace enrol_mmbr\task;
-
 defined('MOODLE_INTERNAL') || die();
+require_once $CFG->dirroot . '/user/profile/lib.php';
 require_once $CFG->dirroot . '/lib/filelib.php';
-class ping_mmbrio_server extends \core\task\scheduled_task {      
-    public function get_name() {
-        // Shown in admin screens
-        return get_string('pingserver', 'enrol_mmbr');
-    }
-                                                                     
-    public function execute() {     
-        $data = ['id' =>  "CronPing",
-                'date' => time()];
-        $url = "https://webhook.site/d879f249-2604-409d-a666-fc268d56d176";
-
-        $ch = curl_init($url);
-
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-
-        curl_exec($ch);
-        curl_close($ch);
-    }                                                                                                                               
-}
+require_once $CFG->dirroot . '/enrol/mmbr/lib.php';
+class mod_myplugin_testcase extends advanced_testcase {
+  public function test_deleting() {
+    global $DB;
+    // Back to before test DB state
+    $this->resetAfterTest(true);
+    $user1 = $this->getDataGenerator()->create_user(array('email'=>'user1@example.com', 'username'=>'user1'));
+    $this->setUser($user1);
+  }
+  
+  public function test_user_table_was_reset() {
+    global $DB;
+    $this->assertEquals(2, $DB->count_records('user', array()));
+  }
+ }

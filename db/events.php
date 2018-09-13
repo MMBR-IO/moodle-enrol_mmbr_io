@@ -26,9 +26,8 @@ $observers = array(
         'callback' => "enrol_mmbr_observer::check_logged_user",
     ),
     array(
-        'eventname' => '\core\event\course_module_instance_list_viewed',
+        'eventname' => '\core\event\user_enrolment_deleted',
         'includefile' => '/enrol/mmbr/classes/observer.php',
-        'callback' => "enrol_mmbr_observer::course_viewed",
+        'callback' => "enrol_mmbr_observer::check_unenrolled_user",
     ),
-
 );

@@ -1,4 +1,3 @@
-<?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,16 +18,17 @@
  * @copyright   Dmitry Nagorny
  */
 
-defined('MOODLE_INTERNAL') || die();
+define(['jquery'], function ($) {
+    return {
+        instances: function () {
+            $(':radio:first').parent('label').css('background-color', 'green');
+            $(":radio").change(function() {
+                if(this.checked) {
+                    $(':radio').parent('label').css('background-color', 'lightgrey');
+                    $(this).parent('label').css('background-color', 'green');
 
-/**
- * Custom code to be run on installing the plugin.
- */
-function xmldb_enrol_mmbr_install() {
-    // Nofify MMBR.IO about that new plugin install
-    require('classes/observer.php');
-    $observer = new enrol_mmbr_observer();
-    $observer->new_plugin_install();
-
-    return true;
-}
+                }
+            });
+        },
+    };
+});
