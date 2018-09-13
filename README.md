@@ -1,4 +1,4 @@
-# MMBR Enrolment Plugin
+# MMBR.IO Enrolment Plugin
 
 TODO Describe the plugin shortly here.
 
@@ -16,5 +16,5 @@ TODO:
 4.  As of July all Moodle plugin must gave Privacy API
     Implementing the Privacy API in your Moodle plugin - GDPR (https://www.youtube.com/watch?v=jcVKzq2qimQ) - Video Tutorial
 5.   
-6.  Fix .IO
+6. Fix .IO
 7. We can run cron jobs remotely with password
