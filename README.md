@@ -1,8 +1,6 @@
 # MMBR.IO Enrolment Plugin
 
-TODO Describe the plugin shortly here.
-
-TODO Provide more detailed description here.
+Foxtrot is a MMBR.IO-powered plugin for Moodle that makes it easy for teachers to charge one-time or a subscription for access to selected courses. https://mmbr.io/products/foxtrot
 
 ## Author
 
