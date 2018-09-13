@@ -23,9 +23,9 @@
   * @param $ -
   * @returns functions
   */
-define(['jquery'], function ($) {
+define(['jquery'], function($) {
     return {
-        call: function () {
+        call: function() {
             window.addEventListener("message", receiveMessage, false);
             /**
              * 
