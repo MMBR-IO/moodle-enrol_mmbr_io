@@ -12,7 +12,7 @@ form {
     display: block;
     background: #666ee8;
     color: white;
-    box-shadow: 
+    box-shadow:
         0 7px 14px 0 rgba(49, 49, 93, 0.10),
         0 3px 6px 0 rgba(0, 0, 0, 0.08);
     border-radius: 4px;
@@ -58,7 +58,7 @@ form {
 }
 
 .success {
-    color: #666EE8;
+    color: #666ee8;
 }
 
 .success .token {

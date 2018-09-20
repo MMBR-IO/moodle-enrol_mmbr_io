@@ -1,23 +1,27 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
-//
-// Moodle is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Moodle is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * @package    enrol_mmbr
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Dmitry Nagorny 
+ * This file is part of Moodle - http://moodle.org/
+ * 
+ * PHP version 7
+
+ * Moodle is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * Moodle is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+ * @category Api_Calls
+ * @package  Enrol_Mmbr
+ * @author   Dmitry Nagorny <dmitry.nagorny@mmbr.io>
+ * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @link     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -40,13 +44,14 @@ class enrol_mmbr_payment_form extends moodleform
 
     //This might be needed in future
     
-    public function definition() {
+    public function definition() 
+    {
         global $USER, $DB, $PAGE;
         $mform = $this->_form;
         $this->instance = $this->_customdata;
         $plugin = enrol_get_plugin('mmbr');
         // Gather all needed information
-        $this->moodle = $DB->get_record_select('config_plugins',"plugin = 'enrol_mmbr' AND name = 'mmbrkey'");
+        $this->moodle = $DB->get_record_select('config_plugins', "plugin = 'enrol_mmbr' AND name = 'mmbrkey'");
         if (empty($this->moodle) || empty($this->moodle->value)) {
             \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbr'));
             \core\notification::error(get_string('mmbriocustomerkey', 'enrol_mmbr'));
@@ -60,12 +65,13 @@ class enrol_mmbr_payment_form extends moodleform
             $this->frequency = $this->instance->enrolperiod;
             $this->email = $USER->email;
             $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('paymentheading', 'enrol_mmbr').'</h3>');
-            $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolmentoption','enrol_mmbr').'<strong>'.$this->instance->name.'</strong></h3>');
+            $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolmentoption', 'enrol_mmbr').'<strong>'.$this->instance->name.'</strong></h3>');
             $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: <strong>$'.$this->instance->cost.'</strong></h3>');
 
             // Create form for subscription 
-            $mform->addElement('html', '<iframe class="mainframe" src="https://staging.mmbr.io/comma/v1/foxtrot/frame?'.
             //$mform->addElement('html', '<iframe class="mainframe" src="http://localhost:4141/comma/v1/foxtrot/frame?'.
+            //$mform->addElement('html', '<iframe class="mainframe" src="https://api.mmbr.io/comma/v1/foxtrot/frame?'.
+            $mform->addElement('html', '<iframe class="mainframe" src="https://staging.mmbr.io/comma/v1/foxtrot/frame?'.
                 'course_id='.   $this->courseid     .''.
                 '&student_id='. $this->studentid    .''.
                 '&price='.      $this->price        .''.
@@ -74,7 +80,7 @@ class enrol_mmbr_payment_form extends moodleform
                 '&repeat_interval='.$this->frequency.''.
                 '&public_key='. $this->mmbrkey      .'"></iframe>');
             
-                $mform->addElement('html', '<h5 id="postError" style="text-align:center;color:red;"></h5>');
+            $mform->addElement('html', '<h5 id="postError" style="text-align:center;color:red;"></h5>');
 
             $PAGE->requires->css('/enrol/mmbr/css/form.css');
             $PAGE->requires->js_call_amd('enrol_mmbr/mmbr_io_calls', 'call');

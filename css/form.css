@@ -117,7 +117,7 @@
     display: none;
   } */
 
-.enrolment input[type="radio"]:checked+label {
+.enrolment input[type="radio"]:checked + label {
     border: solid 2px green !important;
 }
 
