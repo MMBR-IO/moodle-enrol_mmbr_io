@@ -441,35 +441,38 @@ public function get_enrolment_options($id = NULL) {
     }
 }
 
-public function confirm_enrolment($instanceid){
-    global $DB, $CFG, $USER;
-    // Confirm with MMBR.IO that payment successful  
-    require('classes/observer.php');
-    $observer = new enrol_mmbr_observer();
-    // Get instance 
-    $instance = $this->enrol_get_instance($instanceid, true);
-    $result = $observer->validate_user_enrolment($USER->id, $instance->courseid, $instance->cost);
-    if ($result->success) {
-        // We get unix time with milliseconds, need to trim before saving to moodle database to keep consistency 
-        $timestart  = time();
-        $timeend    = 0;
-        if ($result->data && $result->data->timeend && $result->data->timeend > 0) {
-            $timeend = intval(substr(strval($result->data->timeend), 0, 10));
-        } 
-        $roleid = $instance->roleid;
-        // Enrol user in the course
-        $this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend, ENROL_USER_ACTIVE);
-        $userenrolment = $DB->get_record(
-            'user_enrolments',
-            array(
-                'userid' => $USER->id,
-                'enrolid' => $instance->id),
-            'id', MUST_EXIST);
-        redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid", get_string('enrolsuccess', 'enrol_mmbr'), null, \core\output\notification::NOTIFY_SUCCESS);
-    } else {
-        \core\notification::error($result->errors);
+    public function confirm_enrolment($instanceid){
+        global $DB, $CFG, $USER;
+        // Confirm with MMBR.IO that payment successful  
+        require('classes/observer.php');
+        $observer = new enrol_mmbr_observer();
+        // Get instance 
+        $instance = $this->enrol_get_instance($instanceid, true);
+        $result = $observer->validate_user_enrolment($USER->id, $instance->courseid, $instance->cost);
+        if ($result->success) {
+            // We get unix time with milliseconds, need to trim before saving to moodle database to keep consistency 
+            $timestart  = time();
+            $timeend    = 0;
+            if ($result->data && $result->data->timeend && $result->data->timeend > 0) {
+                $timeend = intval(substr(strval($result->data->timeend), 0, 10));
+            } 
+            $roleid = $instance->roleid;
+            // Enrol user in the course
+            $this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend, ENROL_USER_ACTIVE);
+            $userenrolment = $DB->get_record(
+                'user_enrolments',
+                array(
+                    'userid' => $USER->id,
+                    'enrolid' => $instance->id
+                ),
+                'id', 
+                MUST_EXIST
+            );
+            redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid", get_string('enrolsuccess', 'enrol_mmbr'), null, \core\output\notification::NOTIFY_SUCCESS);
+        } else {
+            \core\notification::error($result->errors);
+        }
     }
-}
 
 
 /**
