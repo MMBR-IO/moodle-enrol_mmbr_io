@@ -32,12 +32,14 @@ define(['jquery'], function($) {
              * @param {Object} event 
              */
             function receiveMessage(event) {
-                if (typeof event === 'undefined' || event.origin !== "http://localhost:4141" ||
-                    event.origin !== "https://staging.mmbr.io" || event.origin !== "https://api.mmbr.io" ||
-                    event.data !== 'success') {
-                    $("#postError").text('Error handling message event');
-                } else {
+                if (typeof event !== 'undefined' && event.data === 'success' && (
+                        event.origin === "http://localhost:4141" ||
+                        event.origin === "https://staging.mmbr.io" ||
+                        event.origin === "https://api.mmbr.io"
+                )) {
                     $("form").submit();
+                } else {
+                    $("#postError").text('Error handling message event');
                 }
             }
         },
