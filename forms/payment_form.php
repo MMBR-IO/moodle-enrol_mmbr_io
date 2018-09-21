@@ -69,9 +69,9 @@ class enrol_mmbr_payment_form extends moodleform
             $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: <strong>$'.$this->instance->cost.'</strong></h3>');
 
             // Create form for subscription 
-            $mform->addElement('html', '<iframe class="mainframe" src="http://localhost:4141/comma/v1/foxtrot/frame?'.
+            //$mform->addElement('html', '<iframe class="mainframe" src="http://localhost:4141/comma/v1/foxtrot/frame?'.
             //$mform->addElement('html', '<iframe class="mainframe" src="https://staging.mmbr.io/comma/v1/foxtrot/frame?'.
-            //$mform->addElement('html', '<iframe class="mainframe" src="https://api.mmbr.io/comma/v1/foxtrot/frame?'.
+            $mform->addElement('html', '<iframe class="mainframe" src="https://api.mmbr.io/comma/v1/foxtrot/frame?'.
                 'course_id='.   $this->courseid     .''.
                 '&student_id='. $this->studentid    .''.
                 '&price='.      $this->price        .''.
