@@ -18,6 +18,10 @@ Foxtrot is a MMBR.IO-powered plugin for Moodle that makes it easy for teachers t
 9) Now users can enrol in the course
 10) If user enrolled in the course with subscription, to stop payments user need to unenrol from the course
 
+## Versions
+
+1.0.10 - New status display and better error handling
+
 ## Author
 
 2018 || MMBR.IO || dmitry.nagorny@mmbr.io
