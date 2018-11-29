@@ -42,7 +42,9 @@ class enrol_mmbr_payment_form extends moodleform
                 $studentid, // ID of a student who wants to enrol
                 $mmbrkey;   // MMBR key to indentify MMBR account
 
-    //This might be needed in future
+    /**
+     * Function defines how page looks
+     */
     
     public function definition() 
     {
@@ -68,17 +70,30 @@ class enrol_mmbr_payment_form extends moodleform
             $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolmentoption', 'enrol_mmbr').'<strong>'.$this->instance->name.'</strong></h3>');
             $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: <strong>$'.$this->instance->cost.'</strong></h3>');
 
-            // Create form for subscription 
-            //$mform->addElement('html', '<iframe class="mainframe" src="http://localhost:4141/comma/v1/foxtrot/frame?'.
-            $mform->addElement('html', '<iframe class="mainframe" src="https://staging.mmbr.io/comma/v1/foxtrot/frame?'.
-            //$mform->addElement('html', '<iframe class="mainframe" src="https://api.mmbr.io/comma/v1/foxtrot/frame?'.
+            // Create form for subscription
+            $env = $plugin->get_development_env();
+            switch ($env) {
+            case 'development':
+                $apiLink = 'http://localhost:4141/comma/v1/foxtrot/frame?';
+                break;
+            case 'staging':
+                $apiLink = 'https://staging.mmbr.io/comma/v1/foxtrot/frame?';
+                break;
+            default:
+                $apiLink = 'https://api.mmbr.io/comma/v1/foxtrot/frame?';
+                break;
+            }
+            $mform->addElement(
+                'html', '<iframe class="mainframe" src="'. $apiLink .
                 'course_id='.   $this->courseid     .''.
                 '&student_id='. $this->studentid    .''.
                 '&price='.      $this->price        .''.
                 '&currency='.   $this->currency     .''.
                 '&email='.      urlencode($this->email).''.
                 '&repeat_interval='.$this->frequency.''.
-                '&public_key='. $this->mmbrkey      .'"></iframe>');
+                '&public_key='. $this->mmbrkey      .'">
+            </iframe>'
+            );
             
             $mform->addElement('html', '<h5 id="postError" style="text-align:center;color:red;"></h5>');
 

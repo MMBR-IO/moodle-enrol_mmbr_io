@@ -29,11 +29,13 @@ defined('MOODLE_INTERNAL') || die();
  */
 class enrol_mmbr_plugin extends enrol_plugin
 {
-     /**
+    /**
      * Returns name of this enrol plugin
+     * 
      * @return string
      */
-    public function get_name() {
+    public function get_name() 
+    {
         // second word in class is always enrol name, sorry, no fancy plugin names with _
         $words = explode('_', get_class($this));
         return $words[1];
@@ -198,11 +200,11 @@ class enrol_mmbr_plugin extends enrol_plugin
     }
 
      /**
-     * Returns list of unenrol links for all enrol instances in course.
-     *
-     * @param int $instance
-     * @return moodle_url or NULL if self unenrolment not supported
-     */
+      * Returns list of unenrol links for all enrol instances in course.
+      *
+      * @param int $instance
+      * @return moodle_url or NULL if self unenrolment not supported
+      */
     public function get_unenrolself_link($instance) {
         global $USER, $CFG, $DB;
         $name = $this->get_name();
@@ -511,5 +513,12 @@ public function get_mmbr_io_key() {
     }
     return null;
 }
+
+    public function get_development_env() {
+        // development
+        // staging
+        // production
+        return 'development';
+    }
 
 }
