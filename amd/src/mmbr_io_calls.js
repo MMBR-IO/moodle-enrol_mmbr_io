@@ -23,21 +23,41 @@
   * @param $ -
   * @returns functions
   */
-define(['jquery'], function ($) {
+define(['jquery'], function($) {
     return {
-        call: function () {
+        call: function() {
             window.addEventListener("message", receiveMessage, false);
             /**
              * 
              * @param {Object} event 
              */
             function receiveMessage(event) {
-                if (typeof event === 'undefined' || event.origin !== "https://staging.mmbr.io" ||
-                    event.data !== 'success') {
-                    $("#postError").text('Error handling message event');
-                } else {
+                if (typeof event !== 'undefined' && event.data === 'success' && (
+                        event.origin === "http://localhost:4141" ||
+                        event.origin === "https://staging.mmbr.io" ||
+                        event.origin === "https://api.mmbr.io"
+                )) {
                     $("form").submit();
+                } else {
+                    sendErrorToTheFrame('Connection Error');
                 }
+            }
+
+            /**
+             * Creates postMessage for contentWindow
+             * Sends error message to iFrame
+             * Our iFrame
+             * 
+             * @param {string} err 
+             */
+            function sendErrorToTheFrame(err) {
+                var obj = {
+                    success: false,
+                    origin: 'moodle',
+                    error: err,
+                };
+                var paymentFrame = document.getElementById('paymentFrame');
+                paymentFrame.contentWindow.postMessage(JSON.stringify(obj), '*');
             }
         },
     };

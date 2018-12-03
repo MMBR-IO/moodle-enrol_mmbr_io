@@ -21,12 +21,13 @@
  * @package  enrol_mmbr
  * @author   Dmitry Nagorny <dmitry.nagorny@mmbr.io>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @link     Link
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'enrol_mmbr';
-$plugin->release = '1.0.01';
-$plugin->version = 2018091301; // Version format - YYYYMMDDXX
-$plugin->requires = 2018051700;
+$plugin->release = '1.1.01';
+$plugin->version = 2018120301; // Version format - YYYYMMDDXX
+$plugin->requires = 2017111300;
 $plugin->maturity = MATURITY_RC;

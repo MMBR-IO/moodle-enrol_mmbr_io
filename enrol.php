@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /** 
- * @package     enrol_mmbr
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @copyright   Dmitry Nagorny
+ * @package   enrol_mmbr
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright Dmitry Nagorny
  */
 
 
-require('../../config.php');
+require '../../config.php';
 require_login();
 
 $courseid   = required_param('courseid', PARAM_INT);
@@ -40,7 +40,7 @@ if (!enrol_is_enabled('mmbr')) {
 }
 
 $plugin = enrol_get_plugin('mmbr');
-$instances = $plugin->enrol_get_instances($course->id,true);
+$instances = $plugin->enrol_get_instances($course->id, true);
 // If there is only instance send to payment 
 if (count($instances) == 1) {
     $instanceid = key($instances);
@@ -48,7 +48,7 @@ if (count($instances) == 1) {
 // If $instanceid is set got to payment form 
 if ($instanceid > 0) {
     foreach ($instances as $key => $value) {
-        if ($key === $instanceid){
+        if ($key === $instanceid) {
             $instance = $value;
         }
     }
@@ -58,7 +58,8 @@ if ($instanceid > 0) {
     $mform = new enrol_mmbr_payment_form(null, $instance);
 
     if ($data = $mform->get_data()) { 
-        $plugin->confirm_enrolment($data->enrolinstanceid);
+        return null;
+        // $plugin->confirm_enrolment($data->enrolinstanceid);
     }
     if ($mform->is_cancelled()) {
         redirect($return);

@@ -18,12 +18,12 @@
  * @copyright   Dmitry Nagorny
  */
 
-define(['jquery'], function ($) {
+define(['jquery'], function($) {
     return {
-        instances: function () {
+        instances: function() {
             $(':radio:first').parent('label').css('background-color', 'green');
             $(":radio").change(function() {
-                if(this.checked) {
+                if (this.checked) {
                     $(':radio').parent('label').css('background-color', 'lightgrey');
                     $(this).parent('label').css('background-color', 'green');
 

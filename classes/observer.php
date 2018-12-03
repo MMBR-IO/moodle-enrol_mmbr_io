@@ -32,9 +32,30 @@ require_once $CFG->dirroot . '/enrol/mmbr/lib.php';
 // in classes/observer.php
 class enrol_mmbr_observer
 {
-    private static $__DOMAIN = 'https://staging.mmbr.io/cobb/v1/';
-    //private static $_DOMAIN = 'http://localhost/cobb/v1/';
-    //private static $_DOMAIN_PORT = 4143; // Only for development
+    private static $_DOMAIN_PORT = 4143; // Only for development
+
+    /**
+     * Gets development stage from lib class
+     * Based on it's value returns api string
+     * 
+     * @return string $apiLink - API Link based on development stage
+     */
+    public static function get_domain($e)
+    {
+        switch ($e) {
+        case 'development':
+            $apiLink = 'http://localhost/cobb/v1/';
+            break;
+        case 'staging':
+            $apiLink = 'https://staging.mmbr.io/cobb/v1/';
+            break;
+        default:
+            $apiLink = 'https://api.mmbr.io/cobb/v1/';
+            break;
+        }
+        return $apiLink;
+    }
+
     /**
      * USER LOGGEDIN 
      * Event is triggered when User logs in Moodle
@@ -53,11 +74,11 @@ class enrol_mmbr_observer
     public static function check_logged_user($event) 
     {
         global $DB;
-        $plugin = enrol_get_plugin('mmbr');
         $eventdata = $event->get_data();    // All data about this event
         $userid = $eventdata['userid'];
         $enrol = "enrol";
         $enrolments = $DB->get_records($enrol, array('enrol' => 'mmbr'));
+        $plugin = enrol_get_plugin('mmbr');
         // Check is this user has enrolment with MMBR plugin
         // False -> do nothing || True -> Check if all his enrolment is up to date
         foreach ($enrolments as &$enrolment) {
@@ -76,7 +97,9 @@ class enrol_mmbr_observer
                             $plugin->update_user_enrol($enrolment, $userid, false, null, $newtimeend);  // false -> enrolment is active
                         } else {
                             $plugin->update_user_enrol($enrolment, $userid, true, null, null);          // true -> enrolment is deactivated
-                            \core\notification::error($result->errors); // Shows error to user
+                            // Don't show error for now. Might be bad UX to show some randow errors
+                            // For example if it couldn't connect to our server
+                            // \core\notification::error($result->errors); // Shows error to user
                         }
                     }
                 }
@@ -125,7 +148,7 @@ class enrol_mmbr_observer
      /** 
       * Validates if user is enrolled in course with given price
       * 
-      * @param int $user_id   
+      * @param int $user_id 
       * @param int $course_id  
       * @param int $price  
       *
@@ -191,21 +214,28 @@ class enrol_mmbr_observer
         return $response;
     }
 
-    public static function get($route, $params = array(), $options = array()) {
-        $url = self::$_DOMAIN . $route;
+    public static function get($route, $params = array(), $options = array())
+    {
+        $plugin = enrol_get_plugin('mmbr');
+        $env = $plugin->get_development_env();
+        $url = self::get_domain() . $route;
         if (!empty($params)) {
             $url .= (stripos($url, '?') !== false) ? '&' : '?';
             $url .= http_build_query($params, '', '&');
         }
         $curl = curl_init();
-        curl_setopt_array( 
-            $curl, array(       
-                CURLOPT_HTTPGET         => 1,
-                CURLOPT_RETURNTRANSFER  => 1,
-                CURLOPT_URL             => $url,
-            //CURLOPT_PORT            => self::$_DOMAIN_PORT, //Only for development
-            )
+        $plugin = enrol_get_plugin('mmbr');
+        $env = $plugin->get_development_env();
+        $options = array(
+            CURLOPT_HTTPGET         => 1,
+            CURLOPT_RETURNTRANSFER  => 1,
+            CURLOPT_URL             => $url,
         );
+        if ($env === 'development') {
+            $options[CURLOPT_PORT] = self::$_DOMAIN_PORT;
+        }
+        curl_setopt_array($curl, $options);   
+        
         if (!$response = curl_exec($curl)) {
             $response = new stdClass();
             return $response->errors = $curl_error;
@@ -215,25 +245,31 @@ class enrol_mmbr_observer
     }
 
     public static function post($route, $params = array(), $options = array()) 
-    {     
-        $url = self::$_DOMAIN . $route;
+    {   
+        $plugin = enrol_get_plugin('mmbr');
+        $env = $plugin->get_development_env();
+        $url = self::get_domain($env) . $route;
 
         $payload = json_encode($params);
 
         $curl = curl_init();
-        curl_setopt_array(
-            $curl, array(     
-                CURLINFO_HEADER_OUT     => true,
+        $plugin = enrol_get_plugin('mmbr');
+        $env = $plugin->get_development_env();
+        $options = array(
+            CURLINFO_HEADER_OUT         => true,
                 CURLOPT_RETURNTRANSFER  => true,
                 CURLOPT_POST            => true,
                 CURLOPT_URL             => $url,
-            // CURLOPT_PORT            => self::$_DOMAIN_PORT, // Only for development
                 CURLOPT_POSTFIELDS      => $payload,
                 CURLOPT_HTTPHEADER      => array(
                     'Content-Type: application/json',
                     'Content-Length: ' . strlen($payload)),
-            )
-        );
+                );
+        if ($env === 'development') {
+            $options[CURLOPT_PORT] = self::$_DOMAIN_PORT;
+        }
+
+        curl_setopt_array($curl, $options);
 
         if (!$response = curl_exec($curl)) {
             return $response->errors = $curl_error;

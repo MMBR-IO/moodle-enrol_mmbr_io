@@ -29,11 +29,13 @@ defined('MOODLE_INTERNAL') || die();
  */
 class enrol_mmbr_plugin extends enrol_plugin
 {
-     /**
+    /**
      * Returns name of this enrol plugin
+     * 
      * @return string
      */
-    public function get_name() {
+    public function get_name() 
+    {
         // second word in class is always enrol name, sorry, no fancy plugin names with _
         $words = explode('_', get_class($this));
         return $words[1];
@@ -198,11 +200,11 @@ class enrol_mmbr_plugin extends enrol_plugin
     }
 
      /**
-     * Returns list of unenrol links for all enrol instances in course.
-     *
-     * @param int $instance
-     * @return moodle_url or NULL if self unenrolment not supported
-     */
+      * Returns list of unenrol links for all enrol instances in course.
+      *
+      * @param int $instance
+      * @return moodle_url or NULL if self unenrolment not supported
+      */
     public function get_unenrolself_link($instance) {
         global $USER, $CFG, $DB;
         $name = $this->get_name();
@@ -441,72 +443,87 @@ public function get_enrolment_options($id = NULL) {
     }
 }
 
-public function confirm_enrolment($instanceid){
-    global $DB, $CFG, $USER;
-    // Confirm with MMBR.IO that payment successful  
-    require('classes/observer.php');
-    $observer = new enrol_mmbr_observer();
-    // Get instance 
-    $instance = $this->enrol_get_instance($instanceid, true);
-    $result = $observer->validate_user_enrolment($USER->id, $instance->courseid, $instance->cost);
-    if ($result->success) {
-        // We get unix time with milliseconds, need to trim before saving to moodle database to keep consistency 
-        $timestart  = time();
-        $timeend    = 0;
-        if ($result->data && $result->data->timeend && $result->data->timeend > 0) {
-            $timeend = intval(substr(strval($result->data->timeend), 0, 10));
-        } 
-        $roleid = $instance->roleid;
-        // Enrol user in the course
-        $this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend, ENROL_USER_ACTIVE);
-        $userenrolment = $DB->get_record(
-            'user_enrolments',
-            array(
-                'userid' => $USER->id,
-                'enrolid' => $instance->id),
-            'id', MUST_EXIST);
-        redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid", get_string('enrolsuccess', 'enrol_mmbr'), null, \core\output\notification::NOTIFY_SUCCESS);
-    } else {
-        \core\notification::error($result->errors);
+    public function confirm_enrolment($instanceid)
+    {
+        global $DB, $CFG, $USER;
+        // Confirm with MMBR.IO that payment successful  
+        include 'classes/observer.php';
+        $observer = new enrol_mmbr_observer();
+        // Get instance 
+        $instance = $this->enrol_get_instance($instanceid, true);
+        $result = $observer->validate_user_enrolment($USER->id, $instance->courseid, $instance->cost);
+        if ($result->success) {
+            // We get unix time with milliseconds, need to trim before saving to moodle database to keep consistency 
+            $timestart  = time();
+            $timeend    = 0;
+            if ($result->data && $result->data->timeend && $result->data->timeend > 0) {
+                $timeend = intval(substr(strval($result->data->timeend), 0, 10));
+            } 
+            $roleid = $instance->roleid;
+            // Enrol user in the course
+            $this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend, ENROL_USER_ACTIVE);
+            $userenrolment = $DB->get_record(
+                'user_enrolments',
+                array(
+                    'userid' => $USER->id,
+                    'enrolid' => $instance->id
+                ),
+                'id', 
+                MUST_EXIST
+            );
+            redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid", get_string('enrolsuccess', 'enrol_mmbr'), null, \core\output\notification::NOTIFY_SUCCESS);
+        } else {
+            \core\notification::error($result->errors);
+        }
     }
-}
 
 
-/**
- * Converts all currency to cent value
- * @param $cost reqular price
- * @return $cents price value in cents
- */
-public function get_cost_cents($cost) {
-    if (is_string($cost)) {
-        $cost = floatval($cost);
+    /**
+     * Converts all currency to cent value
+     * @param string $cost Reqular price
+     * @return integer $cents price value in cents
+     */
+    public function get_cost_cents($cost)
+    {
+        if (is_string($cost)) {
+            $cost = floatval($cost);
+        }
+        $cents = round($cost, 2)*100;
+        return $cents;
     }
-    $cents = round($cost,2)*100;
-    return $cents;
-}
 
-/**
- * Converts cost from cent value to dollar
- * @param $cost cost in cents
- * @return $full cost in dollars
- */
-public function get_cost_full($cost) {
-    if (is_string($cost)) {
-        $cost = floatval($cost);
+    /**
+     * Converts cost from cent value to dollar
+     * @param string $cost cost in cents
+     * @return float $full cost in dollars
+     */
+    public function get_cost_full($cost)
+    {
+        if (is_string($cost)) {
+            $cost = floatval($cost);
+        }
+        $full = round($cost,2)/100;
+        return $full;
     }
-    $full = round($cost,2)/100;
-    return $full;
-}
-/**
- * Get public key 
- * @return $key - public key for this instance
- */
-public function get_mmbr_io_key() {
-    global $DB;
-    if ($keyrecord = $DB->get_record_select('config_plugins',"plugin = 'enrol_mmbr' AND name = 'mmbrkey'")) {
-        return $keyrecord->value;
+    /**
+     * Get public key 
+     * @return $key - public key for this instance
+     */
+    public function get_mmbr_io_key()
+    {
+        global $DB;
+        if ($keyrecord = $DB->get_record_select('config_plugins', "plugin = 'enrol_mmbr' AND name = 'mmbrkey'")) {
+            return $keyrecord->value;
+        }
+        return null;
     }
-    return null;
-}
+
+    public function get_development_env()
+    {
+        // development
+        // staging
+        // production
+        return 'development';
+    }
 
 }
