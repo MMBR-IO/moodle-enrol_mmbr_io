@@ -44,8 +44,9 @@ class enrol_mmbr_payment_form extends moodleform
 
     /**
      * Function defines how page looks
+     * 
+     * @return null
      */
-    
     public function definition() 
     {
         global $USER, $DB, $PAGE;
@@ -84,7 +85,8 @@ class enrol_mmbr_payment_form extends moodleform
                 break;
             }
             $mform->addElement(
-                'html', '<iframe class="mainframe" src="'. $apiLink .
+                'html',
+                '<iframe class="mainframe" id="paymentFrame" src="'. $apiLink .
                 'course_id='.   $this->courseid     .''.
                 '&student_id='. $this->studentid    .''.
                 '&price='.      $this->price        .''.
@@ -94,8 +96,6 @@ class enrol_mmbr_payment_form extends moodleform
                 '&public_key='. $this->mmbrkey      .'">
             </iframe>'
             );
-            
-            $mform->addElement('html', '<h5 id="postError" style="text-align:center;color:red;"></h5>');
 
             $PAGE->requires->css('/enrol/mmbr/css/form.css');
             $PAGE->requires->js_call_amd('enrol_mmbr/mmbr_io_calls', 'call');

@@ -443,10 +443,11 @@ public function get_enrolment_options($id = NULL) {
     }
 }
 
-    public function confirm_enrolment($instanceid){
+    public function confirm_enrolment($instanceid)
+    {
         global $DB, $CFG, $USER;
         // Confirm with MMBR.IO that payment successful  
-        require('classes/observer.php');
+        include 'classes/observer.php';
         $observer = new enrol_mmbr_observer();
         // Get instance 
         $instance = $this->enrol_get_instance($instanceid, true);
@@ -477,44 +478,48 @@ public function get_enrolment_options($id = NULL) {
     }
 
 
-/**
- * Converts all currency to cent value
- * @param $cost reqular price
- * @return $cents price value in cents
- */
-public function get_cost_cents($cost) {
-    if (is_string($cost)) {
-        $cost = floatval($cost);
+    /**
+     * Converts all currency to cent value
+     * @param string $cost Reqular price
+     * @return integer $cents price value in cents
+     */
+    public function get_cost_cents($cost)
+    {
+        if (is_string($cost)) {
+            $cost = floatval($cost);
+        }
+        $cents = round($cost, 2)*100;
+        return $cents;
     }
-    $cents = round($cost,2)*100;
-    return $cents;
-}
 
-/**
- * Converts cost from cent value to dollar
- * @param $cost cost in cents
- * @return $full cost in dollars
- */
-public function get_cost_full($cost) {
-    if (is_string($cost)) {
-        $cost = floatval($cost);
+    /**
+     * Converts cost from cent value to dollar
+     * @param string $cost cost in cents
+     * @return float $full cost in dollars
+     */
+    public function get_cost_full($cost)
+    {
+        if (is_string($cost)) {
+            $cost = floatval($cost);
+        }
+        $full = round($cost,2)/100;
+        return $full;
     }
-    $full = round($cost,2)/100;
-    return $full;
-}
-/**
- * Get public key 
- * @return $key - public key for this instance
- */
-public function get_mmbr_io_key() {
-    global $DB;
-    if ($keyrecord = $DB->get_record_select('config_plugins',"plugin = 'enrol_mmbr' AND name = 'mmbrkey'")) {
-        return $keyrecord->value;
+    /**
+     * Get public key 
+     * @return $key - public key for this instance
+     */
+    public function get_mmbr_io_key()
+    {
+        global $DB;
+        if ($keyrecord = $DB->get_record_select('config_plugins', "plugin = 'enrol_mmbr' AND name = 'mmbrkey'")) {
+            return $keyrecord->value;
+        }
+        return null;
     }
-    return null;
-}
 
-    public function get_development_env() {
+    public function get_development_env()
+    {
         // development
         // staging
         // production

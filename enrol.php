@@ -20,7 +20,7 @@
  */
 
 
-require('../../config.php');
+require '../../config.php';
 require_login();
 
 $courseid   = required_param('courseid', PARAM_INT);
@@ -40,7 +40,7 @@ if (!enrol_is_enabled('mmbr')) {
 }
 
 $plugin = enrol_get_plugin('mmbr');
-$instances = $plugin->enrol_get_instances($course->id,true);
+$instances = $plugin->enrol_get_instances($course->id, true);
 // If there is only instance send to payment 
 if (count($instances) == 1) {
     $instanceid = key($instances);
@@ -48,7 +48,7 @@ if (count($instances) == 1) {
 // If $instanceid is set got to payment form 
 if ($instanceid > 0) {
     foreach ($instances as $key => $value) {
-        if ($key === $instanceid){
+        if ($key === $instanceid) {
             $instance = $value;
         }
     }

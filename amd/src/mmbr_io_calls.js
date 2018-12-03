@@ -39,8 +39,25 @@ define(['jquery'], function($) {
                 )) {
                     $("form").submit();
                 } else {
-                    $("#postError").text('Error handling message event');
+                    sendErrorToTheFrame('Connection Error');
                 }
+            }
+
+            /**
+             * Creates postMessage for contentWindow
+             * Sends error message to iFrame
+             * Our iFrame
+             * 
+             * @param {string} err 
+             */
+            function sendErrorToTheFrame(err) {
+                var obj = {
+                    success: false,
+                    origin: 'moodle',
+                    error: err,
+                };
+                var paymentFrame = document.getElementById('paymentFrame');
+                paymentFrame.contentWindow.postMessage(JSON.stringify(obj), '*');
             }
         },
     };
