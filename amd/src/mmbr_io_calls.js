@@ -23,7 +23,7 @@
   * @param $ -
   * @returns functions
   */
-define(['jquery'], function($) {
+define(['jquery', 'core/ajax'], function($, ajax) {
     return {
         call: function() {
             window.addEventListener("message", receiveMessage, false);
@@ -37,7 +37,20 @@ define(['jquery'], function($) {
                         event.origin === "https://staging.mmbr.io" ||
                         event.origin === "https://api.mmbr.io"
                 )) {
-                    $("form").submit();
+                    window.console.log('We received success! Submitting form!');
+                    $.ajax({
+                        type: "POST",
+                        url: "enrol.php",
+                        data: {paymentStatus: "success", validate: {id: 15}},
+                        dataType: 'json',
+                        success: function (response) {
+                            window.console.log('We submitted form and ', response);
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            window.console.log('During ajax call error happened ', errorThrown);
+                         }
+                    });
+                    // $("form").submit();
                 } else {
                     sendErrorToTheFrame('Connection Error');
                 }

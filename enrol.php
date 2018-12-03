@@ -26,6 +26,12 @@ require_login();
 $courseid   = required_param('courseid', PARAM_INT);
 $instanceid = optional_param('instanceid', 0, PARAM_INT); 
 $paymentid = optional_param('paymentid', null, PARAM_TEXT);
+$paymentStatus = null;
+if (isset($_POST['paymentStatus'])) {
+    $paymentStatus = $_POST['paymentStatus'];
+}
+
+print_r('We received this value: ' . $paymentStatus);
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $context = context_course::instance($course->id, MUST_EXIST);
@@ -59,6 +65,9 @@ if ($instanceid > 0) {
 
     if ($data = $mform->get_data()) { 
         return null;
+        if (paymentStatus) {
+            die('We are on the spot!!!');
+        }
         // $plugin->confirm_enrolment($data->enrolinstanceid);
     }
     if ($mform->is_cancelled()) {
