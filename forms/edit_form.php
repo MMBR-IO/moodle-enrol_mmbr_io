@@ -19,9 +19,9 @@
  * Adds new instance of enrol_mmbr to specified course
  * or edits current instance.
  *
- * @package    enrol_mmbr
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Dmitry Nagorny
+ * @package enrol_mmbr
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author  Dmitry Nagorny
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -31,9 +31,11 @@ require_once('lib.php');
 class enrol_mmbr_edit_form extends moodleform {
     /**
      * Sets up moodle form.
+     * 
      * @return void
      */
-    public function definition() {
+    public function definition()
+    {
         $mform = $this->_form;
 
         list($instance, $plugin, $context) = $this->_customdata;
@@ -60,14 +62,17 @@ class enrol_mmbr_edit_form extends moodleform {
         $mform->setType('courseid', PARAM_INT);
 
         if (enrol_accessing_via_instance($instance)) {
-            $mform->addElement('static', 'selfwarn', get_string('instanceeditselfwarning', 'core_enrol'),
-            get_string('instanceeditselfwarningtext', 'core_enrol'));
+            $mform->addElement(
+                'static', 'selfwarn', get_string('instanceeditselfwarning', 'core_enrol'),
+                get_string('instanceeditselfwarningtext', 'core_enrol')
+            );
         }
 
         $this->add_action_buttons(true, ($instance->id ? null : get_string('addinstance', 'enrol')));
 
         $this->set_data($instance);
     }
+
     /**
      * Sets up moodle form validation.
      * @param stdClass $data
@@ -85,7 +90,7 @@ class enrol_mmbr_edit_form extends moodleform {
         if (!is_numeric($cost)) {
             $errors['price'] = get_string('costnumerror', 'enrol_mmbr');
         }
-        if (intval($cost) < 2){
+        if (intval($cost) < 2) {
             $errors['price'] = get_string('costnullerror', 'enrol_mmbr');
         }
         return $errors;
