@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /** 
- * @package     enrol_mmbr
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @copyright   Dmitry Nagorny
+ * @package   enrol_mmbr
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright Dmitry Nagorny
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -39,24 +39,6 @@ if ($ADMIN->fulltree) {
     $currencies = enrol_get_plugin('mmbr')->get_currencies();
     $settings->add(new admin_setting_configselect('enrol_mmbr/currency',
     get_string('currency', 'enrol_mmbr'), '', 'USD', $currencies));
-
-    // Enrol instance defaults... We won't need them probably in early plugin versions
-    // $settings->add(new admin_setting_heading('enrol_manual_defaults',
-    //     get_string('enrolinstancedefaults', 'admin'), get_string('enrolinstancedefaults_desc', 'admin')));
-
-    // $settings->add(new admin_setting_configcheckbox('enrol_mmbr/defaultenrol',
-    //     get_string('defaultenrol', 'enrol'), get_string('defaultenrol_desc', 'enrol'), 0));
-
-    // $options = array(1 => get_string('yes'),
-    //                  0  => get_string('no'));
-
-    // if (!during_initial_install()) {
-    //     $options = get_default_enrol_roles(context_system::instance());
-    //     $student = get_archetype_roles('student');
-    //     $student = reset($student);
-    //     $settings->add(new admin_setting_configselect('enrol_mmbr/roleid',
-    //         get_string('defaultrole', 'role'), '', $student->id, $options));
-    // }
 }
 
 

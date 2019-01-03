@@ -58,8 +58,7 @@ if ($instanceid > 0) {
     $mform = new enrol_mmbr_payment_form(null, $instance);
 
     if ($data = $mform->get_data()) { 
-        return null;
-        // $plugin->confirm_enrolment($data->enrolinstanceid);
+        return $plugin->confirm_enrolment($data->enrolinstanceid);
     }
     if ($mform->is_cancelled()) {
         redirect($return);

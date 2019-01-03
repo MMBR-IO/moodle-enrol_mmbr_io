@@ -32,19 +32,18 @@ require_once $CFG->dirroot . '/enrol/mmbr/lib.php';
 // in classes/observer.php
 class enrol_mmbr_observer
 {
-    private static $_DOMAIN_PORT = 4143; // Only for development
-
     /**
-     * Gets development stage from lib class
+     * Gets development stage
      * Based on it's value returns api string
      * 
+     * @param  string $e - Stage name
      * @return string $apiLink - API Link based on development stage
      */
     public static function get_domain($e)
     {
         switch ($e) {
         case 'development':
-            $apiLink = 'http://localhost/cobb/v1/';
+            $apiLink = 'http://cffa2c6d.ngrok.io/cobb/v1/';
             break;
         case 'staging':
             $apiLink = 'https://staging.mmbr.io/cobb/v1/';
@@ -97,7 +96,7 @@ class enrol_mmbr_observer
                             $plugin->update_user_enrol($enrolment, $userid, false, null, $newtimeend);  // false -> enrolment is active
                         } else {
                             $plugin->update_user_enrol($enrolment, $userid, true, null, null);          // true -> enrolment is deactivated
-                            // Don't show error for now. Might be bad UX to show some randow errors
+                            // Don't show error for now. Might be bad UX to show some random errors
                             // For example if it couldn't connect to our server
                             // \core\notification::error($result->errors); // Shows error to user
                         }
@@ -216,31 +215,19 @@ class enrol_mmbr_observer
 
     public static function get($route, $params = array(), $options = array())
     {
+        // Get plugin instance lib.php classes
         $plugin = enrol_get_plugin('mmbr');
         $env = $plugin->get_development_env();
-        $url = self::get_domain() . $route;
+        $url = self::get_domain($env) . $route;
         if (!empty($params)) {
             $url .= (stripos($url, '?') !== false) ? '&' : '?';
             $url .= http_build_query($params, '', '&');
         }
-        $curl = curl_init();
-        $plugin = enrol_get_plugin('mmbr');
-        $env = $plugin->get_development_env();
-        $options = array(
-            CURLOPT_HTTPGET         => 1,
-            CURLOPT_RETURNTRANSFER  => 1,
-            CURLOPT_URL             => $url,
-        );
-        if ($env === 'development') {
-            $options[CURLOPT_PORT] = self::$_DOMAIN_PORT;
-        }
-        curl_setopt_array($curl, $options);   
-        
-        if (!$response = curl_exec($curl)) {
+        $curl = new curl;
+        if (!$response = $curl->get($url)) {
             $response = new stdClass();
-            return $response->errors = $curl_error;
+            return $response;
         }
-        curl_close($curl);
         return $response;
     }
 
@@ -265,14 +252,11 @@ class enrol_mmbr_observer
                     'Content-Type: application/json',
                     'Content-Length: ' . strlen($payload)),
                 );
-        if ($env === 'development') {
-            $options[CURLOPT_PORT] = self::$_DOMAIN_PORT;
-        }
 
         curl_setopt_array($curl, $options);
 
         if (!$response = curl_exec($curl)) {
-            return $response->errors = $curl_error;
+            return $response->errors = curl_error($curl);
         }
         curl_close($curl);
         return $response;

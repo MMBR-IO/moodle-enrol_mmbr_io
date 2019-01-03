@@ -83,14 +83,7 @@ $string['unernolfailed']    = 'Error happened while cancelling you subscription.
 
 // Privacy API
 // Temp String to explaine why we don't store any data
-$string['privacy:metadata']                 = "For now we don'r store data, maybe in future...";
-$string['privacy:metadata:user']            = 'In order to link payment to user we store some user information in MMBR.IO database';
-$string['privacy:metadata:user:id']         = 'Unique user id helps identify user';
-$string['privacy:metadata:user:firstname']  = 'Allows to communicate with user';
-$string['privacy:metadata:user:lastname']   = 'Allows to communicate with user';
-$string['privacy:metadata:user:email']      = 'Allows to communicate with user';
-
-$string['privacy:metadata:user_enrolments']           = 'In order to validate enrolment and payment status we synchronise this data with MMBR.IO database';
-$string['privacy:metadata:user_enrolments:status']    = 'Stores data is enrolment still valid';
-$string['privacy:metadata:user_enrolments:userid']    = 'Links enrolment with user';
-$string['privacy:metadata:user_enrolments:timeend']   = 'Specifies temporary enrolment end date';
+$string['privacy:metadata:mmbrio_server']            = 'In order to link payment to user we store some user id and email in MMBR.IO database';
+$string['privacy:metadata:mmbrio_server:userid']     = 'Unique user id helps identify user';
+$string['privacy:metadata:mmbrio_server:email']      = 'Allows to communicate with user and send receipt';
+$string['privacy:metadata:mmbrio_server:enrolments'] = 'In order to validate enrolment and payment status we synchronise this data with MMBR.IO database';
