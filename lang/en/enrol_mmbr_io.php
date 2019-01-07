@@ -54,7 +54,7 @@ $string['cost_help']        = "If Subscription option selected this price will b
 $string['currency']         = "Select Currency";
 $string['enrolmentoption']  = "Select enrolment option: ";
 
-// Enrolment instance names 
+// Enrolment instance names
 $string['instancename0']  = "One Time Payment";
 $string['instancename1']  = "Monthly Subscription";
 
@@ -70,15 +70,15 @@ $string['subscription']   = 'Subscription';
 $string['unenrolselfonetime']   = "This course was paid in full, if you unenrol yourself you will lose access to it.";
 $string['unenrolselfsubscribe'] = "If you unenrol yourself, you will loose access to this course and you credit card won't be charged";
 
-// Errors 
+// Errors
 $string['mmbriodeferror']   = 'Sorry, but error occurred in MMBR.IO Plugin.';
 $string['costnumerror']     = 'Price should be numeric values';
 $string['costnullerror']    = 'Minimum charge should be $2';
 $string['mmbriokeyerror']   = 'MMBR.IO Public Key Error. Make sure you entered right key in plugin setting';
-$string['mmbrioservererror']= 'Look like MMBR.IO Server down for maintenance. Please, try later.';
-$string['mmbriokeymiserror']= 'This plugin missing MMBR.IO Public Key in settings. Please enter it.';
-$string['mmbriovaliderror'] = 'Colnd\'t validate your enrolment'; 
-$string['mmbriocustomerkey']= 'Right now you can not enroll in this course. Contact Moodle manager. (Error: mmbrkey)';
+$string['mmbrioservererror'] = 'Look like MMBR.IO Server down for maintenance. Please, try later.';
+$string['mmbriokeymiserror'] = 'This plugin missing MMBR.IO Public Key in settings. Please enter it.';
+$string['mmbriovaliderror'] = 'Colnd\'t validate your enrolment';
+$string['mmbriocustomerkey'] = 'Right now you can not enroll in this course. Contact Moodle manager. (Error: mmbrkey)';
 $string['unernolfailed']    = 'Error happened while cancelling you subscription. Please contact administrator for more information';
 
 // Privacy API

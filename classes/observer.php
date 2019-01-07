@@ -191,7 +191,6 @@ class enrol_mmbr_io_observer
      */
     public static function new_enrolment_instance($instance, $course) 
     {
-        global $DB;
         $response = new stdClass;
         $plugin = enrol_get_plugin('mmbr_io');
         $mmbriokey = $plugin->get_mmbr_io_key();

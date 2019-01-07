@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    enrol_mmrb
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Dmitry Nagorny
+ * @package enrol_mmrb
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author  Dmitry Nagorny
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -46,7 +46,6 @@ $capabilities = array(
             'manager' => CAP_ALLOW,
         )
     ),
-    
     /* Allow a users to unenroll themselves */
     'enrol/mmbr_io:unenrolself' => array(
         'captype' => 'write',

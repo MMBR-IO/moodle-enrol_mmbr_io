@@ -24,7 +24,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Execute enrol_mmbr_io upgrade from the given old version.
  *
- * @param int $oldversion
+ * @param  int $oldversion
  * @return bool
  */
 function xmldb_enrol_mmbr_io_upgrade($oldversion) 

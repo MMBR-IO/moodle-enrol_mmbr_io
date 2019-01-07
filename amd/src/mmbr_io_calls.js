@@ -13,52 +13,56 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /** 
- * @package     enrol_mmbr_io
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @copyright   Dmitry Nagorny
+ * @package   enrol_mmbr_io
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright Dmitry Nagorny
  */
 
  /**
   * Submits form after approved payment, to enrol user in the course
-  * @param $ -
+  *
+  * @param   $ -
   * @returns functions
   */
-define(['jquery'], function($) {
-    return {
-        call: function() {
-            window.addEventListener("message", receiveMessage, false);
-            /**
-             * 
-             * @param {Object} event 
-             */
-            function receiveMessage(event) {
-                if (typeof event !== 'undefined' && event.data === 'success' && (
-                        event.origin === "http://localhost:4141" ||
-                        event.origin === "https://staging.mmbr.io" ||
-                        event.origin === "https://api.mmbr.io"
-                )) {
-                    $("form").submit();
-                } else {
-                    sendErrorToTheFrame('Connection Error');
+define(
+    ['jquery'], function ($) {
+        return {
+            call: function () {
+                window.addEventListener("message", receiveMessage, false);
+                /**
+                 * 
+                 * @param {Object} event 
+                 */
+                function receiveMessage(event)
+                {
+                    if (typeof event !== 'undefined' && event.data === 'success' && (                    event.origin === "http://localhost:4141" 
+                        || event.origin === "https://staging.mmbr.io" 
+                        || event.origin === "https://api.mmbr.io"                    )
+                    ) {
+                        $("form").submit();
+                    } else {
+                        sendErrorToTheFrame('Connection Error');
+                    }
                 }
-            }
 
-            /**
-             * Creates postMessage for contentWindow
-             * Sends error message to iFrame
-             * Our iFrame
-             * 
-             * @param {string} err 
-             */
-            function sendErrorToTheFrame(err) {
-                var obj = {
-                    success: false,
-                    origin: 'moodle',
-                    error: err,
-                };
-                var paymentFrame = document.getElementById('paymentFrame');
-                paymentFrame.contentWindow.postMessage(JSON.stringify(obj), '*');
-            }
-        },
-    };
-});
+                /**
+                 * Creates postMessage for contentWindow
+                 * Sends error message to iFrame
+                 * Our iFrame
+                 * 
+                 * @param {string} err 
+                 */
+                function sendErrorToTheFrame(err)
+                {
+                    var obj = {
+                        success: false,
+                        origin: 'moodle',
+                        error: err,
+                    };
+                    var paymentFrame = document.getElementById('paymentFrame');
+                    paymentFrame.contentWindow.postMessage(JSON.stringify(obj), '*');
+                }
+            },
+        };
+    }
+);

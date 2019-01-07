@@ -46,15 +46,15 @@ class enrol_mmbr_io_plugin extends enrol_plugin
      *
      * @return boolean
      */
-    public function use_standard_editing_ui() {
+    public function use_standard_editing_ui()
+    {
         return false;
     }
 
     /**
-     *
      * All plugins allowing this must implement 'enrol/xxx:manage' capability
      *
-     * @param stdClass $instance course enrol instance
+     * @param  stdClass $instance course enrol instance
      * @return bool - true means it is possible to change enrol period and status in user_enrolments table
      */
     public function allow_manage(stdClass $instance)
@@ -71,10 +71,11 @@ class enrol_mmbr_io_plugin extends enrol_plugin
      * we might want to prevent icon repetition when multiple instances
      * of one type exist. One instance may also produce several icons.
      *
-     * @param array $instances all enrol instances of this type in one course
+     * @param  array $instances all enrol instances of this type in one course
      * @return array of pix_icon
      */
-    public function get_info_icons(array $instances) {
+    public function get_info_icons(array $instances)
+    {
         $found = false;
         foreach ($instances as $instance) {
             if ($instance->enrolstartdate != 0 && $instance->enrolstartdate > time()) {
@@ -93,6 +94,7 @@ class enrol_mmbr_io_plugin extends enrol_plugin
     }
     /**
      * Is it possible to hide/show enrol instance via standard UI?
+     *
      * @param  stdClass $instance
      * @return bool
      */
@@ -105,7 +107,7 @@ class enrol_mmbr_io_plugin extends enrol_plugin
     /**
      * Is it possible to delete enrol instance via standard UI?
      *
-     * @param stdClass $instance
+     * @param  stdClass $instance
      * @return bool
      */
     public function can_delete_instance($instance)
@@ -119,20 +121,23 @@ class enrol_mmbr_io_plugin extends enrol_plugin
      * of this enrolment plugin in the course. Used by the standard editing UI
      * to generate a link to the edit instance form if editing is allowed.
      *
-     * @param stdClass $instance
+     * @param  stdClass $instance
      * @return boolean
      */
-    public function can_edit_instance($instance) {
+    public function can_edit_instance($instance)
+    {
         $context = context_course::instance($instance->courseid);
         return has_capability('enrol/' . $instance->enrol . ':config', $context);
     }
 
     /**
      * Defines if 'enrol me' link will be shown on course page.
-     * @param stdClass $instance of the plugin
+     *
+     * @param  stdClass $instance of the plugin
      * @return bool(true or false)
      */
-    public function show_enrolme_link(stdClass $instance) {
+    public function show_enrolme_link(stdClass $instance)
+    {
         return ($instance->status == ENROL_INSTANCE_ENABLED);
     }
 
@@ -141,10 +146,11 @@ class enrol_mmbr_io_plugin extends enrol_plugin
      * Has possibility to add more icons for additional functionality 
      * Create icon and add to $icons array 
      *
-     * @param stdClass $instance course enrol instance
+     * @param  stdClass $instance course enrol instance
      * @return icons - List on icons that will be added to plugin instance
      */
-    public function get_action_icons(stdClass $instance) {
+    public function get_action_icons(stdClass $instance)
+    {
         global $OUTPUT;
 
         if ($instance->enrol !== 'mmbr_io') {
@@ -156,11 +162,14 @@ class enrol_mmbr_io_plugin extends enrol_plugin
 
         if (has_capability('enrol/mmbr_io:config', $context)) {
             $editlink = new moodle_url("/enrol/mmbr_io/edit.php", array('courseid' => $instance->courseid, 'id' => $instance->id));
-            $icons[] = $OUTPUT->action_icon($editlink, new pix_icon(
-                't/edit',
-                get_string('edit'),
-                'core',
-                array('class' => 'iconsmall')));
+            $icons[] = $OUTPUT->action_icon(
+                $editlink, new pix_icon(
+                    't/edit',
+                    get_string('edit'),
+                    'core',
+                    array('class' => 'iconsmall')
+                )
+            );
         }
         return $icons;
     }
@@ -168,11 +177,12 @@ class enrol_mmbr_io_plugin extends enrol_plugin
     /**
      * Sets up navigation entries.
      *
-     * @param stdClass $instancesnode
-     * @param stdClass $instance
+     * @param  stdClass $instancesnode
+     * @param  stdClass $instance
      * @return void
      */
-    public function add_course_navigation($instancesnode, stdClass $instance) {
+    public function add_course_navigation($instancesnode, stdClass $instance)
+    {
         if ($instance->enrol !== 'mmbr_io') {
              throw new coding_exception('Invalid enrol instance type!');
         }
@@ -188,7 +198,7 @@ class enrol_mmbr_io_plugin extends enrol_plugin
      * Does this plugin allow manual unenrolment of all users?
      * All plugins allowing this must implement 'enrol/xxx:unenrol' capability
      *
-     * @param stdClass $instance course enrol instance
+     * @param  stdClass $instance course enrol instance
      * @return bool - true means user with 'enrol/xxx:unenrol' may unenrol others freely, false means nobody may touch user_enrolments
      */
     public function allow_unenrol(stdClass $instance)
@@ -202,33 +212,34 @@ class enrol_mmbr_io_plugin extends enrol_plugin
      /**
       * Returns list of unenrol links for all enrol instances in course.
       *
-      * @param int $instance
+      * @param  int $instance
       * @return moodle_url or NULL if self unenrolment not supported
       */
-    public function get_unenrolself_link($instance) {
+    public function get_unenrolself_link($instance)
+    {
         global $USER, $CFG, $DB;
         $name = $this->get_name();
         if ($instance->enrol !== $name) {
             throw new coding_exception('invalid enrol instance!');
         }
         if ($instance->courseid == SITEID) {
-            return NULL;
+            return null;
         }
         if (!enrol_is_enabled($name)) {
-            return NULL;
+            return null;
         }
         if ($instance->status != ENROL_INSTANCE_ENABLED) {
-            return NULL;
+            return null;
         }
         if (!file_exists("$CFG->dirroot/enrol/$name/unenrolself.php")) {
-            return NULL;
+            return null;
         }
         $context = context_course::instance($instance->courseid, MUST_EXIST);
         if (!has_capability("enrol/$name:unenrolself", $context)) {
-            return NULL;
+            return null;
         }
         if (!$DB->record_exists('user_enrolments', array('enrolid'=>$instance->id, 'userid'=>$USER->id, 'status'=>ENROL_USER_ACTIVE))) {
-            return NULL;
+            return null;
         }
         return new moodle_url("/enrol/$name/unenrolself.php", array('enrolid'=>$instance->id));
     }
@@ -242,7 +253,7 @@ class enrol_mmbr_io_plugin extends enrol_plugin
      * do suspend instead of full unenrolment.
      *
      * @param stdClass $instance course enrol instance
-     * @param stdClass $ue record from user_enrolments table, specifies user
+     * @param stdClass $ue       record from user_enrolments table, specifies user
      *
      * @return bool - true means user with 'enrol/xxx:unenrol' may unenrol this user, false means nobody may touch this user enrolment
      */
@@ -253,10 +264,12 @@ class enrol_mmbr_io_plugin extends enrol_plugin
 
     /**
      * Returns link to page which may be used to add new instance of enrolment plugin in course.
-     * @param int $courseid
+     *
+     * @param  int $courseid
      * @return moodle_url page url
      */
-    public function get_newinstance_link($courseid) {
+    public function get_newinstance_link($courseid)
+    {
         $context = context_course::instance($courseid, MUST_EXIST);
         if (!has_capability('moodle/course:enrolconfig', $context) or !has_capability('enrol/mmbr_io:config', $context)) {
             return null;
@@ -266,13 +279,14 @@ class enrol_mmbr_io_plugin extends enrol_plugin
     }
     
      /**
-     * Creates course enrol form, checks if form submitted
-     * and enrols user if necessary. It can also redirect.
-     *
-     * @param stdClass $instance
-     * @redirect redirects to the custom enrolment page
-     */
-    public function enrol_page_hook(stdClass $instance) { 
+      * Creates course enrol form, checks if form submitted
+      * and enrols user if necessary. It can also redirect.
+      *
+      * @param    stdClass $instance
+      * @redirect redirects to the custom enrolment page
+      */
+    public function enrol_page_hook(stdClass $instance)
+    { 
         global $CFG, $OUTPUT, $SESSION, $USER, $DB;
         // Guest can't enrol in paid courses
         if (isguestuser()) {
@@ -283,7 +297,7 @@ class enrol_mmbr_io_plugin extends enrol_plugin
         $instances = self::enrol_get_instances($instance->courseid, true);
         $fid = key($instances);
 
-        if ($instance->id == $fid){
+        if ($instance->id == $fid) {
             $courseid = $instance->courseid;
             $url = new moodle_url('/enrol/mmbr_io/enrol.php', array("courseid" => $courseid));
             redirect($url);
@@ -295,14 +309,15 @@ class enrol_mmbr_io_plugin extends enrol_plugin
      * Store user_enrolments changes and trigger event.
      * Get used for subscription, if payment occures extend 'timeend', if no suspend enrolment; 
      *
-     * @param stdClass $instance
-     * @param int $userid
-     * @param int $status
-     * @param int $timestart
-     * @param int $timeend
+     * @param  stdClass $instance
+     * @param  int      $userid
+     * @param  int      $status
+     * @param  int      $timestart
+     * @param  int      $timeend
      * @return void
      */
-    public function update_user_enrol(stdClass $instance, $userid, $status = NULL, $timestart = NULL, $timeend = NULL) {
+    public function update_user_enrol(stdClass $instance, $userid, $status = null, $timestart = null, $timeend = null)
+    {
         global $DB, $USER, $CFG;
         $name = $this->get_name();
         if ($instance->enrol !== $name) {
@@ -337,111 +352,121 @@ class enrol_mmbr_io_plugin extends enrol_plugin
         cache_helper::invalidate_by_definition('core', 'suspended_userids', array(), array($instance->courseid));
         // Trigger event.
         $event = \core\event\user_enrolment_updated::create(
-                array(
+            array(
                     'objectid' => $ue->id,
                     'courseid' => $instance->courseid,
                     'context' => context_course::instance($instance->courseid),
                     'relateduserid' => $ue->userid,
                     'other' => array('enrol' => $name)
                     )
-                );
+        );
         $event->trigger();
-        require_once($CFG->libdir . '/coursecatlib.php');
-        coursecat::user_enrolment_changed($instance->courseid, $ue->userid,
-                $ue->status, $ue->timestart, $ue->timeend);
+        include_once $CFG->libdir . '/coursecatlib.php';
+        coursecat::user_enrolment_changed(
+            $instance->courseid, $ue->userid,
+            $ue->status, $ue->timestart, $ue->timeend
+        );
     }
 
-/**
- * Return enrolment instance by id
- * @param int   $instanceid
- * @param bool  $enable
- * @return stdClass $instance
- */
-function enrol_get_instance($instanceid, $enable){
-    global $DB, $CFG;
-    $status = ($enable)?0:1;
-    try {
-        $result = $DB->get_records('enrol', array('id' => $instanceid, 'status' => $status)); 
-    } catch (Exception $e) {
-        throw new coding_exception( "<b>Exception:</b> " .$exception->getMessage());
-    }
-    $instance = new stdClass();
-    foreach ($result as $inst) {
-        foreach ($inst as $key => $value) {
-            if (is_array($value)) {
-                $value = convertToObject($value);
+    /**
+     * Return enrolment instance by id
+     *
+     * @param  int  $instanceid
+     * @param  bool $enable
+     * @return stdClass $instance
+     */
+    function enrol_get_instance($instanceid, $enable)
+    {
+        global $DB, $CFG;
+        $status = ($enable)?0:1;
+        try {
+            $result = $DB->get_records('enrol', array('id' => $instanceid, 'status' => $status)); 
+        } catch (Exception $e) {
+            throw new coding_exception("<b>Exception:</b> " .$exception->getMessage());
+        }
+        $instance = new stdClass();
+        foreach ($result as $inst) {
+            foreach ($inst as $key => $value) {
+                if (is_array($value)) {
+                    $value = convertToObject($value);
+                }
+                $instance->$key = $value;
             }
-            $instance->$key = $value;
         }
+        return $instance;
     }
-    return $instance;
-}
 
-/**
- * Returns enrolment instances in given course.
- * @param int $courseid
- * @param bool $enabled
- * @return array of enrol instances
- */
-function enrol_get_instances($courseid, $enabled) {
-    global $DB, $CFG;
-    if (!$enabled) {
-        return $DB->get_records('enrol', array('courseid'=>$courseid), 'sortorder,id');
+    /**
+     * Returns enrolment instances in given course.
+     *
+     * @param  int  $courseid
+     * @param  bool $enabled
+     * @return array of enrol instances
+     */
+    function enrol_get_instances($courseid, $enabled)
+    {
+        global $DB, $CFG;
+        if (!$enabled) {
+            return $DB->get_records('enrol', array('courseid'=>$courseid), 'sortorder,id');
+        }
+        $result = $DB->get_records('enrol', array('courseid'=>$courseid, 'status'=>ENROL_INSTANCE_ENABLED), 'sortorder,id');
+        $enabled = explode(',', $CFG->enrol_plugins_enabled);
+        foreach ($result as $key=>$instance) {
+            if (!in_array($instance->enrol, $enabled)) {
+                unset($result[$key]);
+                continue;
+            }
+            if (!file_exists("$CFG->dirroot/enrol/$instance->enrol/lib.php")) {
+                // broken plugin
+                unset($result[$key]);
+                continue;
+            }
+            if ($instance->enrol === 'manual') {
+                // We dont need this 
+                unset($result[$key]);
+                continue;
+            }
+        }
+        return $result;
     }
-    $result = $DB->get_records('enrol', array('courseid'=>$courseid, 'status'=>ENROL_INSTANCE_ENABLED), 'sortorder,id');
-    $enabled = explode(',', $CFG->enrol_plugins_enabled);
-    foreach ($result as $key=>$instance) {
-        if (!in_array($instance->enrol, $enabled)) {
-            unset($result[$key]);
-            continue;
-        }
-        if (!file_exists("$CFG->dirroot/enrol/$instance->enrol/lib.php")) {
-            // broken plugin
-            unset($result[$key]);
-            continue;
-        }
-        if ($instance->enrol === 'manual'){
-            // We dont need this 
-            unset($result[$key]);
-            continue;
-        }
-    }
-    return $result;
-}
 
-/**
- * Lists all currencies available for plugin.
- * @return $currencies
- */
-public function get_currencies() {
-    // $codes = array(
-    //     'AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'JPY',
-    //     'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'USD');
-    $codes = array('USD', 'CAD');
-    $currencies = array();
-    foreach ($codes as $c) {
-        $currencies[$c] = new lang_string($c, 'core_currencies');
-    }
-    return $currencies;
-}
-
-/**
- * Returns all available enrolment options
- * If null passed returns all possible options
- * If id passed returns options name
- * @return $options
- */
-public function get_enrolment_options($id = NULL) {
-    if($id == NULL) {
-    $options = array();
-        for ($i = 0; $i< 2; $i++) {
-            $options[] = get_string('instancename'.$i.'', 'enrol_mmbr_io');
+    /**
+     * Lists all currencies available for plugin.
+     *
+     * @return $currencies
+     */
+    public function get_currencies()
+    {
+        // $codes = array(
+        //     'AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'JPY',
+        //     'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'USD');
+        $codes = array('USD', 'CAD');
+        $currencies = array();
+        foreach ($codes as $c) {
+            $currencies[$c] = new lang_string($c, 'core_currencies');
         }
-    return $options;
-    } else {
-        return get_string('instancename'.$id.'', 'enrol_mmbr_io');
+        return $currencies;
     }
-}
+
+    /**
+     * Returns all available enrolment options
+     * If null passed returns all possible options
+     * If id passed returns options name
+     *
+     * @return $options
+     */
+    public function get_enrolment_options($id = null)
+    {
+        if($id == null) {
+            $options = array();
+            for ($i = 0; $i< 2; $i++) {
+                $options[] = get_string('instancename'.$i.'', 'enrol_mmbr_io');
+            }
+            return $options;
+        } else {
+            return get_string('instancename'.$id.'', 'enrol_mmbr_io');
+        }
+    }
 
     public function confirm_enrolment($instanceid)
     {
@@ -480,7 +505,8 @@ public function get_enrolment_options($id = NULL) {
 
     /**
      * Converts all currency to cent value
-     * @param string $cost Reqular price
+     *
+     * @param  string $cost Reqular price
      * @return integer $cents price value in cents
      */
     public function get_cost_cents($cost)
@@ -494,7 +520,8 @@ public function get_enrolment_options($id = NULL) {
 
     /**
      * Converts cost from cent value to dollar
-     * @param string $cost cost in cents
+     *
+     * @param  string $cost cost in cents
      * @return float $full cost in dollars
      */
     public function get_cost_full($cost)
@@ -502,11 +529,12 @@ public function get_enrolment_options($id = NULL) {
         if (is_string($cost)) {
             $cost = floatval($cost);
         }
-        $full = round($cost,2)/100;
+        $full = round($cost, 2)/100;
         return $full;
     }
     /**
      * Get public key 
+     *
      * @return $key - public key for this instance
      */
     public function get_mmbr_io_key()

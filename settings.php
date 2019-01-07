@@ -24,21 +24,31 @@ defined('MOODLE_INTERNAL') || die();
 if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('enrol_mmbr_io_enrolname', '', get_string('pluginname_desc', 'enrol_mmbr_io')));
 
-    $settings->add(new admin_setting_heading(
-        'enrol_mmbr_io_key',
-        get_string('mmbrkey', 'enrol_mmbr_io'),
-        get_string('mmbrkey', 'enrol_mmbr_io')));
-    $settings->add(new admin_setting_configtext(
-        'enrol_mmbr_io/mmbrkey',
-        get_string('mmbrkey', 'enrol_mmbr_io'),
-        get_string('mmbrkey_desc', 'enrol_mmbr_io'),
-        '',
-        PARAM_TEXT,
-        60));
+    $settings->add(
+        new admin_setting_heading(
+            'enrol_mmbr_io_key',
+            get_string('mmbrkey', 'enrol_mmbr_io'),
+            get_string('mmbrkey', 'enrol_mmbr_io')
+        )
+    );
+    $settings->add(
+        new admin_setting_configtext(
+            'enrol_mmbr_io/mmbrkey',
+            get_string('mmbrkey', 'enrol_mmbr_io'),
+            get_string('mmbrkey_desc', 'enrol_mmbr_io'),
+            '',
+            PARAM_TEXT,
+            60
+        )
+    );
 
     $currencies = enrol_get_plugin('mmbr_io')->get_currencies();
-    $settings->add(new admin_setting_configselect('enrol_mmbr_io/currency',
-    get_string('currency', 'enrol_mmbr_io'), '', 'USD', $currencies));
+    $settings->add(
+        new admin_setting_configselect(
+            'enrol_mmbr_io/currency',
+            get_string('currency', 'enrol_mmbr_io'), '', 'USD', $currencies
+        )
+    );
 }
 
 

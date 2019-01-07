@@ -29,7 +29,8 @@ class Provider implements
     \core_privacy\local\metadata\provider,
     \core_privacy\local\request\data_provider
 {
-    public static function get_metadata(collection $collection) : collection {
+    public static function get_metadata(collection $collection) : collection
+    {
  
         $collection->add_external_location_link(
             'mmbrio_server', [

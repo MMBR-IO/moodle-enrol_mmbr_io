@@ -15,7 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * 
  * Adds new instance of enrol_mmbr_io to specified course
  * or edits current instance.
  *
@@ -26,9 +25,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/formslib.php');
-require_once('lib.php');
-class enrol_mmbr_io_edit_form extends moodleform {
+require_once $CFG->libdir.'/formslib.php';
+require_once 'lib.php';
+class enrol_mmbr_io_edit_form extends moodleform
+{
     /**
      * Sets up moodle form.
      * 
@@ -75,11 +75,13 @@ class enrol_mmbr_io_edit_form extends moodleform {
 
     /**
      * Sets up moodle form validation.
-     * @param stdClass $data
-     * @param stdClass $files
+     *
+     * @param  stdClass $data
+     * @param  stdClass $files
      * @return $error error list
      */
-    public function validation($data, $files) {
+    public function validation($data, $files)
+    {
         global $DB, $CFG;
         $errors = parent::validation($data, $files);
 

@@ -32,7 +32,8 @@ class enrol_mmbr_io_instance_form extends moodleform
 {
     protected   $instances, $courseid;
     
-    public function definition() {
+    public function definition()
+    {
         global $USER, $DB, $PAGE;
         $mform = $this->_form;
         // Retrieve array with all instances
@@ -52,7 +53,7 @@ class enrol_mmbr_io_instance_form extends moodleform
 
         $PAGE->requires->css('/enrol/mmbr_io/css/form.css');
         $PAGE->requires->js_call_amd('enrol_mmbr_io/style', 'instances');
-        $this->add_action_buttons($cancel = false, $submitlabel='Proceed to checkout');
+        $this->add_action_buttons($cancel = false, $submitlabel = 'Proceed to checkout');
 
         $mform->addElement('hidden', 'courseid');
         $mform->setType('courseid', PARAM_INT);

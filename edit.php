@@ -23,9 +23,9 @@
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @link     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require('../../config.php');
-require_once('lib.php');
-require_once('forms/edit_form.php');
+require '../../config.php';
+require_once 'lib.php';
+require_once 'forms/edit_form.php';
 
 $courseid = required_param('courseid', PARAM_INT);
 $instanceid = optional_param('id', 0, PARAM_INT); 
@@ -98,7 +98,7 @@ if ($mform->is_cancelled()) {
                         'enrolenddate' => $instance->enrolenddate,
                         'enrolperiod' => $instance->enrolperiod,
                     );
-        require('classes/observer.php');
+        include 'classes/observer.php';
 
         // Notify MMBR.IO about that new instance is created
         $observer = new enrol_mmbr_io_observer();
