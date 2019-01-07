@@ -24,14 +24,14 @@ defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
 
-    'enrol/mmbr:config' => array(
+    'enrol/mmbr_io:config' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
             'manager' => CAP_ALLOW,
         )
     ),
-    'enrol/mmbr:manage' => array(
+    'enrol/mmbr_io:manage' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
@@ -39,7 +39,7 @@ $capabilities = array(
             'editingteacher' => CAP_ALLOW,
         )
     ),
-    'enrol/mmbr:unenrol' => array(
+    'enrol/mmbr_io:unenrol' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
@@ -48,7 +48,7 @@ $capabilities = array(
     ),
     
     /* Allow a users to unenroll themselves */
-    'enrol/mmbr:unenrolself' => array(
+    'enrol/mmbr_io:unenrolself' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(

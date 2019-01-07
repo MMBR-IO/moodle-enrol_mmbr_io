@@ -18,7 +18,7 @@
  * along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
  * @category Api_Calls
- * @package  Enrol_Mmbr
+ * @package  Enrol_Mmbr.Io
  * @author   Dmitry Nagorny <dmitry.nagorny@mmbr.io>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @link     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -34,22 +34,22 @@ $course = $DB->get_record('course', array('id'=>$courseid), '*', MUST_EXIST);
 $context = context_course::instance($course->id, MUST_EXIST);
 
 require_login($course);
-require_capability('enrol/mmbr:config', $context);
+require_capability('enrol/mmbr_io:config', $context);
 
-$PAGE->set_url('/enrol/mmbr/edit.php', array('courseid' => $course->id, 'id' => $instanceid));
+$PAGE->set_url('/enrol/_io/edit.php', array('courseid' => $course->id, 'id' => $instanceid));
 $PAGE->set_pagelayout('admin');
 
 $returnurl = new moodle_url('/enrol/instances.php', array('id'=>$course->id));
-if (!enrol_is_enabled('mmbr')) {
+if (!enrol_is_enabled('mmbr_io')) {
     redirect($returnurl);
 }
 
-$plugin = enrol_get_plugin('mmbr');
+$plugin = enrol_get_plugin('mmbr_io');
 
 if ($instanceid) {
     $instance = $DB->get_record(
         'enrol',
-        array('courseid' => $course->id, 'enrol' => 'mmbr', 'id' => $instanceid), '*', MUST_EXIST
+        array('courseid' => $course->id, 'enrol' => 'mmbr_io', 'id' => $instanceid), '*', MUST_EXIST
     );
     $instance->cost = format_float($instance->cost, 2, true);
 } else {
@@ -62,7 +62,7 @@ if ($instanceid) {
     $instance->enrolenddate = 0;
 }
 
-$mform = new enrol_mmbr_edit_form(null, array($instance, $plugin, $context));
+$mform = new enrol_mmbr_io_edit_form(null, array($instance, $plugin, $context));
 if ($mform->is_cancelled()) {
     redirect($returnurl);
 } else if ($data = $mform->get_data()) { // If form is submitted
@@ -87,7 +87,7 @@ if ($mform->is_cancelled()) {
         
         $context->mark_dirty(); // Reset caches here
         
-        redirect($returnurl, get_string('enrolupdated', 'enrol_mmbr'), null, \core\output\notification::NOTIFY_SUCCESS);
+        redirect($returnurl, get_string('enrolupdated', 'enrol_mmbr_io'), null, \core\output\notification::NOTIFY_SUCCESS);
 
     } else { // or create a new one
         $fields = array('status' => 0, 
@@ -100,8 +100,8 @@ if ($mform->is_cancelled()) {
                     );
         require('classes/observer.php');
 
-        // Notify MMBR about that new instance is created
-        $observer = new enrol_mmbr_observer();
+        // Notify MMBR.IO about that new instance is created
+        $observer = new enrol_mmbr_io_observer();
         $result =  $observer->new_enrolment_instance($fields, $course);
         if ($result && $result->success) {
             $plugin->add_instance($course, $fields);
@@ -110,28 +110,28 @@ if ($mform->is_cancelled()) {
             if (is_object($result)) {
                 switch($result->errors) {
                 case 'wrong_key':
-                    \core\notification::error(get_string('mmbriokeyerror', 'enrol_mmbr'));
+                    \core\notification::error(get_string('mmbriokeyerror', 'enrol_mmbr_io'));
                     break;
                 case 'miss_key': 
-                    \core\notification::error(get_string('mmbriokeymiserror', 'enrol_mmbr'));
+                    \core\notification::error(get_string('mmbriokeymiserror', 'enrol_mmbr_io'));
                     break;
                 case 'server':
-                    \core\notification::error(get_string('mmbrioservererror', 'enrol_mmbr'));
+                    \core\notification::error(get_string('mmbrioservererror', 'enrol_mmbr_io'));
                     break;
                 default:
-                        \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbr'));
+                        \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbr_io'));
                 }
             } else {
-                \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbr'));
+                \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbr_io'));
             }
         }         
     }
 }
 
 $PAGE->set_heading($course->fullname);
-$PAGE->set_title(get_string('pluginname', 'enrol_mmbr'));
+$PAGE->set_title(get_string('pluginname', 'enrol_mmbr_io'));
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('pluginname', 'enrol_mmbr'));
+echo $OUTPUT->heading(get_string('pluginname', 'enrol_mmbr_io'));
 $mform->display();
 echo $OUTPUT->footer();

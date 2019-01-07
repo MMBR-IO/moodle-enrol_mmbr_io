@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /** 
- * @package     enrol_mmbr
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @copyright   Dmitry Nagorny
+ * @package   enrol_mmbr_io
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright Dmitry Nagorny
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -25,9 +25,9 @@ defined('MOODLE_INTERNAL') || die();
 // methods as necessary.
 
 /**
- * Class enrol_mmbr_plugin.
+ * Class enrol_mmbr_io_plugin.
  */
-class enrol_mmbr_plugin extends enrol_plugin
+class enrol_mmbr_io_plugin extends enrol_plugin
 {
     /**
      * Returns name of this enrol plugin
@@ -59,7 +59,7 @@ class enrol_mmbr_plugin extends enrol_plugin
      */
     public function allow_manage(stdClass $instance)
     {
-        return has_capability('enrol/mmbr:manage', context_course::instance($instance->courseid));
+        return has_capability('enrol/mmbr_io:manage', context_course::instance($instance->courseid));
     }
 
     /**
@@ -87,7 +87,7 @@ class enrol_mmbr_plugin extends enrol_plugin
             break;
         }
         if ($found) {
-            return array(new pix_icon('icon', get_string('pluginname', 'enrol_mmbr'), 'enrol_mmbr'));
+            return array(new pix_icon('icon', get_string('pluginname', 'enrol_mmbr_io'), 'enrol_mmbr_io'));
         }
         return array();
     }
@@ -99,7 +99,7 @@ class enrol_mmbr_plugin extends enrol_plugin
     public function can_hide_show_instance($instance)
     {
         $context = context_course::instance($instance->courseid);
-        return has_capability('enrol/mmbr:config', $context);
+        return has_capability('enrol/mmbr_io:config', $context);
     }
 
     /**
@@ -111,7 +111,7 @@ class enrol_mmbr_plugin extends enrol_plugin
     public function can_delete_instance($instance)
     {
         $context = context_course::instance($instance->courseid);
-        return has_capability('enrol/mmbr:config', $context);
+        return has_capability('enrol/mmbr_io:config', $context);
     }
 
     /**
@@ -147,15 +147,15 @@ class enrol_mmbr_plugin extends enrol_plugin
     public function get_action_icons(stdClass $instance) {
         global $OUTPUT;
 
-        if ($instance->enrol !== 'mmbr') {
+        if ($instance->enrol !== 'mmbr_io') {
             throw new coding_exception('invalid enrol instance!');
         }
         $context = context_course::instance($instance->courseid);
 
         $icons = array();
 
-        if (has_capability('enrol/mmbr:config', $context)) {
-            $editlink = new moodle_url("/enrol/mmbr/edit.php", array('courseid' => $instance->courseid, 'id' => $instance->id));
+        if (has_capability('enrol/mmbr_io:config', $context)) {
+            $editlink = new moodle_url("/enrol/mmbr_io/edit.php", array('courseid' => $instance->courseid, 'id' => $instance->id));
             $icons[] = $OUTPUT->action_icon($editlink, new pix_icon(
                 't/edit',
                 get_string('edit'),
@@ -173,13 +173,13 @@ class enrol_mmbr_plugin extends enrol_plugin
      * @return void
      */
     public function add_course_navigation($instancesnode, stdClass $instance) {
-        if ($instance->enrol !== 'mmbr') {
+        if ($instance->enrol !== 'mmbr_io') {
              throw new coding_exception('Invalid enrol instance type!');
         }
 
         $context = context_course::instance($instance->courseid);
-        if (has_capability('enrol/mmbr:config', $context)) {
-            $managelink = new moodle_url('/enrol/mmbr/edit.php', array('courseid' => $instance->courseid, 'id' => $instance->id));
+        if (has_capability('enrol/mmbr_io:config', $context)) {
+            $managelink = new moodle_url('/enrol/mmbr_io/edit.php', array('courseid' => $instance->courseid, 'id' => $instance->id));
             $instancesnode->add($this->get_instance_name($instance), $managelink, navigation_node::TYPE_SETTING);
         }
     }
@@ -194,7 +194,7 @@ class enrol_mmbr_plugin extends enrol_plugin
     public function allow_unenrol(stdClass $instance)
     {
         $context = context_course::instance($instance->courseid);
-        if (has_capability('enrol/mmbr:unenrolself', $context)) {
+        if (has_capability('enrol/mmbr_io:unenrolself', $context)) {
             return true;           
         }
     }
@@ -258,11 +258,11 @@ class enrol_mmbr_plugin extends enrol_plugin
      */
     public function get_newinstance_link($courseid) {
         $context = context_course::instance($courseid, MUST_EXIST);
-        if (!has_capability('moodle/course:enrolconfig', $context) or !has_capability('enrol/mmbr:config', $context)) {
+        if (!has_capability('moodle/course:enrolconfig', $context) or !has_capability('enrol/mmbr_io:config', $context)) {
             return null;
         }
         // Multiple instances supported - different cost for different roles.
-        return new moodle_url('/enrol/mmbr/edit.php', array('courseid' => $courseid));
+        return new moodle_url('/enrol/mmbr_io/edit.php', array('courseid' => $courseid));
     }
     
      /**
@@ -285,7 +285,7 @@ class enrol_mmbr_plugin extends enrol_plugin
 
         if ($instance->id == $fid){
             $courseid = $instance->courseid;
-            $url = new moodle_url('/enrol/mmbr/enrol.php', array("courseid" => $courseid));
+            $url = new moodle_url('/enrol/mmbr_io/enrol.php', array("courseid" => $courseid));
             redirect($url);
         }
         
@@ -435,11 +435,11 @@ public function get_enrolment_options($id = NULL) {
     if($id == NULL) {
     $options = array();
         for ($i = 0; $i< 2; $i++) {
-            $options[] = get_string('instancename'.$i.'', 'enrol_mmbr');
+            $options[] = get_string('instancename'.$i.'', 'enrol_mmbr_io');
         }
     return $options;
     } else {
-        return get_string('instancename'.$id.'', 'enrol_mmbr');
+        return get_string('instancename'.$id.'', 'enrol_mmbr_io');
     }
 }
 
@@ -448,7 +448,7 @@ public function get_enrolment_options($id = NULL) {
         global $DB, $CFG, $USER;
         // Confirm with MMBR.IO that payment successful  
         include 'classes/observer.php';
-        $observer = new enrol_mmbr_observer();
+        $observer = new enrol_mmbr_io_observer();
         // Get instance 
         $instance = $this->enrol_get_instance($instanceid, true);
         $result = $observer->validate_user_enrolment($USER->id, $instance->courseid, $instance->cost);
@@ -471,7 +471,7 @@ public function get_enrolment_options($id = NULL) {
                 'id', 
                 MUST_EXIST
             );
-            redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid", get_string('enrolsuccess', 'enrol_mmbr'), null, \core\output\notification::NOTIFY_SUCCESS);
+            redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid", get_string('enrolsuccess', 'enrol_mmbr_io'), null, \core\output\notification::NOTIFY_SUCCESS);
         } else {
             \core\notification::error($result->errors);
         }
@@ -512,7 +512,7 @@ public function get_enrolment_options($id = NULL) {
     public function get_mmbr_io_key()
     {
         global $DB;
-        if ($keyrecord = $DB->get_record_select('config_plugins', "plugin = 'enrol_mmbr' AND name = 'mmbrkey'")) {
+        if ($keyrecord = $DB->get_record_select('config_plugins', "plugin = 'enrol_mmbr_io' AND name = 'mmbrkey'")) {
             return $keyrecord->value;
         }
         return null;

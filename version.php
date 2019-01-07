@@ -18,7 +18,7 @@
  * along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
  * @category Version
- * @package  enrol_mmbr
+ * @package  enrol_mmbr_io
  * @author   Dmitry Nagorny <dmitry.nagorny@mmbr.io>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @link     Link
@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'enrol_mmbr';
+$plugin->component = 'enrol_mmbr_io';
 $plugin->release = '1.1.01';
 $plugin->version = 2018120301; // Version format - YYYYMMDDXX
 $plugin->requires = 2017111300;

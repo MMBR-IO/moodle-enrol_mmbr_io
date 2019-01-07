@@ -17,12 +17,12 @@
 /**
  * If course have more than one instance let user to choose 
  * 
- * @package enrol_mmbr
+ * @package enrol_mmbr_io
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author  Dmitry Nagorny
  */
 
-namespace enrol_mmbr\privacy;
+namespace enrol_mmbr_io\privacy;
 use core_privacy\local\metadata\collection;
  
 class Provider implements 

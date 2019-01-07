@@ -17,9 +17,9 @@
 /**
  * If course have more than one instance let user to choose 
  * 
- * @package    enrol_mmbr
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Dmitry Nagorny
+ * @package enrol_mmbr_io
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author  Dmitry Nagorny
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -28,7 +28,7 @@ require_once $CFG->libdir . '/formslib.php';
 require_once $CFG->dirroot . '/user/editlib.php';
 require_once $CFG->dirroot . '/user/profile/lib.php';
 
-class enrol_mmbr_instance_form extends moodleform
+class enrol_mmbr_io_instance_form extends moodleform
 {
     protected   $instances, $courseid;
     
@@ -37,10 +37,10 @@ class enrol_mmbr_instance_form extends moodleform
         $mform = $this->_form;
         // Retrieve array with all instances
         $this->instances = $this->_customdata;
-        $plugin = enrol_get_plugin('mmbr');
+        $plugin = enrol_get_plugin('mmbr_io');
         $fid = key($this->instances);
 
-        $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolheading', 'enrol_mmbr').'</h3>');
+        $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolheading', 'enrol_mmbr_io').'</h3>');
         foreach ($this->instances as $instance) {
             $price = $plugin->get_cost_full($instance->cost);
             $mform->addElement('html', '<div class="enrolment">');
@@ -50,8 +50,8 @@ class enrol_mmbr_instance_form extends moodleform
         }
         $mform->setDefault('instanceid', $fid);
 
-        $PAGE->requires->css('/enrol/mmbr/css/form.css');
-        $PAGE->requires->js_call_amd('enrol_mmbr/style', 'instances');
+        $PAGE->requires->css('/enrol/mmbr_io/css/form.css');
+        $PAGE->requires->js_call_amd('enrol_mmbr_io/style', 'instances');
         $this->add_action_buttons($cancel = false, $submitlabel='Proceed to checkout');
 
         $mform->addElement('hidden', 'courseid');

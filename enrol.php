@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /** 
- * @package   enrol_mmbr
+ * @package   enrol_mmbr_io
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @copyright Dmitry Nagorny
  */
@@ -32,14 +32,14 @@ $context = context_course::instance($course->id, MUST_EXIST);
 
 $PAGE->set_context(context_system::instance()); 
 
-$PAGE->set_url('/enrol/mmbr/enrol.php', array('courseid' => $course->id));
+$PAGE->set_url('/enrol/mmbr_io/enrol.php', array('courseid' => $course->id));
 
 $return = new moodle_url('/enrol/index.php', array('id' => $course->id));
 if (!enrol_is_enabled('mmbr')) {
     redirect($return);
 }
 
-$plugin = enrol_get_plugin('mmbr');
+$plugin = enrol_get_plugin('mmbr_io');
 $instances = $plugin->enrol_get_instances($course->id, true);
 // If there is only instance send to payment 
 if (count($instances) == 1) {
@@ -54,8 +54,8 @@ if ($instanceid > 0) {
     }
     // Set so price is in cents
     $instance->cost = $plugin->get_cost_full($instance->cost);
-    include_once "$CFG->dirroot/enrol/mmbr/forms/payment_form.php";
-    $mform = new enrol_mmbr_payment_form(null, $instance);
+    include_once "$CFG->dirroot/enrol/_io/forms/payment_form.php";
+    $mform = new enrol_mmbr_io_payment_form(null, $instance);
 
     if ($data = $mform->get_data()) { 
         return $plugin->confirm_enrolment($data->enrolinstanceid);
@@ -65,8 +65,8 @@ if ($instanceid > 0) {
 
     } 
 } else { // Else let user to choose enrolment 
-    include_once "$CFG->dirroot/enrol/mmbr/forms/instance_form.php";
-    $mform = new enrol_mmbr_instance_form(null, $instances);
+    include_once "$CFG->dirroot/enrol/mmbr_io/forms/instance_form.php";
+    $mform = new enrol_mmbr_io_instance_form(null, $instances);
 
     if ($mform->is_cancelled()) {
         redirect($return);
@@ -74,9 +74,9 @@ if ($instanceid > 0) {
 }
 
 $PAGE->set_heading($course->fullname);
-$PAGE->set_title(get_string('pluginname', 'enrol_mmbr'));
+$PAGE->set_title(get_string('pluginname', 'enrol_mmbr_io'));
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('pluginname', 'enrol_mmbr'));
+echo $OUTPUT->heading(get_string('pluginname', 'enrol_mmbr_io'));
 $mform->display();
 echo $OUTPUT->footer();

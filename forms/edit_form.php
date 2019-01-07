@@ -16,10 +16,10 @@
 
 /**
  * 
- * Adds new instance of enrol_mmbr to specified course
+ * Adds new instance of enrol_mmbr_io to specified course
  * or edits current instance.
  *
- * @package enrol_mmbr
+ * @package enrol_mmbr_io
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author  Dmitry Nagorny
  */
@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir.'/formslib.php');
 require_once('lib.php');
-class enrol_mmbr_edit_form extends moodleform {
+class enrol_mmbr_io_edit_form extends moodleform {
     /**
      * Sets up moodle form.
      * 
@@ -41,18 +41,18 @@ class enrol_mmbr_edit_form extends moodleform {
         list($instance, $plugin, $context) = $this->_customdata;
         
         $options = $plugin->get_enrolment_options();
-        $mform->addElement('select', 'name', get_string('enrolmentoption', 'enrol_mmbr'), $options, "");
+        $mform->addElement('select', 'name', get_string('enrolmentoption', 'enrol_mmbr_io'), $options, "");
         $mform->setType('name', PARAM_TEXT);
 
-        $mform->addElement('text', 'price', get_string('cost', 'enrol_mmbr'), array('size' => 8));
+        $mform->addElement('text', 'price', get_string('cost', 'enrol_mmbr_io'), array('size' => 8));
         $mform->setType('price', PARAM_RAW);
         if ($instance->id != null) {
             $mform->setDefault('price', $plugin->get_cost_full($instance->cost));
         }
-        $mform->addHelpButton('price', 'cost', 'enrol_mmbr');
+        $mform->addHelpButton('price', 'cost', 'enrol_mmbr_io');
 
         $currencies = $plugin->get_currencies();
-        $mform->addElement('select', 'currency', get_string('currency', 'enrol_mmbr'), $currencies);
+        $mform->addElement('select', 'currency', get_string('currency', 'enrol_mmbr_io'), $currencies);
         $mform->setDefault('currency', $plugin->get_config('currency'));
 
         $mform->addElement('hidden', 'id');
@@ -88,10 +88,10 @@ class enrol_mmbr_edit_form extends moodleform {
         // Depending on language is used replaces decimal separator to '.'
         $cost = str_replace(get_string('decsep', 'langconfig'), '.', $data['price']);
         if (!is_numeric($cost)) {
-            $errors['price'] = get_string('costnumerror', 'enrol_mmbr');
+            $errors['price'] = get_string('costnumerror', 'enrol_mmbr_io');
         }
         if (intval($cost) < 2) {
-            $errors['price'] = get_string('costnullerror', 'enrol_mmbr');
+            $errors['price'] = get_string('costnullerror', 'enrol_mmbr_io');
         }
         return $errors;
     }

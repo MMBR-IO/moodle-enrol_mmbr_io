@@ -17,19 +17,19 @@
 /**
  * Plugin strings are defined here.
  *
- * @package     enrol_mmbr
- * @category    string
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @copyright   Dmitry Nagorny
+ * @package   enrol_mmbr_io
+ * @category  string
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright Dmitry Nagorny
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['mmbr:config']        = 'Configure MMBR.IO enrol instances';
-$string['mmbr:manage']        = 'Manage user enrolments';
-$string['mmbr:manageapplications'] = 'Manage MMBR.IO enrolment';
-$string['mmbr:unenrol']       = 'Cancel users from the course';
-$string['mmbr:unenrolself']   = 'Cancel self from the course';
+$string['mmbr_io:config']        = 'Configure MMBR.IO enrol instances';
+$string['mmbr_io:manage']        = 'Manage user enrolments';
+$string['mmbr_io:manageapplications'] = 'Manage MMBR.IO enrolment';
+$string['mmbr_io:unenrol']       = 'Cancel users from the course';
+$string['mmbr_io:unenrolself']   = 'Cancel self from the course';
 
 $string['pluginname']       = 'MMBR.IO Enrolment Plugin';
 $string['pluginname_desc']  = "With this plugin student can pay for paid course. All payments are synchronized with MMBR.IO Account";
