@@ -39,22 +39,22 @@ $string['enrolheading']     = 'Please select one of the following payment option
 $string['paymentheading']   = 'Please provide payment information to enrol in the course';
 $string['enrolsuccess']     = "Thank you. You now enrolled in this course!";
 
-// Tasks
+// Tasks.
 $string['pingserver']       = 'Ping MMBR.IO Server';
 
-// Settings
+// Settings.
 $string['mmbrkey']          = "Enter you MMBR.IO public key";
 $string['mmbrkey_desc']     = "MMBR.IO key is used to sync all payment with your MMBR.IO account";
 $string['currency']         = 'Enter default currency';
 $string['enrolupdated']     = "Enrolment updated";
 
-// Payment options
+// Payment options.
 $string['cost']             = "Price for this enrolment";
 $string['cost_help']        = "If Subscription option selected this price will be charged once a month";
 $string['currency']         = "Select Currency";
 $string['enrolmentoption']  = "Select enrolment option: ";
 
-// Enrolment instance names
+// Enrolment instance names.
 $string['instancename0']  = "One Time Payment";
 $string['instancename1']  = "Monthly Subscription";
 
@@ -66,11 +66,11 @@ $string['status_help']    = 'Suspended enrolment won\'t be available to use unti
 $string['fullaccess']     = 'Get Full Access';
 $string['subscription']   = 'Subscription';
 
-// Unenrolment
+// Unenrolment.
 $string['unenrolselfonetime']   = "This course was paid in full, if you unenrol yourself you will lose access to it.";
 $string['unenrolselfsubscribe'] = "If you unenrol yourself, you will loose access to this course and you credit card won't be charged";
 
-// Errors
+// Errors.
 $string['mmbriodeferror']   = 'Sorry, but error occurred in MMBR.IO Plugin.';
 $string['costnumerror']     = 'Price should be numeric values';
 $string['costnullerror']    = 'Minimum charge should be $2';
@@ -81,8 +81,8 @@ $string['mmbriovaliderror'] = 'Colnd\'t validate your enrolment';
 $string['mmbriocustomerkey'] = 'Right now you can not enroll in this course. Contact Moodle manager. (Error: mmbrkey)';
 $string['unernolfailed']    = 'Error happened while cancelling you subscription. Please contact administrator for more information';
 
-// Privacy API
-// Temp String to explaine why we don't store any data
+// Privacy API.
+// Temp String to explaine why we don't store any data.
 $string['privacy:metadata:mmbrio_server']            = 'In order to link payment to user we store some user id and email in MMBR.IO database';
 $string['privacy:metadata:mmbrio_server:userid']     = 'Unique user id helps identify user';
 $string['privacy:metadata:mmbrio_server:email']      = 'Allows to communicate with user and send receipt';

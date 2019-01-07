@@ -1,4 +1,8 @@
 <?php
+require '../../config.php';
+require_once 'lib.php';
+require_once 'forms/edit_form.php';
+include 'classes/observer.php';
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -21,14 +25,12 @@
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @link     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require '../../config.php';
-require_once 'lib.php';
-require_once 'forms/edit_form.php';
+
 
 $courseid = required_param('courseid', PARAM_INT);
 $instanceid = optional_param('id', 0, PARAM_INT);
 
-$course = $DB->get_record('course', array('id'=>$courseid), '*', MUST_EXIST);
+$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $context = context_course::instance($course->id, MUST_EXIST);
 
 require_login($course);
@@ -37,7 +39,7 @@ require_capability('enrol/mmbr_io:config', $context);
 $PAGE->set_url('/enrol/_io/edit.php', array('courseid' => $course->id, 'id' => $instanceid));
 $PAGE->set_pagelayout('admin');
 
-$returnurl = new moodle_url('/enrol/instances.php', array('id'=>$course->id));
+$returnurl = new moodle_url('/enrol/instances.php', array('id' => $course->id));
 if (!enrol_is_enabled('mmbr_io')) {
     redirect($returnurl);
 }
@@ -67,14 +69,14 @@ if ($mform->is_cancelled()) {
     redirect($returnurl);
 } elseif ($data = $mform->get_data()) { // If form is submitted
     // Based on selected option choose enrolment duration // Not the best way, must be done properly later.
-    // 0 = represents one time payment
-    // 1 = represents monthly subscription
+    // 0 = represents one time payment.
+    // 1 = represents monthly subscription.
     $op = (int)$data->name;
     if ($op == 1) {
-        $instance->enrolperiod = intval(31536000/12);
+        $instance->enrolperiod = intval(31536000 / 12);
     }
     
-    // If id exists, means we updating existing instance
+    // If id exists, means we updating existing instance.
     if ($instance->id) {
         $instance->name             = $plugin->get_enrolment_options($data->name);  // Instance name
         $instance->status           = 0;                                            // Status -> active
@@ -83,24 +85,24 @@ if ($mform->is_cancelled()) {
         $instance->roleid           = 5;                                            // Role -> Student
         $instance->timemodified     = time();                                       // By default current time when modified
         $DB->update_record('enrol', $instance);
-        
-        $context->mark_dirty(); // Reset caches here
-        
+        // Reset caches here.
+        $context->mark_dirty();
+
         redirect($returnurl, get_string('enrolupdated', 'enrol_mmbr_io'), null, \core\output\notification::NOTIFY_SUCCESS);
-    } else { // or create a new one
+    } else { // Or create a new one.
         $fields = array('status' => 0,
                         'name' => $plugin->get_enrolment_options($data->name),
-                        'cost' => round($data->price, 2)*100,
+                        'cost' => round($data->price, 2) * 100,
                         'currency' => $data->currency,
                         'roleid' => 5,
                         'enrolenddate' => $instance->enrolenddate,
                         'enrolperiod' => $instance->enrolperiod,
                     );
-        include 'classes/observer.php';
 
-        // Notify MMBR.IO about that new instance is created
+        // Notify MMBR.IO about that new instance is created.
+        // Observer included.
         $observer = new enrol_mmbr_io_observer();
-        $result =  $observer->new_enrolment_instance($fields, $course);
+        $result = $observer->new_enrolment_instance($fields, $course);
         if ($result && $result->success) {
             $plugin->add_instance($course, $fields);
             redirect($returnurl);

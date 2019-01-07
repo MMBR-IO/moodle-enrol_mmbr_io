@@ -21,18 +21,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author  Dmitry Nagorny
  */
-
 namespace enrol_mmbr_io\privacy;
+defined('MOODLE_INTERNAL') || die();
 
 use core_privacy\local\metadata\collection;
- 
+
 class Provider implements
     \core_privacy\local\metadata\provider,
     \core_privacy\local\request\data_provider
 {
-    public static function get_metadata(collection $collection) : collection
-    {
- 
+    public static function get_metadata(collection $collection) : collection {
         $collection->add_external_location_link(
             'mmbrio_server',
             [
@@ -42,7 +40,7 @@ class Provider implements
             ],
             'privacy:metadata:mmbrio_server'
         );
- 
+
         return $collection;
     }
 }

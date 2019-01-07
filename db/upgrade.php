@@ -27,8 +27,7 @@ defined('MOODLE_INTERNAL') || die();
  * @param  int $oldversion
  * @return bool
  */
-function xmldb_enrol_mmbr_io_upgrade($oldversion)
-{
+function xmldb_enrol_mmbr_io_upgrade($oldversion) {
     if ($oldversion < 2018091301) {
         // Mmbr.io savepoint reached.
         upgrade_plugin_savepoint(true, 2018091301, 'enrol', 'mmbr.io');
