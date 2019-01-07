@@ -15,8 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * If course have more than one instance let user to choose 
- * 
+ * If course have more than one instance let user to choose
+ *
  * @package enrol_mmbr_io
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author  Dmitry Nagorny
@@ -30,7 +30,7 @@ require_once $CFG->dirroot . '/user/profile/lib.php';
 
 class enrol_mmbr_io_instance_form extends moodleform
 {
-    protected   $instances, $courseid;
+    protected $instances, $courseid;
     
     public function definition()
     {
@@ -58,6 +58,5 @@ class enrol_mmbr_io_instance_form extends moodleform
         $mform->addElement('hidden', 'courseid');
         $mform->setType('courseid', PARAM_INT);
         $mform->setDefault('courseid', $this->courseid);
-    }  
+    }
 }
-

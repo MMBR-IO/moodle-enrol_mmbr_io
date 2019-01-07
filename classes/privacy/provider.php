@@ -15,17 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * If course have more than one instance let user to choose 
- * 
+ * If course have more than one instance let user to choose
+ *
  * @package enrol_mmbr_io
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author  Dmitry Nagorny
  */
 
 namespace enrol_mmbr_io\privacy;
+
 use core_privacy\local\metadata\collection;
  
-class Provider implements 
+class Provider implements
     \core_privacy\local\metadata\provider,
     \core_privacy\local\request\data_provider
 {
@@ -33,7 +34,8 @@ class Provider implements
     {
  
         $collection->add_external_location_link(
-            'mmbrio_server', [
+            'mmbrio_server',
+            [
                 'userid' => 'privacy:metadata:mmbrio_server:userid',
                 'email' => 'privacy:metadata:mmbrio_server:email',
                 'enrolments' => 'privacy:metadata:mmbrio_server:enrolments',
@@ -43,5 +45,4 @@ class Provider implements
  
         return $collection;
     }
-    
 }

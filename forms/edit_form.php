@@ -31,7 +31,7 @@ class enrol_mmbr_io_edit_form extends moodleform
 {
     /**
      * Sets up moodle form.
-     * 
+     *
      * @return void
      */
     public function definition()
@@ -63,7 +63,9 @@ class enrol_mmbr_io_edit_form extends moodleform
 
         if (enrol_accessing_via_instance($instance)) {
             $mform->addElement(
-                'static', 'selfwarn', get_string('instanceeditselfwarning', 'core_enrol'),
+                'static',
+                'selfwarn',
+                get_string('instanceeditselfwarning', 'core_enrol'),
                 get_string('instanceeditselfwarningtext', 'core_enrol')
             );
         }
@@ -82,10 +84,10 @@ class enrol_mmbr_io_edit_form extends moodleform
      */
     public function validation($data, $files)
     {
-        global $DB, $CFG;
+        // global $CFG;
         $errors = parent::validation($data, $files);
 
-        list($instance, $plugin, $context) = $this->_customdata;
+        // list($instance, $plugin, $context) = $this->_customdata;
 
         // Depending on language is used replaces decimal separator to '.'
         $cost = str_replace(get_string('decsep', 'langconfig'), '.', $data['price']);

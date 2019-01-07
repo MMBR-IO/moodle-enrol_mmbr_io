@@ -1,22 +1,20 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * This file is part of Moodle - http://moodle.org/
- * 
- * PHP version 7
-
- * Moodle is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * Moodle is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
  * @category Api_Calls
  * @package  Enrol_Mmbr_IO
  * @author   Dmitry Nagorny <dmitry.nagorny@mmbr.io>
@@ -35,43 +33,43 @@ class enrol_mmbr_io_observer
     /**
      * Gets development stage
      * Based on it's value returns api string
-     * 
+     *
      * @param  string $e - Stage name
      * @return string $apiLink - API Link based on development stage
      */
     public static function get_domain($e)
     {
         switch ($e) {
-        case 'development':
-            // Using ngrok for proper work with https and ports on local development
-            $apiLink = 'http://cffa2c6d.ngrok.io/cobb/v1/';
-            break;
-        case 'staging':
-            $apiLink = 'https://staging.mmbr.io/cobb/v1/';
-            break;
-        default:
-            $apiLink = 'https://api.mmbr.io/cobb/v1/';
-            break;
+            case 'development':
+                // Using ngrok for proper work with https and ports on local development
+                $apiLink = 'http://cffa2c6d.ngrok.io/cobb/v1/';
+                break;
+            case 'staging':
+                $apiLink = 'https://staging.mmbr.io/cobb/v1/';
+                break;
+            default:
+                $apiLink = 'https://api.mmbr.io/cobb/v1/';
+                break;
         }
         return $apiLink;
     }
 
     /**
-     * USER LOGGEDIN 
+     * USER LOGGEDIN
      * Event is triggered when User logs in Moodle
-     * If this user has enrolments with MMBR.IO plugin 
+     * If this user has enrolments with MMBR.IO plugin
      *  - check if all enrolments is up to date
      *  - update with MMBR.IO in case something missing
-     * 
-     * |*| 1) Get all MMBR.IO enrollments -> check is user has one -> validate it         
+     *
+     * |*| 1) Get all MMBR.IO enrollments -> check is user has one -> validate it
      * | | 2) Get all user_enrollments -> check if there are MMBR.IO ones -> validate them
-     * | | 3) Write custom query with table JOIN to get all MMBR.IO enrolments -> validate them 
-     * 
+     * | | 3) Write custom query with table JOIN to get all MMBR.IO enrolments -> validate them
+     *
      * @param object $event - This event instance
-     * 
+     *
      * @return null
      */
-    public static function check_logged_user($event) 
+    public static function check_logged_user($event)
     {
         global $DB;
         $eventdata = $event->get_data();    // All data about this event
@@ -87,12 +85,12 @@ class enrol_mmbr_io_observer
             // If user has enrolments
             if ($records != 0) {
                 foreach ($records as &$rec) {
-                    // If enrolment exist and expired 
+                    // If enrolment exist and expired
                     if (intval($rec->status) == 0 && !empty($rec->timeend) && intval($rec->timeend) != 0 && $rec->timeend > 0 && $rec->timeend < time()) {
                         $result = self::validate_user_enrolment($userid, $enrolment->courseid, $enrolment->cost);
                         // Update enrolment expiry date
                         // If answer from MMBR.IO is true
-                        if ($result->success) { 
+                        if ($result->success) {
                             $newtimeend = intval(substr(strval($result->data->timeend), 0, 10));
                             $plugin->update_user_enrol($enrolment, $userid, false, null, $newtimeend);  // false -> enrolment is active
                         } else {
@@ -110,12 +108,12 @@ class enrol_mmbr_io_observer
     /**
      * User enrolment deleted.
      * Event is triggered when user enrollment deleted
-     * 
+     *
      * @param object $event - This event instance
-     * 
+     *
      * @return null
      */
-    public static function check_unenrolled_user($event) 
+    public static function check_unenrolled_user($event)
     {
         global $DB;
         $eventdata  = $event->get_data();    // All data about this event
@@ -145,22 +143,22 @@ class enrol_mmbr_io_observer
         }
     }
 
-     /** 
+     /**
       * Validates if user is enrolled in course with given price
-      * 
-      * @param int $user_id 
-      * @param int $course_id  
-      * @param int $price  
       *
-      * @return object $response - Response from MMBR.IO server 
+      * @param int $user_id
+      * @param int $course_id
+      * @param int $price
+      *
+      * @return object $response - Response from MMBR.IO server
       *      - success: true/false,
       *          if (true) {
-      *      - data: {timeend: integer }     
+      *      - data: {timeend: integer }
       *          } else {
       *      - error: string
       *          }
       */
-    public static function validate_user_enrolment($user_id, $course_id, $price) 
+    public static function validate_user_enrolment($user_id, $course_id, $price)
     {
         $plugin = enrol_get_plugin('mmbr_io');
         $mmbriokey = $plugin->get_mmbr_io_key();
@@ -182,14 +180,14 @@ class enrol_mmbr_io_observer
     }
 
     /**
-     * Pings MMBR.IO Server when new enrolment instance is created. 
-     * 
+     * Pings MMBR.IO Server when new enrolment instance is created.
+     *
      * @param object $instance - Enrolment instance
      * @param object $course   - Course where instance were created
-     * 
+     *
      * @return $response    - Success message, if false provides error message
      */
-    public static function new_enrolment_instance($instance, $course) 
+    public static function new_enrolment_instance($instance, $course)
     {
         $response = new stdClass;
         $plugin = enrol_get_plugin('mmbr_io');
@@ -205,7 +203,7 @@ class enrol_mmbr_io_observer
         }
         $data = [
             'public_key'    => $mmbriokey,
-            'course_id'     => $course->id, 
+            'course_id'     => $course->id,
             'course_name'   => $course->fullname,
         ];
         $response = self::get('foxtrot/plugin/instance', $data);
@@ -232,8 +230,8 @@ class enrol_mmbr_io_observer
     }
 
     // For now have post request on enrollment deletion
-    public static function post($route, $params = array(), $options = array()) 
-    {   
+    public static function post($route, $params = array(), $options = array())
+    {
         // Get plugin instance lib.php classes
         $plugin = enrol_get_plugin('mmbr_io');
         $env = $plugin->get_development_env();

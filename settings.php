@@ -13,7 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/** 
+/**
  * @package   enrol_mmbr_io
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @copyright Dmitry Nagorny
@@ -46,9 +46,10 @@ if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configselect(
             'enrol_mmbr_io/currency',
-            get_string('currency', 'enrol_mmbr_io'), '', 'USD', $currencies
+            get_string('currency', 'enrol_mmbr_io'),
+            '',
+            'USD',
+            $currencies
         )
     );
 }
-
-

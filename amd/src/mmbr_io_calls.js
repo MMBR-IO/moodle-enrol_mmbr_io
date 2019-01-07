@@ -12,7 +12,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/** 
+/**
  * @package   enrol_mmbr_io
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @copyright Dmitry Nagorny
@@ -25,18 +25,19 @@
   * @returns functions
   */
 define(
-    ['jquery'], function ($) {
+    ['jquery'],
+    function ($) {
         return {
             call: function () {
                 window.addEventListener("message", receiveMessage, false);
                 /**
-                 * 
-                 * @param {Object} event 
+                 *
+                 * @param {Object} event
                  */
                 function receiveMessage(event)
                 {
-                    if (typeof event !== 'undefined' && event.data === 'success' && (                    event.origin === "http://localhost:4141" 
-                        || event.origin === "https://staging.mmbr.io" 
+                    if (typeof event !== 'undefined' && event.data === 'success' && (                    event.origin === "http://localhost:4141"
+                        || event.origin === "https://staging.mmbr.io"
                         || event.origin === "https://api.mmbr.io"                    )
                     ) {
                         $("form").submit();
@@ -49,8 +50,8 @@ define(
                  * Creates postMessage for contentWindow
                  * Sends error message to iFrame
                  * Our iFrame
-                 * 
-                 * @param {string} err 
+                 *
+                 * @param {string} err
                  */
                 function sendErrorToTheFrame(err)
                 {

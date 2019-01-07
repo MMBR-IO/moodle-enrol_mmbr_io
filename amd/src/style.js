@@ -12,14 +12,15 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/** 
+/**
  * @package   enrol_mmbr_io
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @copyright Dmitry Nagorny
  */
 
 define(
-    ['jquery'], function ($) {
+    ['jquery'],
+    function ($) {
         return {
             instances: function () {
                 $(':radio:first').parent('label').css('background-color', 'green');
@@ -28,7 +29,6 @@ define(
                         if (this.checked) {
                             $(':radio').parent('label').css('background-color', 'lightgrey');
                             $(this).parent('label').css('background-color', 'green');
-
                         }
                     }
                 );

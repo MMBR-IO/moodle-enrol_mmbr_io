@@ -13,7 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/** 
+/**
  * @package   enrol_mmbr_io
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @copyright Dmitry Nagorny
@@ -31,10 +31,10 @@ class enrol_mmbr_io_plugin extends enrol_plugin
 {
     /**
      * Returns name of this enrol plugin
-     * 
+     *
      * @return string
      */
-    public function get_name() 
+    public function get_name()
     {
         // second word in class is always enrol name, sorry, no fancy plugin names with _
         $words = explode('_', get_class($this));
@@ -143,8 +143,8 @@ class enrol_mmbr_io_plugin extends enrol_plugin
 
     /**
      * This add 'Edit' icon on admin panel to allow edit existing instance
-     * Has possibility to add more icons for additional functionality 
-     * Create icon and add to $icons array 
+     * Has possibility to add more icons for additional functionality
+     * Create icon and add to $icons array
      *
      * @param  stdClass $instance course enrol instance
      * @return icons - List on icons that will be added to plugin instance
@@ -163,7 +163,8 @@ class enrol_mmbr_io_plugin extends enrol_plugin
         if (has_capability('enrol/mmbr_io:config', $context)) {
             $editlink = new moodle_url("/enrol/mmbr_io/edit.php", array('courseid' => $instance->courseid, 'id' => $instance->id));
             $icons[] = $OUTPUT->action_icon(
-                $editlink, new pix_icon(
+                $editlink,
+                new pix_icon(
                     't/edit',
                     get_string('edit'),
                     'core',
@@ -205,7 +206,7 @@ class enrol_mmbr_io_plugin extends enrol_plugin
     {
         $context = context_course::instance($instance->courseid);
         if (has_capability('enrol/mmbr_io:unenrolself', $context)) {
-            return true;           
+            return true;
         }
     }
 
@@ -286,14 +287,14 @@ class enrol_mmbr_io_plugin extends enrol_plugin
       * @redirect redirects to the custom enrolment page
       */
     public function enrol_page_hook(stdClass $instance)
-    { 
+    {
         global $CFG, $OUTPUT, $SESSION, $USER, $DB;
         // Guest can't enrol in paid courses
         if (isguestuser()) {
             return null;
         }
        
-        // Get all instances for this course 
+        // Get all instances for this course
         $instances = self::enrol_get_instances($instance->courseid, true);
         $fid = key($instances);
 
@@ -302,12 +303,11 @@ class enrol_mmbr_io_plugin extends enrol_plugin
             $url = new moodle_url('/enrol/mmbr_io/enrol.php', array("courseid" => $courseid));
             redirect($url);
         }
-        
-    }   
+    }
 
     /**
      * Store user_enrolments changes and trigger event.
-     * Get used for subscription, if payment occures extend 'timeend', if no suspend enrolment; 
+     * Get used for subscription, if payment occures extend 'timeend', if no suspend enrolment;
      *
      * @param  stdClass $instance
      * @param  int      $userid
@@ -363,8 +363,11 @@ class enrol_mmbr_io_plugin extends enrol_plugin
         $event->trigger();
         include_once $CFG->libdir . '/coursecatlib.php';
         coursecat::user_enrolment_changed(
-            $instance->courseid, $ue->userid,
-            $ue->status, $ue->timestart, $ue->timeend
+            $instance->courseid,
+            $ue->userid,
+            $ue->status,
+            $ue->timestart,
+            $ue->timeend
         );
     }
 
@@ -380,7 +383,7 @@ class enrol_mmbr_io_plugin extends enrol_plugin
         global $DB, $CFG;
         $status = ($enable)?0:1;
         try {
-            $result = $DB->get_records('enrol', array('id' => $instanceid, 'status' => $status)); 
+            $result = $DB->get_records('enrol', array('id' => $instanceid, 'status' => $status));
         } catch (Exception $e) {
             throw new coding_exception("<b>Exception:</b> " .$exception->getMessage());
         }
@@ -411,7 +414,7 @@ class enrol_mmbr_io_plugin extends enrol_plugin
         }
         $result = $DB->get_records('enrol', array('courseid'=>$courseid, 'status'=>ENROL_INSTANCE_ENABLED), 'sortorder,id');
         $enabled = explode(',', $CFG->enrol_plugins_enabled);
-        foreach ($result as $key=>$instance) {
+        foreach ($result as $key => $instance) {
             if (!in_array($instance->enrol, $enabled)) {
                 unset($result[$key]);
                 continue;
@@ -422,7 +425,7 @@ class enrol_mmbr_io_plugin extends enrol_plugin
                 continue;
             }
             if ($instance->enrol === 'manual') {
-                // We dont need this 
+                // We dont need this
                 unset($result[$key]);
                 continue;
             }
@@ -457,7 +460,7 @@ class enrol_mmbr_io_plugin extends enrol_plugin
      */
     public function get_enrolment_options($id = null)
     {
-        if($id == null) {
+        if ($id == null) {
             $options = array();
             for ($i = 0; $i< 2; $i++) {
                 $options[] = get_string('instancename'.$i.'', 'enrol_mmbr_io');
@@ -471,19 +474,19 @@ class enrol_mmbr_io_plugin extends enrol_plugin
     public function confirm_enrolment($instanceid)
     {
         global $DB, $CFG, $USER;
-        // Confirm with MMBR.IO that payment successful  
+        // Confirm with MMBR.IO that payment successful
         include 'classes/observer.php';
         $observer = new enrol_mmbr_io_observer();
-        // Get instance 
+        // Get instance
         $instance = $this->enrol_get_instance($instanceid, true);
         $result = $observer->validate_user_enrolment($USER->id, $instance->courseid, $instance->cost);
         if ($result->success) {
-            // We get unix time with milliseconds, need to trim before saving to moodle database to keep consistency 
+            // We get unix time with milliseconds, need to trim before saving to moodle database to keep consistency
             $timestart  = time();
             $timeend    = 0;
             if ($result->data && $result->data->timeend && $result->data->timeend > 0) {
                 $timeend = intval(substr(strval($result->data->timeend), 0, 10));
-            } 
+            }
             $roleid = $instance->roleid;
             // Enrol user in the course
             $this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend, ENROL_USER_ACTIVE);
@@ -493,7 +496,7 @@ class enrol_mmbr_io_plugin extends enrol_plugin
                     'userid' => $USER->id,
                     'enrolid' => $instance->id
                 ),
-                'id', 
+                'id',
                 MUST_EXIST
             );
             redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid", get_string('enrolsuccess', 'enrol_mmbr_io'), null, \core\output\notification::NOTIFY_SUCCESS);
@@ -533,7 +536,7 @@ class enrol_mmbr_io_plugin extends enrol_plugin
         return $full;
     }
     /**
-     * Get public key 
+     * Get public key
      *
      * @return $key - public key for this instance
      */
@@ -553,5 +556,4 @@ class enrol_mmbr_io_plugin extends enrol_plugin
         // production
         return 'development';
     }
-
 }

@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * MMBR.IO enrolment plugin - support for user self unenrolment.
  *
@@ -45,7 +46,7 @@ if ($confirm and confirm_sesskey()) {
 echo $OUTPUT->header();
 $yesurl = new moodle_url($PAGE->url, array('confirm' => 1, 'sesskey' => sesskey()));
 $nourl = new moodle_url('/course/view.php', array('id' => $course->id));
-if (intval($instance->enrolperiod) < 0 ) {
+if (intval($instance->enrolperiod) < 0) {
     $message = get_string('unenrolselfonetime', 'enrol_mmbr_io', format_string($course->fullname));
 } else {
     $message = get_string('unenrolselfsubscribe', 'enrol_mmbr_io', format_string($course->fullname));
