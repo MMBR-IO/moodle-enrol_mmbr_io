@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * @package   enrol_mmbr_io
+ * @package   enrol_mmbrio
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @copyright Dmitry Nagorny
  */
@@ -24,12 +24,12 @@ defined('MOODLE_INTERNAL') || die();
 $observers = array(
     array(
         'eventname' => '\core\event\user_loggedin',
-        'includefile' => '/enrol/mmbr_io/classes/observer.php',
-        'callback' => "enrol_mmbr_io_observer::check_logged_user",
+        'includefile' => '/enrol/mmbrio/classes/observer.php',
+        'callback' => "enrol_mmbrio_observer::check_logged_user",
     ),
     array(
         'eventname' => '\core\event\user_enrolment_deleted',
-        'includefile' => '/enrol/mmbr_io/classes/observer.php',
-        'callback' => "enrol_mmbr_io_observer::check_unenrolled_user",
+        'includefile' => '/enrol/mmbrio/classes/observer.php',
+        'callback' => "enrol_mmbrio_observer::check_unenrolled_user",
     ),
 );

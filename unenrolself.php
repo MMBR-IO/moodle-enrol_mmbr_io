@@ -17,7 +17,7 @@
 /**
  * MMBR.IO enrolment plugin - support for user self unenrolment.
  *
- * @package   enrol_mmbr_io
+ * @package   enrol_mmbrio
  * @copyright 2010 Petr Skoda  {@link http://skodak.org}
  * @copyright 2018 Dmitry Nagorny  {@link http://mmbr.io}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,19 +25,19 @@
 require '../../config.php';
 $enrolid = required_param('enrolid', PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_BOOL);
-$instance = $DB->get_record('enrol', array('id' => $enrolid, 'enrol' => 'mmbr_io'), '*', MUST_EXIST);
+$instance = $DB->get_record('enrol', array('id' => $enrolid, 'enrol' => 'mmbrio'), '*', MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $instance->courseid), '*', MUST_EXIST);
 $context = context_course::instance($course->id, MUST_EXIST);
 require_login($course);
 if (!is_enrolled($context)) {
     redirect(new moodle_url('/'));
 }
-$plugin = enrol_get_plugin('mmbr_io');
+$plugin = enrol_get_plugin('mmbrio');
 // Security defined inside following function.
 if (!$plugin->get_unenrolself_link($instance)) {
     redirect(new moodle_url('/course/view.php', array('id' => $course->id)));
 }
-$PAGE->set_url('/enrol/mmbr_io/unenrolself.php', array('enrolid' => $instance->id));
+$PAGE->set_url('/enrol/mmbrio/unenrolself.php', array('enrolid' => $instance->id));
 $PAGE->set_title($plugin->get_instance_name($instance));
 if ($confirm and confirm_sesskey()) {
     $plugin->unenrol_user($instance, $USER->id);
@@ -47,9 +47,9 @@ echo $OUTPUT->header();
 $yesurl = new moodle_url($PAGE->url, array('confirm' => 1, 'sesskey' => sesskey()));
 $nourl = new moodle_url('/course/view.php', array('id' => $course->id));
 if (intval($instance->enrolperiod) < 0) {
-    $message = get_string('unenrolselfonetime', 'enrol_mmbr_io', format_string($course->fullname));
+    $message = get_string('unenrolselfonetime', 'enrol_mmbrio', format_string($course->fullname));
 } else {
-    $message = get_string('unenrolselfsubscribe', 'enrol_mmbr_io', format_string($course->fullname));
+    $message = get_string('unenrolselfsubscribe', 'enrol_mmbrio', format_string($course->fullname));
 }
 echo $OUTPUT->confirm($message, $yesurl, $nourl);
 echo $OUTPUT->footer();

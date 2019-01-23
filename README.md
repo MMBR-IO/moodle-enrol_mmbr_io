@@ -6,10 +6,11 @@ Foxtrot is a MMBR.IO-powered plugin for Moodle that makes it easy for teachers t
 
 1) Install plugin from zip or Moodle plugin directory
 2) On setting page enter public key from your MMBR.IO account
-3) Go to Site administration->Plugins->Enrolments 
+3) Go to Site administration -> Plugins -> Enrolments 
 4) Find "MMBR.IO Enrolment Plugin" and enable it (by pressing eye symbol near it)
 5) Now you can add "MMBR.IO Enrolment Plugin" as course enrolment option
-6) Go to course you would like to add this plugin Dashboard->Courses-><CourseName>->Users->Enrolment methods
+6) Go to course you would like to add this plugin
+  Dashboard -> Courses -> CourseName -> Users -> Enrolment methods
 7) From drop-down menu select "MMBR.IO Enrolment Plugin" 
 8) In the form just opened:
   a) Select enrolment type (One Time Payment \ Subscription)
@@ -20,7 +21,8 @@ Foxtrot is a MMBR.IO-powered plugin for Moodle that makes it easy for teachers t
 
 ## Versions
 
-1.0.10 - New status display and better error handling
+1.1.01 - New status display and better error handling
+1.2.01 - Improved connection with server and minor bug fixes
 
 ## Author
 

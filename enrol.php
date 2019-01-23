@@ -1,7 +1,7 @@
 <?php
 require '../../config.php';
-include_once "$CFG->dirroot/enrol/_io/forms/payment_form.php";
-include_once "$CFG->dirroot/enrol/mmbr_io/forms/instance_form.php";
+include_once "$CFG->dirroot/enrol/mmbrio/forms/payment_form.php";
+include_once "$CFG->dirroot/enrol/mmbrio/forms/instance_form.php";
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@ include_once "$CFG->dirroot/enrol/mmbr_io/forms/instance_form.php";
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package   enrol_mmbr_io
+ * @package   enrol_mmbrio
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @copyright Dmitry Nagorny
  */
@@ -33,13 +33,13 @@ $context = context_course::instance($course->id, MUST_EXIST);
 
 $PAGE->set_context(context_system::instance());
 
-$PAGE->set_url('/enrol/mmbr_io/enrol.php', array('courseid' => $course->id));
+$PAGE->set_url('/enrol/mmbrio/enrol.php', array('courseid' => $course->id));
 $return = new moodle_url('/enrol/index.php', array('id' => $course->id));
-if (!enrol_is_enabled('mmbr')) {
+if (!enrol_is_enabled('mmbrio')) {
     redirect($return);
 }
 
-$plugin = enrol_get_plugin('mmbr_io');
+$plugin = enrol_get_plugin('mmbrio');
 $instances = $plugin->enrol_get_instances($course->id, true);
 // If there is only instance send to payment.
 if (count($instances) == 1) {
@@ -54,8 +54,7 @@ if ($instanceid > 0) {
     }
     // Set so price is in cents.
     $instance->cost = $plugin->get_cost_full($instance->cost);
-    
-    $mform = new enrol_mmbr_io_payment_form(null, $instance);
+    $mform = new enrol_mmbrio_payment_form(null, $instance);
 
     if ($data = $mform->get_data()) {
         return $plugin->confirm_enrolment($data->enrolinstanceid);
@@ -64,7 +63,7 @@ if ($instanceid > 0) {
         redirect($return);
     }
 } else { // Else let user to choose enrolment.
-    $mform = new enrol_mmbr_io_instance_form(null, $instances);
+    $mform = new enrol_mmbrio_instance_form(null, $instances);
 
     if ($mform->is_cancelled()) {
         redirect($return);
@@ -72,9 +71,9 @@ if ($instanceid > 0) {
 }
 
 $PAGE->set_heading($course->fullname);
-$PAGE->set_title(get_string('pluginname', 'enrol_mmbr_io'));
+$PAGE->set_title(get_string('pluginname', 'enrol_mmbrio'));
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('pluginname', 'enrol_mmbr_io'));
+echo $OUTPUT->heading(get_string('pluginname', 'enrol_mmbrio'));
 $mform->display();
 echo $OUTPUT->footer();

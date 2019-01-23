@@ -16,7 +16,7 @@
 
 /**
  * @category Api_Calls
- * @package  Enrol_Mmbr_io
+ * @package  Enrol_mmbrio
  * @author   Dmitry Nagorny <dmitry.nagorny@mmbr.io>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @link     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -28,7 +28,7 @@ require_once $CFG->libdir . '/formslib.php';
 require_once $CFG->dirroot . '/user/editlib.php';
 require_once $CFG->dirroot . '/user/profile/lib.php';
 
-class enrol_mmbr_io_payment_form extends moodleform
+class enrol_mmbrio_payment_form extends moodleform
 {
     protected $instance,  // enrolment instance
                 $moodle,    // Current moodle instance
@@ -50,9 +50,9 @@ class enrol_mmbr_io_payment_form extends moodleform
         global $USER, $DB, $PAGE;
         $mform = $this->_form;
         $this->instance = $this->_customdata;
-        $plugin = enrol_get_plugin('mmbr_io');
+        $plugin = enrol_get_plugin('mmbrio');
         // Gather all needed information
-        $this->moodle = $DB->get_record_select('config_plugins', "plugin = 'enrol_mmbr_io' AND name = 'mmbrkey'");
+        $this->moodle = $DB->get_record_select('config_plugins', "plugin = 'enrol_mmbrio' AND name = 'mmbrkey'");
         if (empty($this->moodle) || empty($this->moodle->value)) {
             \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbr'));
             \core\notification::error(get_string('mmbriocustomerkey', 'enrol_mmbr'));
@@ -65,8 +65,8 @@ class enrol_mmbr_io_payment_form extends moodleform
             $this->currency = $this->instance->currency;
             $this->frequency = $this->instance->enrolperiod;
             $this->email = $USER->email;
-            $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('paymentheading', 'enrol_mmbr_io').'</h3>');
-            $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolmentoption', 'enrol_mmbr_io').'<strong>'.$this->instance->name.'</strong></h3>');
+            $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('paymentheading', 'enrol_mmbrio').'</h3>');
+            $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolmentoption', 'enrol_mmbrio').'<strong>'.$this->instance->name.'</strong></h3>');
             $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: <strong>$'.$this->instance->cost.'</strong></h3>');
 
             // Create form for subscription
@@ -95,8 +95,8 @@ class enrol_mmbr_io_payment_form extends moodleform
             </iframe>'
             );
 
-            $PAGE->requires->css('/enrol/mmbr_io/css/form.css');
-            $PAGE->requires->js_call_amd('enrol_mmbr_io/mmbr_io_calls', 'call');
+            $PAGE->requires->css('/enrol/mmbrio/css/form.css');
+            $PAGE->requires->js_call_amd('enrol_mmbrio/mmbrio_calls', 'call');
         }
 
         $mform->addElement('hidden', 'courseid');

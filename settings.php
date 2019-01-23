@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * @package   enrol_mmbr_io
+ * @package   enrol_mmbrio
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @copyright Dmitry Nagorny
  */
@@ -22,31 +22,31 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
-    $settings->add(new admin_setting_heading('enrol_mmbr_io_enrolname', '', get_string('pluginname_desc', 'enrol_mmbr_io')));
+    $settings->add(new admin_setting_heading('enrol_mmbrio_enrolname', '', get_string('pluginname_desc', 'enrol_mmbrio')));
 
     $settings->add(
         new admin_setting_heading(
-            'enrol_mmbr_io_key',
-            get_string('mmbrkey', 'enrol_mmbr_io'),
-            get_string('mmbrkey', 'enrol_mmbr_io')
+            'enrol_mmbrio_key',
+            get_string('mmbrkey', 'enrol_mmbrio'),
+            get_string('mmbrkey', 'enrol_mmbrio')
         )
     );
     $settings->add(
         new admin_setting_configtext(
-            'enrol_mmbr_io/mmbrkey',
-            get_string('mmbrkey', 'enrol_mmbr_io'),
-            get_string('mmbrkey_desc', 'enrol_mmbr_io'),
+            'enrol_mmbrio/mmbrkey',
+            get_string('mmbrkey', 'enrol_mmbrio'),
+            get_string('mmbrkey_desc', 'enrol_mmbrio'),
             '',
             PARAM_TEXT,
             60
         )
     );
 
-    $currencies = enrol_get_plugin('mmbr_io')->get_currencies();
+    $currencies = enrol_get_plugin('mmbrio')->get_currencies();
     $settings->add(
         new admin_setting_configselect(
-            'enrol_mmbr_io/currency',
-            get_string('currency', 'enrol_mmbr_io'),
+            'enrol_mmbrio/currency',
+            get_string('currency', 'enrol_mmbrio'),
             '',
             'USD',
             $currencies

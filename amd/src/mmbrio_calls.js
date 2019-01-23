@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * @package   enrol_mmbr_io
+ * @package   enrol_mmbrio
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @copyright Dmitry Nagorny
  */
@@ -24,11 +24,9 @@
   * @param   $ -
   * @returns functions
   */
-define(
-    ['jquery'],
-    function ($) {
+define(['jquery'], function($) {
         return {
-            call: function () {
+            call: function() {
                 window.addEventListener("message", receiveMessage, false);
                 /**
                  *
@@ -36,9 +34,10 @@ define(
                  */
                 function receiveMessage(event)
                 {
-                    if (typeof event !== 'undefined' && event.data === 'success' && (                    event.origin === "http://localhost:4141"
+                    if (typeof event !== 'undefined' && event.data === 'success' && (
+                        event.origin === "http://localhost:4141"
                         || event.origin === "https://staging.mmbr.io"
-                        || event.origin === "https://api.mmbr.io"                    )
+                        || event.origin === "https://api.mmbr.io")
                     ) {
                         $("form").submit();
                     } else {

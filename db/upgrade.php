@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * @package   enrol_mmbr_io
+ * @package   enrol_mmbrio
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @copyright Dmitry Nagorny
  */
@@ -22,12 +22,12 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Execute enrol_mmbr_io upgrade from the given old version.
+ * Execute enrol_mmbrio upgrade from the given old version.
  *
  * @param  int $oldversion
  * @return bool
  */
-function xmldb_enrol_mmbr_io_upgrade($oldversion) {
+function xmldb_enrol_mmbrio_upgrade($oldversion) {
     if ($oldversion < 2018091301) {
         // Mmbr.io savepoint reached.
         upgrade_plugin_savepoint(true, 2018091301, 'enrol', 'mmbr.io');
