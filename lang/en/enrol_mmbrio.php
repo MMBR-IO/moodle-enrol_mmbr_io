@@ -17,19 +17,19 @@
 /**
  * Plugin strings are defined here.
  *
- * @package     enrol_mmbr
- * @category    string
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @copyright   Dmitry Nagorny
+ * @package   enrol_mmbrio
+ * @category  string
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright Dmitry Nagorny
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['mmbr:config']        = 'Configure MMBR.IO enrol instances';
-$string['mmbr:manage']        = 'Manage user enrolments';
-$string['mmbr:manageapplications'] = 'Manage MMBR.IO enrolment';
-$string['mmbr:unenrol']       = 'Cancel users from the course';
-$string['mmbr:unenrolself']   = 'Cancel self from the course';
+$string['mmbrio:config']        = 'Configure MMBR.IO enrol instances';
+$string['mmbrio:manage']        = 'Manage user enrolments';
+$string['mmbrio:manageapplications'] = 'Manage MMBR.IO enrolment';
+$string['mmbrio:unenrol']       = 'Cancel users from the course';
+$string['mmbrio:unenrolself']   = 'Cancel self from the course';
 
 $string['pluginname']       = 'MMBR.IO Enrolment Plugin';
 $string['pluginname_desc']  = "With this plugin student can pay for paid course. All payments are synchronized with MMBR.IO Account";
@@ -39,22 +39,22 @@ $string['enrolheading']     = 'Please select one of the following payment option
 $string['paymentheading']   = 'Please provide payment information to enrol in the course';
 $string['enrolsuccess']     = "Thank you. You now enrolled in this course!";
 
-// Tasks
+// Tasks.
 $string['pingserver']       = 'Ping MMBR.IO Server';
 
-// Settings
+// Settings.
 $string['mmbrkey']          = "Enter you MMBR.IO public key";
 $string['mmbrkey_desc']     = "MMBR.IO key is used to sync all payment with your MMBR.IO account";
 $string['currency']         = 'Enter default currency';
 $string['enrolupdated']     = "Enrolment updated";
 
-// Payment options
+// Payment options.
 $string['cost']             = "Price for this enrolment";
 $string['cost_help']        = "If Subscription option selected this price will be charged once a month";
 $string['currency']         = "Select Currency";
 $string['enrolmentoption']  = "Select enrolment option: ";
 
-// Enrolment instance names 
+// Enrolment instance names.
 $string['instancename0']  = "One Time Payment";
 $string['instancename1']  = "Monthly Subscription";
 
@@ -66,31 +66,24 @@ $string['status_help']    = 'Suspended enrolment won\'t be available to use unti
 $string['fullaccess']     = 'Get Full Access';
 $string['subscription']   = 'Subscription';
 
-// Unenrolment
+// Unenrolment.
 $string['unenrolselfonetime']   = "This course was paid in full, if you unenrol yourself you will lose access to it.";
 $string['unenrolselfsubscribe'] = "If you unenrol yourself, you will loose access to this course and you credit card won't be charged";
 
-// Errors 
+// Errors.
 $string['mmbriodeferror']   = 'Sorry, but error occurred in MMBR.IO Plugin.';
 $string['costnumerror']     = 'Price should be numeric values';
 $string['costnullerror']    = 'Minimum charge should be $2';
 $string['mmbriokeyerror']   = 'MMBR.IO Public Key Error. Make sure you entered right key in plugin setting';
-$string['mmbrioservererror']= 'Look like MMBR.IO Server down for maintenance. Please, try later.';
-$string['mmbriokeymiserror']= 'This plugin missing MMBR.IO Public Key in settings. Please enter it.';
-$string['mmbriovaliderror'] = 'Colnd\'t validate your enrolment'; 
-$string['mmbriocustomerkey']= 'Right now you can not enroll in this course. Contact Moodle manager. (Error: mmbrkey)';
+$string['mmbrioservererror'] = 'Look like MMBR.IO Server down for maintenance. Please, try later.';
+$string['mmbriokeymiserror'] = 'This plugin missing MMBR.IO Public Key in settings. Please enter it.';
+$string['mmbriovaliderror'] = 'Colnd\'t validate your enrolment';
+$string['mmbriocustomerkey'] = 'Right now you can not enroll in this course. Contact Moodle manager. (Error: mmbrkey)';
 $string['unernolfailed']    = 'Error happened while cancelling you subscription. Please contact administrator for more information';
 
-// Privacy API
-// Temp String to explaine why we don't store any data
-$string['privacy:metadata']                 = "For now we don'r store data, maybe in future...";
-$string['privacy:metadata:user']            = 'In order to link payment to user we store some user information in MMBR.IO database';
-$string['privacy:metadata:user:id']         = 'Unique user id helps identify user';
-$string['privacy:metadata:user:firstname']  = 'Allows to communicate with user';
-$string['privacy:metadata:user:lastname']   = 'Allows to communicate with user';
-$string['privacy:metadata:user:email']      = 'Allows to communicate with user';
-
-$string['privacy:metadata:user_enrolments']           = 'In order to validate enrolment and payment status we synchronise this data with MMBR.IO database';
-$string['privacy:metadata:user_enrolments:status']    = 'Stores data is enrolment still valid';
-$string['privacy:metadata:user_enrolments:userid']    = 'Links enrolment with user';
-$string['privacy:metadata:user_enrolments:timeend']   = 'Specifies temporary enrolment end date';
+// Privacy API.
+// Temp String to explaine why we don't store any data.
+$string['privacy:metadata:mmbrio_server']            = 'In order to link payment to user we store some user id and email in MMBR.IO database';
+$string['privacy:metadata:mmbrio_server:userid']     = 'Unique user id helps identify user';
+$string['privacy:metadata:mmbrio_server:email']      = 'Allows to communicate with user and send receipt';
+$string['privacy:metadata:mmbrio_server:enrolments'] = 'In order to validate enrolment and payment status we synchronise this data with MMBR.IO database';

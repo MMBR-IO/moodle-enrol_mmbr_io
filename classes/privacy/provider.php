@@ -15,26 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * If course have more than one instance let user to choose 
- * 
- * @package enrol_mmbr
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Dmitry Nagorny
+ * If course have more than one instance let user to choose
+ *
+ * @package enrol_mmbrio
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author  Dmitry Nagorny
  */
+namespace enrol_mmbrio\privacy;
+defined('MOODLE_INTERNAL') || die();
 
-namespace enrol_mmbr\privacy;
 use core_privacy\local\metadata\collection;
- 
-class Provider implements 
-        // This plugin does store personal user data.
-     //   \core_privacy\local\metadata\provider {
 
-// This plugin does not store any personal user data.
-\core_privacy\local\metadata\null_provider {
+class Provider implements
+    \core_privacy\local\metadata\provider,
+    \core_privacy\local\request\data_provider
+{
+    public static function get_metadata(collection $collection) : collection {
+        $collection->add_external_location_link(
+            'mmbrio_server',
+            [
+                'userid' => 'privacy:metadata:mmbrio_server:userid',
+                'email' => 'privacy:metadata:mmbrio_server:email',
+                'enrolments' => 'privacy:metadata:mmbrio_server:enrolments',
+            ],
+            'privacy:metadata:mmbrio_server'
+        );
 
-    public static function get_reason() : string 
-    {
-        return 'privacy:metadata';
+        return $collection;
     }
-    
 }

@@ -13,50 +13,43 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/** 
- * @package     enrol_mmbr
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @copyright   Dmitry Nagorny
+/**
+ * @package   enrol_mmbrio
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright Dmitry Nagorny
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
-    $settings->add(new admin_setting_heading('enrol_mmbr_enrolname', '', get_string('pluginname_desc', 'enrol_mmbr')));
+    $settings->add(new admin_setting_heading('enrol_mmbrio_enrolname', '', get_string('pluginname_desc', 'enrol_mmbrio')));
 
-    $settings->add(new admin_setting_heading(
-        'enrol_mmbr_key',
-        get_string('mmbrkey', 'enrol_mmbr'),
-        get_string('mmbrkey', 'enrol_mmbr')));
-    $settings->add(new admin_setting_configtext(
-        'enrol_mmbr/mmbrkey',
-        get_string('mmbrkey', 'enrol_mmbr'),
-        get_string('mmbrkey_desc', 'enrol_mmbr'),
-        '',
-        PARAM_TEXT,
-        60));
+    $settings->add(
+        new admin_setting_heading(
+            'enrol_mmbrio_key',
+            get_string('mmbrkey', 'enrol_mmbrio'),
+            get_string('mmbrkey', 'enrol_mmbrio')
+        )
+    );
+    $settings->add(
+        new admin_setting_configtext(
+            'enrol_mmbrio/mmbrkey',
+            get_string('mmbrkey', 'enrol_mmbrio'),
+            get_string('mmbrkey_desc', 'enrol_mmbrio'),
+            '',
+            PARAM_TEXT,
+            60
+        )
+    );
 
-    $currencies = enrol_get_plugin('mmbr')->get_currencies();
-    $settings->add(new admin_setting_configselect('enrol_mmbr/currency',
-    get_string('currency', 'enrol_mmbr'), '', 'USD', $currencies));
-
-    // Enrol instance defaults... We won't need them probably in early plugin versions
-    // $settings->add(new admin_setting_heading('enrol_manual_defaults',
-    //     get_string('enrolinstancedefaults', 'admin'), get_string('enrolinstancedefaults_desc', 'admin')));
-
-    // $settings->add(new admin_setting_configcheckbox('enrol_mmbr/defaultenrol',
-    //     get_string('defaultenrol', 'enrol'), get_string('defaultenrol_desc', 'enrol'), 0));
-
-    // $options = array(1 => get_string('yes'),
-    //                  0  => get_string('no'));
-
-    // if (!during_initial_install()) {
-    //     $options = get_default_enrol_roles(context_system::instance());
-    //     $student = get_archetype_roles('student');
-    //     $student = reset($student);
-    //     $settings->add(new admin_setting_configselect('enrol_mmbr/roleid',
-    //         get_string('defaultrole', 'role'), '', $student->id, $options));
-    // }
+    $currencies = enrol_get_plugin('mmbrio')->get_currencies();
+    $settings->add(
+        new admin_setting_configselect(
+            'enrol_mmbrio/currency',
+            get_string('currency', 'enrol_mmbrio'),
+            '',
+            'USD',
+            $currencies
+        )
+    );
 }
-
-

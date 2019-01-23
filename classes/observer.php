@@ -1,24 +1,22 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * This file is part of Moodle - http://moodle.org/
- * 
- * PHP version 7
-
- * Moodle is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * Moodle is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
  * @category Api_Calls
- * @package  Enrol_Mmbr
+ * @package  Enrol_mmbrio
  * @author   Dmitry Nagorny <dmitry.nagorny@mmbr.io>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @link     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -27,59 +25,59 @@
 defined('MOODLE_INTERNAL') || die();
 require_once $CFG->dirroot . '/user/profile/lib.php';
 require_once $CFG->dirroot . '/lib/filelib.php';
-require_once $CFG->dirroot . '/enrol/mmbr/lib.php';
+require_once $CFG->dirroot . '/enrol/mmbrio/lib.php';
 
 // in classes/observer.php
-class enrol_mmbr_observer
+class enrol_mmbrio_observer
 {
-    private static $_DOMAIN_PORT = 4143; // Only for development
-
     /**
-     * Gets development stage from lib class
+     * Gets development stage
      * Based on it's value returns api string
-     * 
+     *
+     * @param  string $e - Stage name
      * @return string $apiLink - API Link based on development stage
      */
     public static function get_domain($e)
     {
         switch ($e) {
-        case 'development':
-            $apiLink = 'http://localhost/cobb/v1/';
-            break;
-        case 'staging':
-            $apiLink = 'https://staging.mmbr.io/cobb/v1/';
-            break;
-        default:
-            $apiLink = 'https://api.mmbr.io/cobb/v1/';
-            break;
+            case 'development':
+                // Using ngrok for proper work with https and ports on local development
+                $apiLink = 'https://35b9bee6.ngrok.io/cobb/v1/';
+                break;
+            case 'staging':
+                $apiLink = 'https://staging.mmbr.io/cobb/v1/';
+                break;
+            default:
+                $apiLink = 'https://api.mmbr.io/cobb/v1/';
+                break;
         }
         return $apiLink;
     }
 
     /**
-     * USER LOGGEDIN 
+     * USER LOGGED IN
      * Event is triggered when User logs in Moodle
-     * If this user has enrolments with MMBR.IO plugin 
-     *  - check if all enrolments is up to date
+     * If this user has enrollments with MMBR.IO plugin
+     *  - check if all enrollments is up to date
      *  - update with MMBR.IO in case something missing
-     * 
-     * |*| 1) Get all MMBR.IO enrollments -> check is user has one -> validate it         
+     *
+     * |*| 1) Get all MMBR.IO enrollments -> check is user has one -> validate it
      * | | 2) Get all user_enrollments -> check if there are MMBR.IO ones -> validate them
-     * | | 3) Write custom query with table JOIN to get all MMBR.IO enrolments -> validate them 
-     * 
+     * | | 3) Write custom query with table JOIN to get all MMBR.IO enrollments -> validate them
+     *
      * @param object $event - This event instance
-     * 
+     *
      * @return null
      */
-    public static function check_logged_user($event) 
+    public static function check_logged_user($event)
     {
         global $DB;
         $eventdata = $event->get_data();    // All data about this event
         $userid = $eventdata['userid'];
         $enrol = "enrol";
-        $enrolments = $DB->get_records($enrol, array('enrol' => 'mmbr'));
-        $plugin = enrol_get_plugin('mmbr');
-        // Check is this user has enrolment with MMBR plugin
+        $enrolments = $DB->get_records($enrol, array('enrol' => 'mmbrio'));
+        $plugin = enrol_get_plugin('mmbrio');
+        // Check is this user has enrolment with MMBR.IO plugin
         // False -> do nothing || True -> Check if all his enrolment is up to date
         foreach ($enrolments as &$enrolment) {
             $enrolid = $enrolment->id;
@@ -87,17 +85,17 @@ class enrol_mmbr_observer
             // If user has enrolments
             if ($records != 0) {
                 foreach ($records as &$rec) {
-                    // If enrolment exist and expired 
+                    // If enrolment exist and expired
                     if (intval($rec->status) == 0 && !empty($rec->timeend) && intval($rec->timeend) != 0 && $rec->timeend > 0 && $rec->timeend < time()) {
                         $result = self::validate_user_enrolment($userid, $enrolment->courseid, $enrolment->cost);
                         // Update enrolment expiry date
                         // If answer from MMBR.IO is true
-                        if ($result->success) { 
+                        if ($result->success) {
                             $newtimeend = intval(substr(strval($result->data->timeend), 0, 10));
                             $plugin->update_user_enrol($enrolment, $userid, false, null, $newtimeend);  // false -> enrolment is active
                         } else {
                             $plugin->update_user_enrol($enrolment, $userid, true, null, null);          // true -> enrolment is deactivated
-                            // Don't show error for now. Might be bad UX to show some randow errors
+                            // Don't show error for now. Might be bad UX to show some random errors
                             // For example if it couldn't connect to our server
                             // \core\notification::error($result->errors); // Shows error to user
                         }
@@ -110,24 +108,24 @@ class enrol_mmbr_observer
     /**
      * User enrolment deleted.
      * Event is triggered when user enrollment deleted
-     * 
+     *
      * @param object $event - This event instance
-     * 
+     *
      * @return null
      */
-    public static function check_unenrolled_user($event) 
+    public static function check_unenrolled_user($event)
     {
         global $DB;
         $eventdata  = $event->get_data();    // All data about this event
-        if ($eventdata['other']['enrol'] === "mmbr") {
+        if ($eventdata['other']['enrol'] === "mmbrio") {
             $userid     = $eventdata['other']['userenrolment']['userid'];
             $courseid   = $eventdata['other']['userenrolment']['courseid'];
             $enrolid    = $eventdata['other']['userenrolment']['enrolid'];
             $expiry     = $eventdata['other']['userenrolment']['timeend'];
-            $plugin = enrol_get_plugin('mmbr');
+            $plugin = enrol_get_plugin('mmbrio');
             $price = $DB->get_field('enrol', 'cost', array('id' => $enrolid), $strictness = IGNORE_MISSING);
 
-            $mmbriokey = $plugin->get_mmbr_io_key();
+            $mmbriokey = $plugin->get_mmbrio_key();
             $data = array(
                 'public_key'   => $mmbriokey,
                 'user_id'      => $userid,
@@ -140,30 +138,30 @@ class enrol_mmbr_observer
                 $result = json_decode($result);
             }
             if (intval($expiry) > 0 && !$result->success) {
-                \core\notification::error(get_string('unernolfailed', 'enrol_mmbr'));
+                \core\notification::error(get_string('unernolfailed', 'enrol_mmbrio'));
             }
         }
     }
 
-     /** 
+     /**
       * Validates if user is enrolled in course with given price
-      * 
-      * @param int $user_id 
-      * @param int $course_id  
-      * @param int $price  
       *
-      * @return object $response - Response from MMBR.IO server 
+      * @param int $user_id
+      * @param int $course_id
+      * @param int $price
+      *
+      * @return object $response - Response from MMBR.IO server
       *      - success: true/false,
       *          if (true) {
-      *      - data: {timeend: integer }     
+      *      - data: {timeend: integer }
       *          } else {
       *      - error: string
       *          }
       */
-    public static function validate_user_enrolment($user_id, $course_id, $price) 
+    public static function validate_user_enrolment($user_id, $course_id, $price)
     {
-        $plugin = enrol_get_plugin('mmbr');
-        $mmbriokey = $plugin->get_mmbr_io_key();
+        $plugin = enrol_get_plugin('mmbrio');
+        $mmbriokey = $plugin->get_mmbrio_key();
         $data = [
             'public_key'   => $mmbriokey,
             'user_id'      => $user_id,
@@ -176,37 +174,36 @@ class enrol_mmbr_observer
             return $response;
         } else {
             $response->success = false;
-            $response->error = get_string('mmbriovaliderror', 'enrol_mmbr');
+            $response->error = get_string('mmbriovaliderror', 'enrol_mmbrio');
             return $response;
         }
     }
 
     /**
-     * Pings MMBR.IO Server when new enrolment instance is created. 
-     * 
+     * Pings MMBR.IO Server when new enrolment instance is created.
+     *
      * @param object $instance - Enrolment instance
      * @param object $course   - Course where instance were created
-     * 
+     *
      * @return $response    - Success message, if false provides error message
      */
-    public static function new_enrolment_instance($instance, $course) 
+    public static function new_enrolment_instance($instance, $course)
     {
-        global $DB;
         $response = new stdClass;
-        $plugin = enrol_get_plugin('mmbr');
-        $mmbriokey = $plugin->get_mmbr_io_key();
+        $plugin = enrol_get_plugin('mmbrio');
+        $mmbriokey = $plugin->get_mmbrio_key();
         if (!$mmbriokey) { // Check if key exists
             $response->success = false;
             $response->errors = "miss_key";
             return $response;
         }
-        if (strlen($plugin->get_mmbr_io_key()) < 13) {
+        if (strlen($plugin->get_mmbrio_key()) < 13) {
             $response->errors = 'miss_key';
             return $response;
         }
         $data = [
             'public_key'    => $mmbriokey,
-            'course_id'     => $course->id, 
+            'course_id'     => $course->id,
             'course_name'   => $course->fullname,
         ];
         $response = self::get('foxtrot/plugin/instance', $data);
@@ -216,65 +213,44 @@ class enrol_mmbr_observer
 
     public static function get($route, $params = array(), $options = array())
     {
-        $plugin = enrol_get_plugin('mmbr');
+        // Get plugin instance lib.php classes
+        $plugin = enrol_get_plugin('mmbrio');
         $env = $plugin->get_development_env();
-        $url = self::get_domain() . $route;
+        $url = self::get_domain($env) . $route;
         if (!empty($params)) {
             $url .= (stripos($url, '?') !== false) ? '&' : '?';
             $url .= http_build_query($params, '', '&');
         }
-        $curl = curl_init();
-        $plugin = enrol_get_plugin('mmbr');
-        $env = $plugin->get_development_env();
-        $options = array(
-            CURLOPT_HTTPGET         => 1,
-            CURLOPT_RETURNTRANSFER  => 1,
-            CURLOPT_URL             => $url,
-        );
-        if ($env === 'development') {
-            $options[CURLOPT_PORT] = self::$_DOMAIN_PORT;
-        }
-        curl_setopt_array($curl, $options);   
-        
-        if (!$response = curl_exec($curl)) {
+        $curl = new curl;
+        if (!$response = $curl->get($url)) {
             $response = new stdClass();
-            return $response->errors = $curl_error;
+            return $response;
         }
-        curl_close($curl);
         return $response;
     }
 
-    public static function post($route, $params = array(), $options = array()) 
-    {   
-        $plugin = enrol_get_plugin('mmbr');
+    // For now have post request on enrollment deletion
+    public static function post($route, $params = array(), $options = array())
+    {
+        // Get plugin instance lib.php classes
+        $plugin = enrol_get_plugin('mmbrio');
         $env = $plugin->get_development_env();
         $url = self::get_domain($env) . $route;
-
         $payload = json_encode($params);
 
-        $curl = curl_init();
-        $plugin = enrol_get_plugin('mmbr');
-        $env = $plugin->get_development_env();
+        $curl = new curl;
+
         $options = array(
-            CURLINFO_HEADER_OUT         => true,
-                CURLOPT_RETURNTRANSFER  => true,
-                CURLOPT_POST            => true,
-                CURLOPT_URL             => $url,
-                CURLOPT_POSTFIELDS      => $payload,
-                CURLOPT_HTTPHEADER      => array(
-                    'Content-Type: application/json',
-                    'Content-Length: ' . strlen($payload)),
-                );
-        if ($env === 'development') {
-            $options[CURLOPT_PORT] = self::$_DOMAIN_PORT;
-        }
+            'CURLOPT_RETURNTRANSFER' => true,
+            'CURLOPT_POST' => true,
+            'CURLOPT_HTTPHEADER' => array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($payload)),
+        );
 
-        curl_setopt_array($curl, $options);
-
-        if (!$response = curl_exec($curl)) {
-            return $response->errors = $curl_error;
+        if (!$response = $curl->post($url, $payload, $options)) {
+            return $response->errors = curl_error($curl);
         }
-        curl_close($curl);
         return $response;
     }
 }
