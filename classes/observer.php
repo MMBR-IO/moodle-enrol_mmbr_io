@@ -42,16 +42,16 @@ class enrol_mmbrio_observer
         switch ($e) {
             case 'development':
                 // Using ngrok for proper work with https and ports on local development
-                $apiLink = 'https://35b9bee6.ngrok.io/cobb/v1/';
+                $apilink = 'https://35b9bee6.ngrok.io/cobb/v1/';
                 break;
             case 'staging':
-                $apiLink = 'https://staging.mmbr.io/cobb/v1/';
+                $apilink = 'https://staging.mmbr.io/cobb/v1/';
                 break;
             default:
-                $apiLink = 'https://api.mmbr.io/cobb/v1/';
+                $apilink = 'https://api.mmbr.io/cobb/v1/';
                 break;
         }
-        return $apiLink;
+        return $apilink;
     }
 
     /**
@@ -72,32 +72,36 @@ class enrol_mmbrio_observer
     public static function check_logged_user($event)
     {
         global $DB;
-        $eventdata = $event->get_data();    // All data about this event
+        // All data about this event
+        $eventdata = $event->get_data();
         $userid = $eventdata['userid'];
         $enrol = "enrol";
         $enrolments = $DB->get_records($enrol, array('enrol' => 'mmbrio'));
         $plugin = enrol_get_plugin('mmbrio');
-        // Check is this user has enrolment with MMBR.IO plugin
-        // False -> do nothing || True -> Check if all his enrolment is up to date
+        // Check is this user has enrolment with MMBR.IO plugin.
+        // False -> do nothing || True -> Check if all his enrolment is up to date.
         foreach ($enrolments as &$enrolment) {
             $enrolid = $enrolment->id;
-            $records = $DB->get_records("user_enrolments", array('enrolid' => $enrolid, 'userid'=> $userid)); // Get all user enrolments
-            // If user has enrolments
+            // Get all user enrollments.
+            $records = $DB->get_records("user_enrolments", array('enrolid' => $enrolid, 'userid' => $userid));
+            // If user has enrolments.
             if ($records != 0) {
                 foreach ($records as &$rec) {
                     // If enrolment exist and expired
                     if (intval($rec->status) == 0 && !empty($rec->timeend) && intval($rec->timeend) != 0 && $rec->timeend > 0 && $rec->timeend < time()) {
                         $result = self::validate_user_enrolment($userid, $enrolment->courseid, $enrolment->cost);
-                        // Update enrolment expiry date
-                        // If answer from MMBR.IO is true
+                        // Update enrolment expiry date.
+                        // If answer from MMBR.IO is true.
                         if ($result->success) {
                             $newtimeend = intval(substr(strval($result->data->timeend), 0, 10));
-                            $plugin->update_user_enrol($enrolment, $userid, false, null, $newtimeend);  // false -> enrolment is active
+                            // false -> enrolment is active.
+                            $plugin->update_user_enrol($enrolment, $userid, false, null, $newtimeend);
                         } else {
-                            $plugin->update_user_enrol($enrolment, $userid, true, null, null);          // true -> enrolment is deactivated
-                            // Don't show error for now. Might be bad UX to show some random errors
-                            // For example if it couldn't connect to our server
-                            // \core\notification::error($result->errors); // Shows error to user
+                            // true -> enrolment is deactivated.
+                            $plugin->update_user_enrol($enrolment, $userid, true, null, null);
+                            // Don't show error for now. Might be bad UX to show some random errors.
+                            // For example if it couldn't connect to our server.
+                            // This is \core\notification::error($result->errors); // Shows error to user.
                         }
                     }
                 }
@@ -107,16 +111,16 @@ class enrol_mmbrio_observer
 
     /**
      * User enrolment deleted.
-     * Event is triggered when user enrollment deleted
+     * Event is triggered when user enrollment deleted.
      *
-     * @param object $event - This event instance
+     * @param object $event - This event instance.
      *
      * @return null
      */
-    public static function check_unenrolled_user($event)
-    {
+    public static function check_unenrolled_user($event) {
         global $DB;
-        $eventdata  = $event->get_data();    // All data about this event
+        // validate if answer has success message.
+        $eventdata  = $event->get_data();
         if ($eventdata['other']['enrol'] === "mmbrio") {
             $userid     = $eventdata['other']['userenrolment']['userid'];
             $courseid   = $eventdata['other']['userenrolment']['courseid'];
@@ -158,8 +162,7 @@ class enrol_mmbrio_observer
       *      - error: string
       *          }
       */
-    public static function validate_user_enrolment($user_id, $course_id, $price)
-    {
+    public static function validate_user_enrolment($user_id, $course_id, $price) {
         $plugin = enrol_get_plugin('mmbrio');
         $mmbriokey = $plugin->get_mmbrio_key();
         $data = [
@@ -170,7 +173,8 @@ class enrol_mmbrio_observer
         ];
         $response = self::get('foxtrot/plugin/user', $data, array());
         $response = json_decode($response);
-        if ($response->success) { // validate if answer has success message
+        // validate if answer has success message.
+        if ($response->success) {
             return $response;
         } else {
             $response->success = false;
@@ -182,17 +186,17 @@ class enrol_mmbrio_observer
     /**
      * Pings MMBR.IO Server when new enrolment instance is created.
      *
-     * @param object $instance - Enrolment instance
-     * @param object $course   - Course where instance were created
+     * @param object $instance - Enrolment instance.
+     * @param object $course   - Course where instance were created.
      *
-     * @return $response    - Success message, if false provides error message
+     * @return $response    - Success message, if false provides error message.
      */
-    public static function new_enrolment_instance($instance, $course)
-    {
+    public static function new_enrolment_instance($instance, $course) {
         $response = new stdClass;
         $plugin = enrol_get_plugin('mmbrio');
         $mmbriokey = $plugin->get_mmbrio_key();
-        if (!$mmbriokey) { // Check if key exists
+         // Check if key exists
+        if (!$mmbriokey) {
             $response->success = false;
             $response->errors = "miss_key";
             return $response;
@@ -211,9 +215,8 @@ class enrol_mmbrio_observer
         return $response;
     }
 
-    public static function get($route, $params = array(), $options = array())
-    {
-        // Get plugin instance lib.php classes
+    public static function get($route, $params = array(), $options = array()) {
+        // Get plugin instance lib.php classes.
         $plugin = enrol_get_plugin('mmbrio');
         $env = $plugin->get_development_env();
         $url = self::get_domain($env) . $route;
@@ -229,10 +232,9 @@ class enrol_mmbrio_observer
         return $response;
     }
 
-    // For now have post request on enrollment deletion
-    public static function post($route, $params = array(), $options = array())
-    {
-        // Get plugin instance lib.php classes
+    // For now have post request on enrollment deletion.
+    public static function post($route, $params = array(), $options = array()) {
+        // Get plugin instance lib.php classes.
         $plugin = enrol_get_plugin('mmbrio');
         $env = $plugin->get_development_env();
         $url = self::get_domain($env) . $route;

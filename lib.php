@@ -21,8 +21,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// The base class 'enrol_plugin' can be found at lib/enrollib.php. Override
-// methods as necessary.
+// The base class 'enrol_plugin' can be found at lib/enrollib.php.
+// Override methods as necessary.
 
 /**
  * Class enrol_mmbrio_plugin.
@@ -34,8 +34,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
      *
      * @return string
      */
-    public function get_name()
-    {
+    public function get_name() {
         // second word in class is always enrol name, sorry, no fancy plugin names with
         $words = explode('_', get_class($this));
         return $words[1];
@@ -46,8 +45,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
      *
      * @return boolean
      */
-    public function use_standard_editing_ui()
-    {
+    public function use_standard_editing_ui() {
         return false;
     }
 
@@ -57,8 +55,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
      * @param  stdClass $instance course enrol instance
      * @return bool - true means it is possible to change enrol period and status in user_enrolments table
      */
-    public function allow_manage(stdClass $instance)
-    {
+    public function allow_manage(stdClass $instance) {
         return has_capability('enrol/mmbrio:manage', context_course::instance($instance->courseid));
     }
 
@@ -74,8 +71,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
      * @param  array $instances all enrol instances of this type in one course
      * @return array of pix_icon
      */
-    public function get_info_icons(array $instances)
-    {
+    public function get_info_icons(array $instances) {
         $found = false;
         foreach ($instances as $instance) {
             if ($instance->enrolstartdate != 0 && $instance->enrolstartdate > time()) {
@@ -92,14 +88,14 @@ class enrol_mmbrio_plugin extends enrol_plugin
         }
         return array();
     }
+
     /**
      * Is it possible to hide/show enrol instance via standard UI?
      *
      * @param  stdClass $instance
      * @return bool
      */
-    public function can_hide_show_instance($instance)
-    {
+    public function can_hide_show_instance($instance) {
         $context = context_course::instance($instance->courseid);
         return has_capability('enrol/mmbrio:config', $context);
     }
@@ -110,8 +106,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
      * @param  stdClass $instance
      * @return bool
      */
-    public function can_delete_instance($instance)
-    {
+    public function can_delete_instance($instance) {
         $context = context_course::instance($instance->courseid);
         return has_capability('enrol/mmbrio:config', $context);
     }
@@ -124,8 +119,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
      * @param  stdClass $instance
      * @return boolean
      */
-    public function can_edit_instance($instance)
-    {
+    public function can_edit_instance($instance) {
         $context = context_course::instance($instance->courseid);
         return has_capability('enrol/' . $instance->enrol . ':config', $context);
     }
@@ -136,8 +130,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
      * @param  stdClass $instance of the plugin
      * @return bool(true or false)
      */
-    public function show_enrolme_link(stdClass $instance)
-    {
+    public function show_enrolme_link(stdClass $instance) {
         return ($instance->status == ENROL_INSTANCE_ENABLED);
     }
 
@@ -149,8 +142,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
      * @param  stdClass $instance course enrol instance
      * @return icons - List on icons that will be added to plugin instance
      */
-    public function get_action_icons(stdClass $instance)
-    {
+    public function get_action_icons(stdClass $instance) {
         global $OUTPUT;
 
         if ($instance->enrol !== 'mmbrio') {
@@ -182,8 +174,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
      * @param  stdClass $instance
      * @return void
      */
-    public function add_course_navigation($instancesnode, stdClass $instance)
-    {
+    public function add_course_navigation($instancesnode, stdClass $instance) {
         if ($instance->enrol !== 'mmbrio') {
              throw new coding_exception('Invalid enrol instance type!');
         }
@@ -202,8 +193,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
      * @param  stdClass $instance course enrol instance
      * @return bool - true means user with 'enrol/xxx:unenrol' may unenrol others freely, false means nobody may touch user_enrolments
      */
-    public function allow_unenrol(stdClass $instance)
-    {
+    public function allow_unenrol(stdClass $instance) {
         $context = context_course::instance($instance->courseid);
         if (has_capability('enrol/mmbrio:unenrolself', $context)) {
             return true;
@@ -216,8 +206,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
       * @param  int $instance
       * @return moodle_url or NULL if self unenrolment not supported
       */
-    public function get_unenrolself_link($instance)
-    {
+    public function get_unenrolself_link($instance) {
         global $USER, $CFG, $DB;
         $name = $this->get_name();
         if ($instance->enrol !== $name) {
@@ -239,18 +228,24 @@ class enrol_mmbrio_plugin extends enrol_plugin
         if (!has_capability("enrol/$name:unenrolself", $context)) {
             return null;
         }
-        if (!$DB->record_exists('user_enrolments', array('enrolid'=>$instance->id, 'userid'=>$USER->id, 'status'=>ENROL_USER_ACTIVE))) {
+        if (!$DB->record_exists(
+            'user_enrolments', array(
+                'enrolid' => $instance->id,
+                'userid' => $USER->id,
+                'status' => ENROL_USER_ACTIVE)
+        )
+        ) {
             return null;
         }
-        return new moodle_url("/enrol/$name/unenrolself.php", array('enrolid'=>$instance->id));
+        return new moodle_url("/enrol/$name/unenrolself.php", array('enrolid' => $instance->id));
     }
 
 
     /**
      * Does this plugin allow manual unenrolment of a specific user?
-     * All plugins allowing this must implement 'enrol/xxx:unenrol' capability
+     * All plugins allowing this must implement 'enrol/xxx:unenrol' capability.
      *
-     * This is useful especially for synchronisation plugins that
+     * This is useful especially for synchronisation plugins that.
      * do suspend instead of full unenrolment.
      *
      * @param stdClass $instance course enrol instance
@@ -258,8 +253,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
      *
      * @return bool - true means user with 'enrol/xxx:unenrol' may unenrol this user, false means nobody may touch this user enrolment
      */
-    public function allow_unenrol_user(stdClass $instance, stdClass $ue)
-    {
+    public function allow_unenrol_user(stdClass $instance, stdClass $ue) {
         return $this->allow_unenrol($instance);
     }
 
@@ -269,8 +263,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
      * @param  int $courseid
      * @return moodle_url page url
      */
-    public function get_newinstance_link($courseid)
-    {
+    public function get_newinstance_link($courseid) {
         $context = context_course::instance($courseid, MUST_EXIST);
         if (!has_capability('moodle/course:enrolconfig', $context) or !has_capability('enrol/mmbrio:config', $context)) {
             return null;
@@ -280,21 +273,20 @@ class enrol_mmbrio_plugin extends enrol_plugin
     }
     
      /**
-      * Creates course enrol form, checks if form submitted
+      * Creates course enrol form, checks if form submitted.
       * and enrols user if necessary. It can also redirect.
       *
       * @param    stdClass $instance
       * @redirect redirects to the custom enrolment page
       */
-    public function enrol_page_hook(stdClass $instance)
-    {
+    public function enrol_page_hook(stdClass $instance) {
         global $CFG, $OUTPUT, $SESSION, $USER, $DB;
         // Guest can't enrol in paid courses
         if (isguestuser()) {
             return null;
         }
        
-        // Get all instances for this course
+        // Get all instances for this course.
         $instances = self::enrol_get_instances($instance->courseid, true);
         $fid = key($instances);
 
@@ -316,15 +308,14 @@ class enrol_mmbrio_plugin extends enrol_plugin
      * @param  int      $timeend
      * @return void
      */
-    public function update_user_enrol(stdClass $instance, $userid, $status = null, $timestart = null, $timeend = null)
-    {
+    public function update_user_enrol(stdClass $instance, $userid, $status = null, $timestart = null, $timeend = null) {
         global $DB, $USER, $CFG;
         $name = $this->get_name();
         if ($instance->enrol !== $name) {
             throw new coding_exception('invalid enrol instance!');
         }
         if (!$ue = $DB->get_record('user_enrolments', array('enrolid'=>$instance->id, 'userid'=>$userid))) {
-            // weird, user not enrolled
+            // Weird, user not enrolled.
             return;
         }
         $modified = false;
@@ -341,13 +332,14 @@ class enrol_mmbrio_plugin extends enrol_plugin
             $modified = true;
         }
         if (!$modified) {
-            // no change
+            // No change.
             return;
         }
         $ue->modifierid = $USER->id;
         $ue->timemodified = time();
         $DB->update_record('user_enrolments', $ue);
-        context_course::instance($instance->courseid)->mark_dirty(); // reset enrol caches
+        // Reset enrol caches.
+        context_course::instance($instance->courseid)->mark_dirty();
         // Invalidate core_access cache for get_suspended_userids.
         cache_helper::invalidate_by_definition('core', 'suspended_userids', array(), array($instance->courseid));
         // Trigger event.
@@ -372,14 +364,13 @@ class enrol_mmbrio_plugin extends enrol_plugin
     }
 
     /**
-     * Return enrolment instance by id
+     * Return enrolment instance by id.
      *
      * @param  int  $instanceid
      * @param  bool $enable
      * @return stdClass $instance
      */
-    function enrol_get_instance($instanceid, $enable)
-    {
+    function enrol_get_instance($instanceid, $enable) {
         global $DB, $CFG;
         $status = ($enable)?0:1;
         try {
@@ -402,12 +393,11 @@ class enrol_mmbrio_plugin extends enrol_plugin
     /**
      * Returns enrolment instances in given course.
      *
-     * @param  int  $courseid
-     * @param  bool $enabled
-     * @return array of enrol instances
+     * @param  int  $courseid.
+     * @param  bool $enabled.
+     * @return array of enrol instances.
      */
-    function enrol_get_instances($courseid, $enabled)
-    {
+    function enrol_get_instances($courseid, $enabled) {
         global $DB, $CFG;
         if (!$enabled) {
             return $DB->get_records('enrol', array('courseid'=>$courseid), 'sortorder,id');
@@ -420,12 +410,12 @@ class enrol_mmbrio_plugin extends enrol_plugin
                 continue;
             }
             if (!file_exists("$CFG->dirroot/enrol/$instance->enrol/lib.php")) {
-                // broken plugin
+                // Broken plugin.
                 unset($result[$key]);
                 continue;
             }
             if ($instance->enrol === 'manual') {
-                // We dont need this
+                // We dont need this.
                 unset($result[$key]);
                 continue;
             }
@@ -438,11 +428,10 @@ class enrol_mmbrio_plugin extends enrol_plugin
      *
      * @return $currencies
      */
-    public function get_currencies()
-    {
+    public function get_currencies() {
         // $codes = array(
-        //     'AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'JPY',
-        //     'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'USD');
+        // 'AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'JPY',
+        // 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'USD');
         $codes = array('USD', 'CAD');
         $currencies = array();
         foreach ($codes as $c) {
@@ -458,8 +447,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
      *
      * @return $options
      */
-    public function get_enrolment_options($id = null)
-    {
+    public function get_enrolment_options($id = null) {
         if ($id == null) {
             $options = array();
             for ($i = 0; $i< 2; $i++) {
@@ -471,24 +459,23 @@ class enrol_mmbrio_plugin extends enrol_plugin
         }
     }
 
-    public function confirm_enrolment($instanceid)
-    {
+    public function confirm_enrolment($instanceid) {
         global $DB, $CFG, $USER;
-        // Confirm with MMBR.IO that payment successful
+        // Confirm with MMBR.IO that payment successful.
         include 'classes/observer.php';
         $observer = new enrol_mmbrio_observer();
         // Get instance
         $instance = $this->enrol_get_instance($instanceid, true);
         $result = $observer->validate_user_enrolment($USER->id, $instance->courseid, $instance->cost);
         if ($result->success) {
-            // We get unix time with milliseconds, need to trim before saving to moodle database to keep consistency
+            // We get unix time with milliseconds, need to trim before saving to moodle database to keep consistency.
             $timestart  = time();
             $timeend    = 0;
             if ($result->data && $result->data->timeend && $result->data->timeend > 0) {
                 $timeend = intval(substr(strval($result->data->timeend), 0, 10));
             }
             $roleid = $instance->roleid;
-            // Enrol user in the course
+            // Enrol user in the course.
             $this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend, ENROL_USER_ACTIVE);
             $userenrolment = $DB->get_record(
                 'user_enrolments',
@@ -506,13 +493,12 @@ class enrol_mmbrio_plugin extends enrol_plugin
     }
 
     /**
-     * Converts all currency to cent value
+     * Converts all currency to cent value.
      *
-     * @param  string $cost Reqular price
-     * @return integer $cents price value in cents
+     * @param  string $cost Reqular price.
+     * @return integer $cents price value in cents.
      */
-    public function get_cost_cents($cost)
-    {
+    public function get_cost_cents($cost) {
         if (is_string($cost)) {
             $cost = floatval($cost);
         }
@@ -521,13 +507,12 @@ class enrol_mmbrio_plugin extends enrol_plugin
     }
 
     /**
-     * Converts cost from cent value to dollar
+     * Converts cost from cent value to dollar.
      *
-     * @param  string $cost cost in cents
-     * @return float $full cost in dollars
+     * @param  string $cost cost in cents.
+     * @return float $full cost in dollars.
      */
-    public function get_cost_full($cost)
-    {
+    public function get_cost_full($cost) {
         if (is_string($cost)) {
             $cost = floatval($cost);
         }
@@ -537,10 +522,9 @@ class enrol_mmbrio_plugin extends enrol_plugin
     /**
      * Get public key
      *
-     * @return $key - public key for this instance
+     * @return $key - public key for this instance.
      */
-    public function get_mmbrio_key()
-    {
+    public function get_mmbrio_key() {
         global $DB;
         if ($keyrecord = $DB->get_record_select('config_plugins', "plugin = 'enrol_mmbrio' AND name = 'mmbrkey'")) {
             return $keyrecord->value;
@@ -548,11 +532,10 @@ class enrol_mmbrio_plugin extends enrol_plugin
         return null;
     }
 
-    public function get_development_env()
-    {
-        // development
-        // staging
-        // production
+    public function get_development_env() {
+        // development.
+        // staging.
+        // production.
         return 'staging';
     }
 }
