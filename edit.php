@@ -25,7 +25,7 @@
 require('../../config.php');
 require('classes/observer.php');
 require_once('lib.php');
-require_once('forms/edit_form.php');
+include_once('forms/edit_form.php');
 
 $courseid = required_param('courseid', PARAM_INT);
 $instanceid = optional_param('id', 0, PARAM_INT);

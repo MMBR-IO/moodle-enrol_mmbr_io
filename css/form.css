@@ -8,7 +8,7 @@
 }
 
 .lds-spinner {
-    color: official;
+    color: darkgrey;
     display: inline-block;
     position: relative;
     width: 64px;
@@ -118,9 +118,9 @@
   } */
 
 .enrolment input[type="radio"]:checked + label {
-    border: solid 2px green !important;
+    border: solid 2px green;
 }
 
 input:checked div {
-    background-color: red !important;
+    background-color: red;
 }
