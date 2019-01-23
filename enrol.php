@@ -20,16 +20,19 @@
  * @copyright Dmitry Nagorny
  */
 
-require_login();
+defined('MOODLE_INTERNAL') || die();
+
 require('../../config.php');
-include_once("$CFG->dirroot/enrol/mmbrio/forms/payment_form.php");
-include_once("$CFG->dirroot/enrol/mmbrio/forms/instance_form.php");
+require_once("$CFG->dirroot/enrol/mmbrio/forms/payment_form.php");
+require_once("$CFG->dirroot/enrol/mmbrio/forms/instance_form.php");
 
 $courseid   = required_param('courseid', PARAM_INT);
 $instanceid = optional_param('instanceid', 0, PARAM_INT);
 $paymentid = optional_param('paymentid', null, PARAM_TEXT);
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $context = context_course::instance($course->id, MUST_EXIST);
+
+require_login($course);
 
 $PAGE->set_context(context_system::instance());
 

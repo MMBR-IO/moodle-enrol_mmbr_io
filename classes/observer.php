@@ -27,7 +27,7 @@ require_once($CFG->dirroot . '/user/profile/lib.php');
 require_once($CFG->dirroot . '/lib/filelib.php');
 require_once($CFG->dirroot . '/enrol/mmbrio/lib.php');
 
-// in classes/observer.php
+// In classes/observer.php.
 class enrol_mmbrio_observer
 {
     /**
@@ -37,11 +37,10 @@ class enrol_mmbrio_observer
      * @param  string $e - Stage name
      * @return string $apiLink - API Link based on development stage
      */
-    public static function get_domain($e)
-    {
+    public static function get_domain($e) {
         switch ($e) {
             case 'development':
-                // Using ngrok for proper work with https and ports on local development
+                // Using ngrok for proper work with https and ports on local development.
                 $apilink = 'https://35b9bee6.ngrok.io/cobb/v1/';
                 break;
             case 'staging':
@@ -69,10 +68,9 @@ class enrol_mmbrio_observer
      *
      * @return null
      */
-    public static function check_logged_user($event)
-    {
+    public static function check_logged_user($event) {
         global $DB;
-        // All data about this event
+        // All data about this event.
         $eventdata = $event->get_data();
         $userid = $eventdata['userid'];
         $enrol = "enrol";
@@ -87,17 +85,20 @@ class enrol_mmbrio_observer
             // If user has enrolments.
             if ($records != 0) {
                 foreach ($records as &$rec) {
-                    // If enrolment exist and expired
-                    if (intval($rec->status) == 0 && !empty($rec->timeend) && intval($rec->timeend) != 0 && $rec->timeend > 0 && $rec->timeend < time()) {
+                    // If enrolment exist and expired.
+                    if (intval($rec->status) == 0 && !empty($rec->timeend)
+                        && intval($rec->timeend) != 0 && $rec->timeend > 0 
+                        && $rec->timeend < time()
+                    ) {
                         $result = self::validate_user_enrolment($userid, $enrolment->courseid, $enrolment->cost);
                         // Update enrolment expiry date.
                         // If answer from MMBR.IO is true.
                         if ($result->success) {
                             $newtimeend = intval(substr(strval($result->data->timeend), 0, 10));
-                            // false -> enrolment is active.
+                            // False -> enrolment is active.
                             $plugin->update_user_enrol($enrolment, $userid, false, null, $newtimeend);
                         } else {
-                            // true -> enrolment is deactivated.
+                            // True -> enrolment is deactivated.
                             $plugin->update_user_enrol($enrolment, $userid, true, null, null);
                             // Don't show error for now. Might be bad UX to show some random errors.
                             // For example if it couldn't connect to our server.
@@ -162,18 +163,18 @@ class enrol_mmbrio_observer
       *      - error: string
       *          }
       */
-    public static function validate_user_enrolment($user_id, $course_id, $price) {
+    public static function validate_user_enrolment($userId, $courseId, $price) {
         $plugin = enrol_get_plugin('mmbrio');
         $mmbriokey = $plugin->get_mmbrio_key();
         $data = [
             'public_key'   => $mmbriokey,
-            'user_id'      => $user_id,
-            'course_id'    => $course_id,
+            'user_id'      => $userId,
+            'course_id'    => $courseId,
             'price'        => $price,
         ];
         $response = self::get('foxtrot/plugin/user', $data, array());
         $response = json_decode($response);
-        // validate if answer has success message.
+        // Validate if answer has success message.
         if ($response->success) {
             return $response;
         } else {
@@ -195,7 +196,7 @@ class enrol_mmbrio_observer
         $response = new stdClass;
         $plugin = enrol_get_plugin('mmbrio');
         $mmbriokey = $plugin->get_mmbrio_key();
-         // Check if key exists
+         // Check if key exists.
         if (!$mmbriokey) {
             $response->success = false;
             $response->errors = "miss_key";

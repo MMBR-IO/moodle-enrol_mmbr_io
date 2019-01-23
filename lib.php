@@ -35,7 +35,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
      * @return string
      */
     public function get_name() {
-        // second word in class is always enrol name, sorry, no fancy plugin names with
+        // Second word in class is always enrol name, sorry, no fancy plugin names with.
         $words = explode('_', get_class($this));
         return $words[1];
     }
@@ -191,7 +191,8 @@ class enrol_mmbrio_plugin extends enrol_plugin
      * All plugins allowing this must implement 'enrol/xxx:unenrol' capability
      *
      * @param  stdClass $instance course enrol instance
-     * @return bool - true means user with 'enrol/xxx:unenrol' may unenrol others freely, false means nobody may touch user_enrolments
+     * @return bool - true means user with 'enrol/xxx:unenrol' may unenrol others freely,
+     * false means nobody may touch user_enrolments
      */
     public function allow_unenrol(stdClass $instance) {
         $context = context_course::instance($instance->courseid);
@@ -251,7 +252,8 @@ class enrol_mmbrio_plugin extends enrol_plugin
      * @param stdClass $instance course enrol instance
      * @param stdClass $ue       record from user_enrolments table, specifies user
      *
-     * @return bool - true means user with 'enrol/xxx:unenrol' may unenrol this user, false means nobody may touch this user enrolment
+     * @return bool - true means user with 'enrol/xxx:unenrol' may unenrol this user,
+     * false means nobody may touch this user enrolment
      */
     public function allow_unenrol_user(stdClass $instance, stdClass $ue) {
         return $this->allow_unenrol($instance);
@@ -271,21 +273,21 @@ class enrol_mmbrio_plugin extends enrol_plugin
         // Multiple instances supported - different cost for different roles.
         return new moodle_url('/enrol/mmbrio/edit.php', array('courseid' => $courseid));
     }
-    
+
      /**
       * Creates course enrol form, checks if form submitted.
       * and enrols user if necessary. It can also redirect.
       *
       * @param    stdClass $instance
-      * @redirect redirects to the custom enrolment page
+      * @redirect redirects to the custom enrolment page.
       */
     public function enrol_page_hook(stdClass $instance) {
         global $CFG, $OUTPUT, $SESSION, $USER, $DB;
-        // Guest can't enrol in paid courses
+        // Guest can't enrol in paid courses.
         if (isguestuser()) {
             return null;
         }
-       
+
         // Get all instances for this course.
         $instances = self::enrol_get_instances($instance->courseid, true);
         $fid = key($instances);
@@ -314,7 +316,12 @@ class enrol_mmbrio_plugin extends enrol_plugin
         if ($instance->enrol !== $name) {
             throw new coding_exception('invalid enrol instance!');
         }
-        if (!$ue = $DB->get_record('user_enrolments', array('enrolid'=>$instance->id, 'userid'=>$userid))) {
+        if (!$ue = $DB->get_record(
+            'user_enrolments', array(
+                'enrolid' => $instance->id,
+                'userid' => $userid)
+        )
+        ) {
             // Weird, user not enrolled.
             return;
         }
@@ -353,7 +360,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
                     )
         );
         $event->trigger();
-        include_once $CFG->libdir . '/coursecatlib.php';
+        include_once($CFG->libdir . '/coursecatlib.php');
         coursecat::user_enrolment_changed(
             $instance->courseid,
             $ue->userid,
@@ -372,7 +379,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
      */
     function enrol_get_instance($instanceid, $enable) {
         global $DB, $CFG;
-        $status = ($enable)?0:1;
+        $status = ($enable) ? 0 : 1;
         try {
             $result = $DB->get_records('enrol', array('id' => $instanceid, 'status' => $status));
         } catch (Exception $e) {
@@ -402,7 +409,13 @@ class enrol_mmbrio_plugin extends enrol_plugin
         if (!$enabled) {
             return $DB->get_records('enrol', array('courseid'=>$courseid), 'sortorder,id');
         }
-        $result = $DB->get_records('enrol', array('courseid'=>$courseid, 'status'=>ENROL_INSTANCE_ENABLED), 'sortorder,id');
+        $result = $DB->get_records(
+            'enrol', array(
+                'courseid' => $courseid,
+                'status' => ENROL_INSTANCE_ENABLED
+            ),
+            'sortorder,id'
+        );
         $enabled = explode(',', $CFG->enrol_plugins_enabled);
         foreach ($result as $key => $instance) {
             if (!in_array($instance->enrol, $enabled)) {
@@ -426,12 +439,9 @@ class enrol_mmbrio_plugin extends enrol_plugin
     /**
      * Lists all currencies available for plugin.
      *
-     * @return $currencies
+     * @return $currencies.
      */
     public function get_currencies() {
-        // $codes = array(
-        // 'AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'JPY',
-        // 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'USD');
         $codes = array('USD', 'CAD');
         $currencies = array();
         foreach ($codes as $c) {
@@ -441,16 +451,16 @@ class enrol_mmbrio_plugin extends enrol_plugin
     }
 
     /**
-     * Returns all available enrolment options
-     * If null passed returns all possible options
-     * If id passed returns options name
+     * Returns all available enrolment options.
+     * If null passed returns all possible options.
+     * If id passed returns options name.
      *
      * @return $options
      */
     public function get_enrolment_options($id = null) {
         if ($id == null) {
             $options = array();
-            for ($i = 0; $i< 2; $i++) {
+            for ($i = 0; $i < 2; $i++) {
                 $options[] = get_string('instancename'.$i.'', 'enrol_mmbrio');
             }
             return $options;
@@ -462,9 +472,9 @@ class enrol_mmbrio_plugin extends enrol_plugin
     public function confirm_enrolment($instanceid) {
         global $DB, $CFG, $USER;
         // Confirm with MMBR.IO that payment successful.
-        include 'classes/observer.php';
+        include ('classes/observer.php');
         $observer = new enrol_mmbrio_observer();
-        // Get instance
+        // Get instance.
         $instance = $this->enrol_get_instance($instanceid, true);
         $result = $observer->validate_user_enrolment($USER->id, $instance->courseid, $instance->cost);
         if ($result->success) {
@@ -502,7 +512,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
         if (is_string($cost)) {
             $cost = floatval($cost);
         }
-        $cents = round($cost, 2)*100;
+        $cents = round($cost, 2) * 100;
         return $cents;
     }
 
@@ -516,11 +526,11 @@ class enrol_mmbrio_plugin extends enrol_plugin
         if (is_string($cost)) {
             $cost = floatval($cost);
         }
-        $full = round($cost, 2)/100;
+        $full = round($cost, 2) / 100;
         return $full;
     }
     /**
-     * Get public key
+     * Get public key.
      *
      * @return $key - public key for this instance.
      */

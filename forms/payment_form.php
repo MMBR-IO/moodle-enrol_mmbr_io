@@ -30,28 +30,27 @@ require_once($CFG->dirroot . '/user/profile/lib.php');
 
 class enrol_mmbrio_payment_form extends moodleform
 {
-    protected $instance,  // enrolment instance
-                $moodle,    // Current moodle instance
-                $price,     // One time price
-                $email,     // User email
-                $frequency, // Subscription payment frequency
-                $currency,  // Currency
-                $courseid,  // ID on enrolment course
-                $studentid, // ID of a student who wants to enrol
-                $mmbrkey;   // MMBR.IO key to indentify MMBR.IO account
+    protected $instance,  // enrolment instance.
+                $moodle,    // Current moodle instance.
+                $price,     // One time price.
+                $email,     // User email.
+                $frequency, // Subscription payment frequency.
+                $currency,  // Currency.
+                $courseid,  // ID on enrolment course.
+                $studentid, // ID of a student who wants to enrol.
+                $mmbrkey;   // MMBR.IO key to indentify MMBR.IO account.
 
     /**
-     * Function defines how page looks
+     * Function defines how page looks.
      *
      * @return null
      */
-    public function definition()
-    {
+    public function definition() {
         global $USER, $DB, $PAGE;
         $mform = $this->_form;
         $this->instance = $this->_customdata;
         $plugin = enrol_get_plugin('mmbrio');
-        // Gather all needed information
+        // Gather all needed information.
         $this->moodle = $DB->get_record_select('config_plugins', "plugin = 'enrol_mmbrio' AND name = 'mmbrkey'");
         if (empty($this->moodle) || empty($this->moodle->value)) {
             \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbr'));
@@ -65,26 +64,35 @@ class enrol_mmbrio_payment_form extends moodleform
             $this->currency = $this->instance->currency;
             $this->frequency = $this->instance->enrolperiod;
             $this->email = $USER->email;
-            $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('paymentheading', 'enrol_mmbrio').'</h3>');
-            $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolmentoption', 'enrol_mmbrio').'<strong>'.$this->instance->name.'</strong></h3>');
-            $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: <strong>$'.$this->instance->cost.'</strong></h3>');
+            $mform->addElement(
+                'html',
+                '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('paymentheading', 'enrol_mmbrio').'</h3>'
+            );
+            $mform->addElement(
+                'html',
+                '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolmentoption', 'enrol_mmbrio').'<strong>'.$this->instance->name.'</strong></h3>'
+            );
+            $mform->addElement(
+                'html',
+                '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: <strong>$'.$this->instance->cost.'</strong></h3>'
+            );
 
             // Create form for subscription
             $env = $plugin->get_development_env();
             switch ($env) {
-                case 'development':
-                    $apiLink = 'http://localhost:4141/comma/v1/foxtrot/frame?';
-                    break;
-                case 'staging':
-                    $apiLink = 'https://staging.mmbr.io/comma/v1/foxtrot/frame?';
-                    break;
-                default:
-                    $apiLink = 'https://api.mmbr.io/comma/v1/foxtrot/frame?';
-                    break;
+            case 'development':
+                $apilink = 'http://localhost:4141/comma/v1/foxtrot/frame?';
+                break;
+            case 'staging':
+                $apilink = 'https://staging.mmbr.io/comma/v1/foxtrot/frame?';
+                break;
+            default:
+                $apilink = 'https://api.mmbr.io/comma/v1/foxtrot/frame?';
+                break;
             }
             $mform->addElement(
                 'html',
-                '<iframe class="mainframe" id="paymentFrame" src="'. $apiLink .
+                '<iframe class="mainframe" id="paymentFrame" src="'. $apilink .
                 'course_id='.   $this->courseid     .''.
                 '&student_id='. $this->studentid    .''.
                 '&price='.      $this->price        .''.
@@ -110,7 +118,6 @@ class enrol_mmbrio_payment_form extends moodleform
         $mform->addElement('hidden', 'instanceid');
         $mform->setType('instanceid', PARAM_INT);
         $mform->setDefault('instanceid', $this->instance->id);
-        
 
         $mform->addElement('hidden', 'submit_data');
         $mform->setType('submit_data', PARAM_TEXT);
