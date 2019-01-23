@@ -1,8 +1,4 @@
 <?php
-require '../../config.php';
-require_once 'lib.php';
-require_once 'forms/edit_form.php';
-include 'classes/observer.php';
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -26,6 +22,10 @@ include 'classes/observer.php';
  * @link     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+require('../../config.php');
+require('classes/observer.php');
+require_once('lib.php');
+include_once('forms/edit_form.php');
 
 $courseid = required_param('courseid', PARAM_INT);
 $instanceid = optional_param('id', 0, PARAM_INT);
@@ -67,62 +67,65 @@ if ($instanceid) {
 $mform = new enrol_mmbrio_edit_form(null, array($instance, $plugin, $context));
 if ($mform->is_cancelled()) {
     redirect($returnurl);
-} elseif ($data = $mform->get_data()) { // If form is submitted
-    // Based on selected option choose enrolment duration // Not the best way, must be done properly later.
-    // 0 = represents one time payment.
-    // 1 = represents monthly subscription.
-    $op = (int)$data->name;
-    if ($op == 1) {
-        $instance->enrolperiod = intval(31536000 / 12);
-    }
-    
-    // If id exists, means we updating existing instance.
-    if ($instance->id) {
-        $instance->name             = $plugin->get_enrolment_options($data->name);  // Instance name
-        $instance->status           = 0;                                            // Status -> active
-        $instance->cost             = round($data->price, 2)*100;                    // Price
-        $instance->currency         = $data->currency;                              // Currency
-        $instance->roleid           = 5;                                            // Role -> Student
-        $instance->timemodified     = time();                                       // By default current time when modified
-        $DB->update_record('enrol', $instance);
-        // Reset caches here.
-        $context->mark_dirty();
+} else {
+    if ($data = $mform->get_data()) { // If form is submitted
+        // Based on selected option choose enrolment duration // Not the best way, must be done properly later.
+        // 0 = represents one time payment.
+        // 1 = represents monthly subscription.
+        $op = (int)$data->name;
+        if ($op == 1) {
+            $instance->enrolperiod = intval(31536000 / 12);
+        }
 
-        redirect($returnurl, get_string('enrolupdated', 'enrol_mmbrio'), null, \core\output\notification::NOTIFY_SUCCESS);
-    } else { // Or create a new one.
-        $fields = array('status' => 0,
-                        'name' => $plugin->get_enrolment_options($data->name),
-                        'cost' => round($data->price, 2) * 100,
-                        'currency' => $data->currency,
-                        'roleid' => 5,
-                        'enrolenddate' => $instance->enrolenddate,
-                        'enrolperiod' => $instance->enrolperiod,
-                    );
+        // If id exists, means we updating existing instance.
+        if ($instance->id) {
+            $instance->name             = $plugin->get_enrolment_options($data->name);  // Instance name.
+            $instance->status           = 0;                                            // Status -> active.
+            $instance->cost             = round($data->price, 2) * 100;                 // Price.
+            $instance->currency         = $data->currency;                              // Currency.
+            $instance->roleid           = 5;                                            // Role -> Student.
+            $instance->timemodified     = time();                                       // By default current time when modified.
+            $DB->update_record('enrol', $instance);
+            // Reset caches here.
+            $context->mark_dirty();
 
-        // Notify MMBR.IO that new instance is created.
-        // Observer included.
-        $observer = new enrol_mmbrio_observer();
-        $result = $observer->new_enrolment_instance($fields, $course);
-        if ($result && $result->success) {
-            $plugin->add_instance($course, $fields);
-            redirect($returnurl);
+            redirect($returnurl, get_string('enrolupdated', 'enrol_mmbrio'), null, \core\output\notification::NOTIFY_SUCCESS);
         } else {
-            if (is_object($result)) {
-                switch ($result->errors) {
-                    case 'wrong_key':
-                        \core\notification::error(get_string('mmbriokeyerror', 'enrol_mmbrio'));
-                        break;
-                    case 'miss_key':
-                        \core\notification::error(get_string('mmbriokeymiserror', 'enrol_mmbrio'));
-                        break;
-                    case 'server':
-                        \core\notification::error(get_string('mmbrioservererror', 'enrol_mmbrio'));
-                        break;
-                    default:
-                        \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbrio'));
-                }
+            // Or create a new one.
+            $fields = array('status' => 0,
+                            'name' => $plugin->get_enrolment_options($data->name),
+                            'cost' => round($data->price, 2) * 100,
+                            'currency' => $data->currency,
+                            'roleid' => 5,
+                            'enrolenddate' => $instance->enrolenddate,
+                            'enrolperiod' => $instance->enrolperiod,
+                        );
+
+            // Notify MMBR.IO that new instance is created.
+            // Observer included.
+            $observer = new enrol_mmbrio_observer();
+            $result = $observer->new_enrolment_instance($fields, $course);
+            if ($result && $result->success) {
+                $plugin->add_instance($course, $fields);
+                redirect($returnurl);
             } else {
-                \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbrio'));
+                if (is_object($result)) {
+                    switch ($result->errors) {
+                        case 'wrong_key':
+                            \core\notification::error(get_string('mmbriokeyerror', 'enrol_mmbrio'));
+                            break;
+                        case 'miss_key':
+                            \core\notification::error(get_string('mmbriokeymiserror', 'enrol_mmbrio'));
+                            break;
+                        case 'server':
+                            \core\notification::error(get_string('mmbrioservererror', 'enrol_mmbrio'));
+                            break;
+                        default:
+                            \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbrio'));
+                    }
+                } else {
+                    \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbrio'));
+                }
             }
         }
     }

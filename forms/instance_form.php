@@ -24,24 +24,26 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once $CFG->libdir . '/formslib.php';
-require_once $CFG->dirroot . '/user/editlib.php';
-require_once $CFG->dirroot . '/user/profile/lib.php';
+require_once($CFG->libdir . '/formslib.php');
+require_once($CFG->dirroot . '/user/editlib.php');
+require_once($CFG->dirroot . '/user/profile/lib.php');
 
 class enrol_mmbrio_instance_form extends moodleform
 {
     protected $instances, $courseid;
-    
-    public function definition()
-    {
+
+    public function definition() {
         global $USER, $DB, $PAGE;
         $mform = $this->_form;
-        // Retrieve array with all instances
+        // Retrieve array with all instances.
         $this->instances = $this->_customdata;
         $plugin = enrol_get_plugin('mmbrio');
         $fid = key($this->instances);
 
-        $mform->addElement('html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolheading', 'enrol_mmbrio').'</h3>');
+        $mform->addElement(
+            'html',
+            '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('enrolheading', 'enrol_mmbrio').'</h3>'
+        );
         foreach ($this->instances as $instance) {
             $price = $plugin->get_cost_full($instance->cost);
             $mform->addElement('html', '<div class="enrolment">');

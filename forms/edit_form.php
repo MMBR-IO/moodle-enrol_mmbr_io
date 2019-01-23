@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once $CFG->libdir.'/formslib.php';
-require_once 'lib.php';
+require_once($CFG->libdir.'/formslib.php');
+require_once('lib.php');
 class enrol_mmbrio_edit_form extends moodleform
 {
     /**
@@ -34,12 +34,11 @@ class enrol_mmbrio_edit_form extends moodleform
      *
      * @return void
      */
-    public function definition()
-    {
+    public function definition() {
         $mform = $this->_form;
 
         list($instance, $plugin, $context) = $this->_customdata;
-        
+
         $options = $plugin->get_enrolment_options();
         $mform->addElement('select', 'name', get_string('enrolmentoption', 'enrol_mmbrio'), $options, "");
         $mform->setType('name', PARAM_TEXT);
@@ -78,18 +77,14 @@ class enrol_mmbrio_edit_form extends moodleform
     /**
      * Sets up moodle form validation.
      *
-     * @param  stdClass $data
-     * @param  stdClass $files
-     * @return $error error list
+     * @param  stdClass $data.
+     * @param  stdClass $files.
+     * @return $error error list.
      */
-    public function validation($data, $files)
-    {
-        // global $CFG;
+    public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
-        // list($instance, $plugin, $context) = $this->_customdata;
-
-        // Depending on language is used replaces decimal separator to '.'
+        // Depending on language is used replaces decimal separator to '.'.
         $cost = str_replace(get_string('decsep', 'langconfig'), '.', $data['price']);
         if (!is_numeric($cost)) {
             $errors['price'] = get_string('costnumerror', 'enrol_mmbrio');
