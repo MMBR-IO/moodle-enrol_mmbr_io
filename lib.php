@@ -377,7 +377,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
      * @param  bool $enable
      * @return stdClass $instance
      */
-    function enrol_get_instance($instanceid, $enable) {
+    public function enrol_get_instance($instanceid, $enable) {
         global $DB, $CFG;
         $status = ($enable) ? 0 : 1;
         try {
@@ -404,10 +404,10 @@ class enrol_mmbrio_plugin extends enrol_plugin
      * @param  bool $enabled.
      * @return array of enrol instances.
      */
-    function enrol_get_instances($courseid, $enabled) {
+    public function enrol_get_instances($courseid, $enabled) {
         global $DB, $CFG;
         if (!$enabled) {
-            return $DB->get_records('enrol', array('courseid'=>$courseid), 'sortorder,id');
+            return $DB->get_records('enrol', array('courseid' => $courseid), 'sortorder,id');
         }
         $result = $DB->get_records(
             'enrol', array(
@@ -472,7 +472,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
     public function confirm_enrolment($instanceid) {
         global $DB, $CFG, $USER;
         // Confirm with MMBR.IO that payment successful.
-        include ('classes/observer.php');
+        include('classes/observer.php');
         $observer = new enrol_mmbrio_observer();
         // Get instance.
         $instance = $this->enrol_get_instance($instanceid, true);
@@ -496,7 +496,12 @@ class enrol_mmbrio_plugin extends enrol_plugin
                 'id',
                 MUST_EXIST
             );
-            redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid", get_string('enrolsuccess', 'enrol_mmbrio'), null, \core\output\notification::NOTIFY_SUCCESS);
+            redirect(
+                "$CFG->wwwroot/course/view.php?id=$instance->courseid",
+                get_string('enrolsuccess', 'enrol_mmbrio'),
+                null,
+                \core\output\notification::NOTIFY_SUCCESS
+            );
         } else {
             \core\notification::error($result->errors);
         }
@@ -530,7 +535,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
         return $full;
     }
     /**
-     * Get public key.
+     * Get public key
      *
      * @return $key - public key for this instance.
      */
@@ -543,9 +548,9 @@ class enrol_mmbrio_plugin extends enrol_plugin
     }
 
     public function get_development_env() {
-        // development.
-        // staging.
-        // production.
+        // Case development.
+        // Case staging.
+        // Case production.
         return 'staging';
     }
 }

@@ -111,17 +111,17 @@ if ($mform->is_cancelled()) {
             } else {
                 if (is_object($result)) {
                     switch ($result->errors) {
-                    case 'wrong_key':
-                        \core\notification::error(get_string('mmbriokeyerror', 'enrol_mmbrio'));
-                        break;
-                    case 'miss_key':
-                        \core\notification::error(get_string('mmbriokeymiserror', 'enrol_mmbrio'));
-                        break;
-                    case 'server':
-                        \core\notification::error(get_string('mmbrioservererror', 'enrol_mmbrio'));
-                        break;
-                    default:
-                        \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbrio'));
+                        case 'wrong_key':
+                            \core\notification::error(get_string('mmbriokeyerror', 'enrol_mmbrio'));
+                            break;
+                        case 'miss_key':
+                            \core\notification::error(get_string('mmbriokeymiserror', 'enrol_mmbrio'));
+                            break;
+                        case 'server':
+                            \core\notification::error(get_string('mmbrioservererror', 'enrol_mmbrio'));
+                            break;
+                        default:
+                            \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbrio'));
                     }
                 } else {
                     \core\notification::error(get_string('mmbriodeferror', 'enrol_mmbrio'));

@@ -30,7 +30,7 @@ require_once($CFG->dirroot . '/user/profile/lib.php');
 
 class enrol_mmbrio_payment_form extends moodleform
 {
-    protected $instance,  // enrolment instance.
+    protected $instance,  // Enrolment instance.
                 $moodle,    // Current moodle instance.
                 $price,     // One time price.
                 $email,     // User email.
@@ -77,18 +77,18 @@ class enrol_mmbrio_payment_form extends moodleform
                 '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: <strong>$'.$this->instance->cost.'</strong></h3>'
             );
 
-            // Create form for subscription
+            // Create form for subscription.
             $env = $plugin->get_development_env();
             switch ($env) {
-            case 'development':
-                $apilink = 'http://localhost:4141/comma/v1/foxtrot/frame?';
-                break;
-            case 'staging':
-                $apilink = 'https://staging.mmbr.io/comma/v1/foxtrot/frame?';
-                break;
-            default:
-                $apilink = 'https://api.mmbr.io/comma/v1/foxtrot/frame?';
-                break;
+                case 'development':
+                    $apilink = 'http://localhost:4141/comma/v1/foxtrot/frame?';
+                    break;
+                case 'staging':
+                    $apilink = 'https://staging.mmbr.io/comma/v1/foxtrot/frame?';
+                    break;
+                default:
+                    $apilink = 'https://api.mmbr.io/comma/v1/foxtrot/frame?';
+                    break;
             }
             $mform->addElement(
                 'html',

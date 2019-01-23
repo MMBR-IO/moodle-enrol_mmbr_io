@@ -87,7 +87,7 @@ class enrol_mmbrio_observer
                 foreach ($records as &$rec) {
                     // If enrolment exist and expired.
                     if (intval($rec->status) == 0 && !empty($rec->timeend)
-                        && intval($rec->timeend) != 0 && $rec->timeend > 0 
+                        && intval($rec->timeend) != 0 && $rec->timeend > 0
                         && $rec->timeend < time()
                     ) {
                         $result = self::validate_user_enrolment($userid, $enrolment->courseid, $enrolment->cost);
@@ -120,7 +120,7 @@ class enrol_mmbrio_observer
      */
     public static function check_unenrolled_user($event) {
         global $DB;
-        // validate if answer has success message.
+        // Validate if answer has success message.
         $eventdata  = $event->get_data();
         if ($eventdata['other']['enrol'] === "mmbrio") {
             $userid     = $eventdata['other']['userenrolment']['userid'];
@@ -163,13 +163,13 @@ class enrol_mmbrio_observer
       *      - error: string
       *          }
       */
-    public static function validate_user_enrolment($userId, $courseId, $price) {
+    public static function validate_user_enrolment($userid, $courseid, $price) {
         $plugin = enrol_get_plugin('mmbrio');
         $mmbriokey = $plugin->get_mmbrio_key();
         $data = [
             'public_key'   => $mmbriokey,
-            'user_id'      => $userId,
-            'course_id'    => $courseId,
+            'user_id'      => $userid,
+            'course_id'    => $courseid,
             'price'        => $price,
         ];
         $response = self::get('foxtrot/plugin/user', $data, array());
