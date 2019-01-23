@@ -1,8 +1,4 @@
 <?php
-require '../../config.php';
-require_once 'lib.php';
-require_once 'forms/edit_form.php';
-include 'classes/observer.php';
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -26,6 +22,10 @@ include 'classes/observer.php';
  * @link     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+require('../../config.php');
+require('classes/observer.php');
+require_once('lib.php');
+require_once('forms/edit_form.php');
 
 $courseid = required_param('courseid', PARAM_INT);
 $instanceid = optional_param('id', 0, PARAM_INT);

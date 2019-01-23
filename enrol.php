@@ -1,7 +1,4 @@
 <?php
-require '../../config.php';
-include_once "$CFG->dirroot/enrol/mmbrio/forms/payment_form.php";
-include_once "$CFG->dirroot/enrol/mmbrio/forms/instance_form.php";
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -24,6 +21,9 @@ include_once "$CFG->dirroot/enrol/mmbrio/forms/instance_form.php";
  */
 
 require_login();
+require('../../config.php');
+include_once("$CFG->dirroot/enrol/mmbrio/forms/payment_form.php");
+include_once("$CFG->dirroot/enrol/mmbrio/forms/instance_form.php");
 
 $courseid   = required_param('courseid', PARAM_INT);
 $instanceid = optional_param('instanceid', 0, PARAM_INT);
@@ -62,7 +62,8 @@ if ($instanceid > 0) {
     if ($mform->is_cancelled()) {
         redirect($return);
     }
-} else { // Else let user to choose enrolment.
+} else {
+    // Else let user to choose enrolment.
     $mform = new enrol_mmbrio_instance_form(null, $instances);
 
     if ($mform->is_cancelled()) {

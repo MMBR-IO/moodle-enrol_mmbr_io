@@ -23,9 +23,9 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-require_once $CFG->dirroot . '/user/profile/lib.php';
-require_once $CFG->dirroot . '/lib/filelib.php';
-require_once $CFG->dirroot . '/enrol/mmbrio/lib.php';
+require_once($CFG->dirroot . '/user/profile/lib.php');
+require_once($CFG->dirroot . '/lib/filelib.php');
+require_once($CFG->dirroot . '/enrol/mmbrio/lib.php');
 
 // in classes/observer.php
 class enrol_mmbrio_observer

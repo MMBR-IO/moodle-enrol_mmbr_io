@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once $CFG->libdir.'/formslib.php';
-require_once 'lib.php';
+require_once($CFG->libdir.'/formslib.php');
+require_once('lib.php');
 class enrol_mmbrio_edit_form extends moodleform
 {
     /**
