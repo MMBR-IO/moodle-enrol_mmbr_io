@@ -32,8 +32,12 @@ $string['mmbrio:unenrol']       = 'Cancel users from the course';
 $string['mmbrio:unenrolself']   = 'Cancel self from the course';
 
 $string['pluginname']       = 'MMBR.IO Enrolment Plugin';
-$string['pluginname_desc']  = "With this plugin student can pay for paid course. All payments are synchronized with MMBR.IO Account";
+$string['pluginname_desc']  = "With this plugin, students can pay to enrol in a paid course.
+  You set the cost of enrolment to your course: a one-time or recurring (subscription) payment.
+  A MMBR.IO account is all you need to start accepting payments for your paid courses.
+  Foxtrot is a product designed by MMBR.IO and is specifically made to work securely with the Moodle™ platform.";
 $string['enrolname']        = 'MMBR.IO Enrolment Plugin';
+$string['enrolname_short']  = 'MMBR.IO';
 
 $string['enrolheading']     = 'Please select one of the following payment options and proceed to payment form';
 $string['paymentheading']   = 'Please provide payment information to enrol in the course';
@@ -43,19 +47,21 @@ $string['enrolsuccess']     = "Thank you. You now enrolled in this course!";
 $string['pingserver']       = 'Ping MMBR.IO Server';
 
 // Settings.
-$string['mmbrkey']          = "Enter you MMBR.IO public key";
-$string['mmbrkey_desc']     = "MMBR.IO key is used to sync all payment with your MMBR.IO account";
-$string['currency']         = 'Enter default currency';
+$string['mmbrio_set']       = "Foxtrot by MMBR.IO - Payment processing to enable enrolment into paid courses";
+$string['mmbrio_set_desc']  = "Once you have a verified MMBR.IO account, get your Foxtrot key from: https://dashboard.mmbr.io/foxtrot/moodles";
+$string['mmbrkey']          = "Enter your Foxtrot Public Key";
+$string['mmbrkey_desc']     = "The Foxtrot public key authorizes payments to your MMBR.IO merchant account and synchronizes your enrolled students.";
+$string['set_currency']     = 'Enter default currency';
 $string['enrolupdated']     = "Enrolment updated";
 
 // Payment options.
 $string['cost']             = "Price for this enrolment";
 $string['cost_help']        = "If Subscription option selected this price will be charged once a month";
 $string['currency']         = "Select Currency";
-$string['enrolmentoption']  = "Select enrolment option: ";
+$string['enrolmentoption']  = "Selected enrolment option: ";
 
 // Enrolment instance names.
-$string['instancename0']  = "One Time Payment";
+$string['instancename0']  = "One-time Payment";
 $string['instancename1']  = "Monthly Subscription";
 
 $string['role']           = "Select role once enroled";

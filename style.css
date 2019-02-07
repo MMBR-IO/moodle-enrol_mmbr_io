@@ -1,4 +1,4 @@
-.mainframe {
+.mmbrio-mainframe {
     display: block;
     width: 500px;
     height: 300px;
@@ -111,16 +111,4 @@
     border-radius: .5em;
     transition: all 0.3s;
     background-color: lightgrey;
-}
-
-/* .enrolment input[type="radio"] {
-    display: none;
-  } */
-
-.enrolment input[type="radio"]:checked + label {
-    border: solid 2px green;
-}
-
-input:checked div {
-    background-color: red;
 }
