@@ -22,13 +22,13 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
-    $settings->add(new admin_setting_heading('enrol_mmbrio_enrolname', '', get_string('pluginname_desc', 'enrol_mmbrio')));
+    $settings->add(new admin_setting_heading('enrol_mmbrio_enrolname_short', '', get_string('pluginname_desc', 'enrol_mmbrio')));
 
     $settings->add(
         new admin_setting_heading(
             'enrol_mmbrio_key',
-            get_string('mmbrkey', 'enrol_mmbrio'),
-            get_string('mmbrkey', 'enrol_mmbrio')
+            get_string('mmbrio_set', 'enrol_mmbrio'),
+            get_string('mmbrio_set_desc', 'enrol_mmbrio')
         )
     );
     $settings->add(
@@ -46,7 +46,7 @@ if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configselect(
             'enrol_mmbrio/currency',
-            get_string('currency', 'enrol_mmbrio'),
+            get_string('set_currency', 'enrol_mmbrio'),
             '',
             'USD',
             $currencies

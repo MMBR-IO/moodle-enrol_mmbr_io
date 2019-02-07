@@ -92,7 +92,7 @@ class enrol_mmbrio_payment_form extends moodleform
             }
             $mform->addElement(
                 'html',
-                '<iframe class="mainframe" id="paymentFrame" src="'. $apilink .
+                '<iframe class="mmbrio-mainframe" id="paymentFrame" src="'. $apilink .
                 'course_id='.   $this->courseid     .''.
                 '&student_id='. $this->studentid    .''.
                 '&price='.      $this->price        .''.
