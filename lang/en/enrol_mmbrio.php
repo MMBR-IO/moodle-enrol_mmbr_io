@@ -39,7 +39,7 @@ $string['pluginname_desc']  = "With this plugin, students can pay to enrol in a 
 $string['enrolname']        = 'MMBR.IO Enrolment Plugin';
 $string['enrolname_short']  = 'MMBR.IO';
 
-$string['enrolheading']     = 'Please select one of the following payment options and proceed to payment form';
+$string['enrolheading']     = 'Please select one of the following payment options and proceed to checkout';
 $string['paymentheading']   = 'Please provide payment information to enrol in the course';
 $string['enrolsuccess']     = "Thank you. You now enrolled in this course!";
 

@@ -53,7 +53,7 @@ class enrol_mmbrio_instance_form extends moodleform
         }
         $mform->setDefault('instanceid', $fid);
 
-        $PAGE->requires->css('/enrol/mmbrio/css/form.css');
+        $PAGE->requires->css('/enrol/mmbrio/style.css');
         $PAGE->requires->js_call_amd('enrol_mmbrio/style', 'instances');
         $this->add_action_buttons($cancel = false, $submitlabel = 'Proceed to checkout');
 
