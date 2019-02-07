@@ -66,15 +66,15 @@ class enrol_mmbrio_payment_form extends moodleform
             $this->email = $USER->email;
             
             $mform->addElement(
-                'html', '<h3 class="text-center pb-4">'.get_string('paymentheading', 'enrol_mmbrio').'</h3>'
+                'html', '<h3 style="text-align:center;padding-bottom: 20px;">'.get_string('paymentheading', 'enrol_mmbrio').'</h3>'
             );
             $mform->addElement(
                 'html',
-                '<h3 class="text-center">'.get_string('enrolmentoption', 'enrol_mmbrio').'<strong>'.$this->instance->name.'</strong></h3>'
+                '<h3 style="text-align:center;padding-bottom: 10px;">'.get_string('enrolmentoption', 'enrol_mmbrio').'<strong>'.$this->instance->name.'</strong></h3>'
             );
             $mform->addElement(
                 'html',
-                '<h3 class="text-center pb-4">Enrolment price: <strong>$'.$this->instance->cost.'</strong></h3>'
+                '<h3 style="text-align:center;padding-bottom: 20px;">Enrolment price: <strong>$'.$this->instance->cost.'</strong></h3>'
             );
 
             // Create form for subscription.
