@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'enrol_mmbrio';
-$plugin->release = '1.2.2';
-$plugin->version = 2019020701; // Version format - YYYYMMDDXX.
+$plugin->release = '1.2.3';
+$plugin->version = 2019030501; // Version format - YYYYMMDDXX.
 $plugin->requires = 2017111300;
-$plugin->maturity = MATURITY_RC;
+$plugin->maturity = MATURITY_STABLE;

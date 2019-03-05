@@ -360,8 +360,7 @@ class enrol_mmbrio_plugin extends enrol_plugin
                     )
         );
         $event->trigger();
-        include_once($CFG->libdir . '/coursecatlib.php');
-        coursecat::user_enrolment_changed(
+        core_course_category::user_enrolment_changed(
             $instance->courseid,
             $ue->userid,
             $ue->status,

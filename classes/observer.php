@@ -41,7 +41,7 @@ class enrol_mmbrio_observer
         switch ($e) {
             case 'development':
                 // Using ngrok for proper work with https and ports on local development.
-                $apilink = 'https://35b9bee6.ngrok.io/cobb/v1/';
+                $apilink = 'https://a4bb272a.ngrok.io/cobb/v1/';
                 break;
             case 'staging':
                 $apilink = 'https://staging.mmbr.io/cobb/v1/';
