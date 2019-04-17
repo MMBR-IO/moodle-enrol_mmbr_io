@@ -550,6 +550,6 @@ class enrol_mmbrio_plugin extends enrol_plugin
         // Case development.
         // Case staging.
         // Case production.
-        return 'production';
+        return 'development';
     }
 }

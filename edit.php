@@ -105,6 +105,8 @@ if ($mform->is_cancelled()) {
             // Observer included.
             $observer = new enrol_mmbrio_observer();
             $result = $observer->new_enrolment_instance($fields, $course);
+            // var_dump($result);
+            // die();
             if ($result && $result->success) {
                 $plugin->add_instance($course, $fields);
                 redirect($returnurl);
