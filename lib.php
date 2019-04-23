@@ -178,13 +178,17 @@ class enrol_mmbrio_plugin extends enrol_plugin
         if ($instance->enrol !== 'mmbrio') {
              throw new coding_exception('Invalid enrol instance type!');
         }
-
         $context = context_course::instance($instance->courseid);
         if (has_capability('enrol/mmbrio:config', $context)) {
             $managelink = new moodle_url('/enrol/mmbrio/edit.php', array('courseid' => $instance->courseid, 'id' => $instance->id));
-            $instancesnode->add($this->get_instance_name($instance), $managelink, navigation_node::TYPE_SETTING);
+            $instancesnode->add('Dmitrik', $managelink, navigation_node::TYPE_SETTING);
+        }
+
+        if (has_capability('enrol/mmbrio:unenrolself', $context)) {
+            $instancesnode->add('Custom Dmitry', new moodle_url('/a/link/if/you/want/one.php'), navigation_node::TYPE_SETTING);
         }
     }
+    
 
     /**
      * Does this plugin allow manual unenrolment of all users?
@@ -200,6 +204,19 @@ class enrol_mmbrio_plugin extends enrol_plugin
             return true;
         }
     }
+    
+    public function enrol_mmbrio_extend_navigation_course(navigation_node $parentnode, stdClass $course, context_course $context) {
+        global $PAGE;
+        die('Смерть храбрых...');
+        $settingsnav = $PAGE->settingsnav;
+        $modulesettings = $settingsnav->get('coursesettings');
+        if (!$modulesettings) {
+            $modulesettings = $settingsnav->prepend(('Test by Dmitry'), null, navigation_node::TYPE_SETTING, null, 'coursesettings');
+        }
+
+        $modulesettings->add('My test URL', new moodle_url("/enrol/$name/unenrolself.php"), navigation_node::TYPE_SETTING);
+    }
+    
 
      /**
       * Returns list of unenrol links for all enrol instances in course.
@@ -292,11 +309,23 @@ class enrol_mmbrio_plugin extends enrol_plugin
         $instances = self::enrol_get_instances($instance->courseid, true);
         $fid = key($instances);
 
+        $courseid = $instance->courseid;
+
         if ($instance->id == $fid) {
-            $courseid = $instance->courseid;
             $url = new moodle_url('/enrol/mmbrio/enrol.php', array("courseid" => $courseid));
             redirect($url);
         }
+
+        global $PAGE;
+        
+        
+        $settingsnav = $PAGE->settingsnav;
+        $modulesettings = $settingsnav->get('modulesettings');
+        if (!$modulesettings) {
+            $modulesettings = $settingsnav->prepend(('Test by Dmitry'), null, navigation_node::TYPE_SETTING, null, 'modulesettings');
+        }
+
+        $modulesettings->add('My test URL', new moodle_url("/enrol/$name/unenrolself.php"), navigation_node::TYPE_SETTING);
     }
 
     /**

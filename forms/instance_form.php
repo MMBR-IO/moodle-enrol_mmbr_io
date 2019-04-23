@@ -33,7 +33,18 @@ class enrol_mmbrio_instance_form extends moodleform
     protected $instances, $courseid;
 
     public function definition() {
+        
         global $USER, $DB, $PAGE;
+
+
+        $settingnode = $PAGE->settingsnav->add('Custom Baikal', new moodle_url('/a/link/if/you/want/one.php'), navigation_node::TYPE_CONTAINER);
+        $thingnode = $settingnode->add('Custom Baikal', new moodle_url('/a/link/if/you/want/one.php'));
+        $thingnode->make_active();
+
+        $coursenode = $PAGE->navigation->find(3, navigation_node::TYPE_COURSE);
+        $thingnode = $coursenode->add('Custom Sofia', new moodle_url('/a/link/if/you/want/one.php'));
+        $thingnode->make_active();
+
         $mform = $this->_form;
         // Retrieve array with all instances.
         $this->instances = $this->_customdata;
